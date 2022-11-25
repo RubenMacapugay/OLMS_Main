@@ -10,6 +10,7 @@ include('assets/header.view.php');
 <?php 
     $subjectId = $_SESSION['subjectId'];
     $teacherId = $_SESSION['teacher_id'];
+
     
     // get subject
     $currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
@@ -124,8 +125,8 @@ include('assets/header.view.php');
                                     <div class="card">
                                         <div class="card-header">
                                             <h3><?php echo $currentSubjectData['subject_list_name']?></h3>
-                                            <p>BSIT 4.1B</p>
-                                            <p>Course Description</p>
+                                            <p>Section</p>
+                                            <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                                                 Atque
                                                 ipsum
@@ -137,14 +138,14 @@ include('assets/header.view.php');
                                     <!-- First Grading -->
                                     <div class="section-module mt-2 card ">
                                         <div class="card-header ">
-                                            <h4 class="section-title">Section 1</h4>
+                                            <h4 class="section-title">First Grading</h4>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $firstGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus"></i>
-                                                        <a class="nav-link content-collapse" type="">3 Content <i
+                                                        <a class="nav-link content-collapse" type=""><?php echo $firstGradingTask;?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -215,14 +216,14 @@ include('assets/header.view.php');
                                     <!-- Second Grading -->
                                     <div class="section-module mt-2 card">
                                         <div class="card-header">
-                                            <h4 class="section-title">Section 2</h4>
+                                            <h4 class="section-title">Second Grading</h4>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $secondGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus"></i>
-                                                        <a class="nav-link content-collapse" type="">4 Content <i
+                                                        <a class="nav-link content-collapse" type=""><?php echo $secondGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -291,14 +292,14 @@ include('assets/header.view.php');
                                     <!-- Third Grading -->
                                     <div class="section-module mt-2 card">
                                         <div class="card-header">
-                                            <h4 class="section-title">Section 3</h4>
+                                            <h4 class="section-title">Third Grading</h4>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $thirdGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus"></i>
-                                                        <a class="nav-link content-collapse" type="">7 Content <i
+                                                        <a class="nav-link content-collapse" type=""><?php echo $thirdGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -367,14 +368,14 @@ include('assets/header.view.php');
                                     <!-- Fourth Grading -->
                                     <div class="section-module mt-2 card">
                                         <div class="card-header">
-                                            <h4 class="section-title">Section 4</h4>
+                                            <h4 class="section-title">Forth Grading</h4>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $fourthGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus"></i>
-                                                        <a class="nav-link content-collapse" type="">7 Content <i
+                                                        <a class="nav-link content-collapse" type=""><?php echo $fourthGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
