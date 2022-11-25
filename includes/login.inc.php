@@ -1,8 +1,8 @@
 <?php  
 
-if(isset($_POST["submit"])){
-    $username = $_POST["usernumber"];
-    $pwd = $_POST["password"];
+if(isset($_POST["login_btn"])){
+    $username = $_POST["user_login"];
+    $pwd = $_POST["user_password"];
 
     include_once 'dbh.inc.php';
     include_once 'functions.inc.php';
