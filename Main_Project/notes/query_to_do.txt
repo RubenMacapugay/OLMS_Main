@@ -1,0 +1,17 @@
+given that you have data on your database
+
+For teacher account only
+** Select statement
+# display the subjects of teacher
+# on each subject display what section it is connected, ex: ap -> BSIT 4.1b
+# for each subject subject display the gradings
+# for each grading, display each task name and modules
+# display the students enrolled on the subject that the teacher is teaching, ex: list students at ap->BSIT 4.1b that teacher1 handled
+# display the list of task on specific subject of teacher, ex: all the task list of ap -> BSIT 4.1b that teacher1 handled
+# display the student of subject that pass an task, ex: student1 of ap->BSIT 4.1b that teacher1 handled
+
+for now small task na pangpasakit sa ulo, pero I know na kaya mo naman hahahha
+payt!
+
+
+## on update check if questioner exists

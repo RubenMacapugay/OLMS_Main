@@ -1,0 +1,85 @@
+#Student Function
+	~proflie
+		+student info
+		~progress
+		~profile image
+		~background-img
+		~edit profile
+	~Dashboard
+		~announcement
+			*content
+		~subjects
+			~progress bar
+	~Subject (Ex: Math)
+		+Modules
+			open modules/task
+		+Task
+		+Progress
+	~Task (Open)
+		~assignment
+		~activity
+		~project
+		~essay
+ 		~quiz [multiple choice, identification, enumiration, essays]
+		~exam [multiple choice, identification, enumiration, essays]
+	~TODO
+		~task in all subjects
+	-Calendar
+		-Main and side
+		-schedule in all task
+
+
+# Teacher Function
+	~Profile
+		~student info
+		~progress
+		~profile image
+		~background-img
+		~edit profile
+	~Dashboard
+		~announcement
+			*content
+		~subjects
+	~Subject (Ex: Math)
+		+Modules
+			+manage modules/task
+			-open modules/task
+			
+	### Working
+	~Task (Open)
+		~assignment
+		~activity
+		~project
+		~essay
+		~quiz [multiple choice, identification, enumiration]
+		~exam [multiple choice, identification, enumiration]
+	-Task (Create)
+		-assignment
+		-activity
+		-project
+		-essay
+		-quiz [multiple choice, identification, enumiration, essays]
+		-exam [multiple choice, identification, enumiration, essays]
+	### End Working
+		
+	-Students
+		-list of students [name, task type, final grade]
+	-Student (Open/Edit)
+		-list of task [task type, due date, status, grade]
+	-TODO
+		-list of all task
+	-Calendar
+		-Main and side
+		-schedule in all task
+
+
+
+
+
+Add ons
+	-dropbox
+	-todo
+	-give grade on student
+	-put on modal when editing and adding a task and student grades
+
+

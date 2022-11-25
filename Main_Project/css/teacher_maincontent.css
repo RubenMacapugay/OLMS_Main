@@ -1,0 +1,74 @@
+/* modalWrapper */
+#modalWrapper .modal {
+   --bs-modal-width: 900px;
+}
+
+
+/* Create Task Modals  */
+
+
+/* Teacher List teacher.subject.php */
+ #subjectStudentList.tab-content .student-table {
+   height: 600px;
+   overflow: auto;
+}
+
+#subjectStudentList.tab-content tr td:nth-child(1){
+   min-width: 150px;
+}
+
+/* Teacher Profile teacher.profile.php */
+#teacherProfile .img-section {
+   position: relative;
+   height: 300px;
+   width: 100%;
+  
+}
+
+#teacherProfile p{
+   margin-bottom: 0;
+}
+
+#teacherProfile .img-section .overlay-image {
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   top: 0;
+   background-position: center;
+   background-size: cover;
+   opacity: .9;
+}
+
+#teacherProfile .img-section .profile-img-cont {
+   position: absolute;
+   bottom: 0;
+   z-index: 99;
+   height: 150px; 
+   width: 150px; 
+   opacity: 1;
+}
+
+#teacherProfile .img-section .profile-img {
+   height: 100%;
+   width: 100%;
+   transform: translateY(50%);
+   border: 3px solid white;
+   border-radius: 50%;
+}
+
+#teacherProfile .profile-content .profile-header{
+   
+   margin-left: 200px;
+   max-width: 300px;
+   /* width: fit-content; */
+}
+
+#teacherProfile .profile-content h3{
+   width:available;
+}
+
+/* Create Questioner tacher.createquestioner.php */
+.create-question .questioner-cont .question-label{
+   min-width: 110px;
+}

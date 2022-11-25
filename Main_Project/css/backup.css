@@ -1,0 +1,223 @@
+/* -------Defaults------- */
+body {
+    font-family: 'Montserrat', sans-serif;
+}
+
+
+
+/* ------Header Navbar Styles------ */
+.navbar-top {
+    background-color: #002E94;
+}
+
+.navbar-top .navbar-brand {
+    color: #fff;
+    padding-left: 12px;
+}
+
+.navbar-top .nav-item .nav-link {
+    color: #fff;
+}
+
+
+
+/* ------End Navbar Styles------ */
+
+/* -----custom------- */
+.custom-border{
+    border: 1px #C8C8C8 solid;
+    border-radius: 5px;  
+    padding: 10px 10px;
+}
+/* -----end custom------- */
+
+/* Content Section */
+#content{
+    position: relative;
+
+}
+
+
+/* ------Side Navbar Styles------ */
+
+#sideNav{
+    box-sizing: content-box; 
+    background: #2C384A;
+    padding: 0;
+}
+
+
+#sideNav a,
+i {
+    color: #fff;
+}
+
+#sideNav .container-ralative{
+    position: relative;
+    height: 100%;
+    width: 100%;
+    /* overflow: hidden; */
+}
+
+#sideNav .navbar-nav .side-button-logo {
+    margin-top: 1.2rem;
+    color: #fff;
+    display:none;
+    
+}
+
+
+
+#sideNav .navbar .sub-title {
+    color: #fff;
+    width: 100%;
+    height: auto;
+    padding: 20px 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding-left: 12px;
+
+}
+
+#sideNav .navbar-nav .nav-item {
+    margin: 10px 15px;
+    line-height: 1.5;
+}
+
+
+
+#sideNav .navbar-nav i {
+    padding: 6px 12px;
+}
+
+#sideNav ul li:hover {
+    color: #11101d;
+    background: #566B75;
+    border-radius: 5px;
+    transition: all .5s ease;
+}
+
+/* -----Banner Right----- */
+#rightBanner img{
+    width: 100%;
+}
+
+/* -----End Banner Right----- */
+
+
+/* -----Responsive Layout----- */
+@media(max-width: 767px) {
+
+    /*Removing the overflow*/
+    #content .row {
+        overflow: hidden;
+    }
+    
+    .navbar-top .navbar-brand {
+        padding-left: 0;
+    }
+
+    #sideNav {
+        position: absolute;
+        width: 10%;
+        min-height: 100%; /*edit*/
+        transition: all .5s ease;
+    }
+    #sideNav.customActive{
+        width: 60%;
+    }
+
+    #sideNav .navbar-nav .side-button-logo {
+        display: block;
+        
+    }
+
+    #sideNav.customActive .side-button-logo {
+        text-align: left;
+    }
+    
+
+    #sideNav .navbar-nav .sub-title{
+        /* come */
+        display:none;
+        transition: all .5s ease;
+
+    }
+
+    #sideNav.customActive .navbar-nav .sub-title{
+        display:block;
+        transition: all .5s ease;
+
+    }
+
+    #sideNav .navbar-nav .search-input{
+        /* come */
+        display:none;
+        transition: all .5s ease;
+
+    }
+    #sideNav.customActive .navbar-nav .search-input{
+        display:inline-block;
+        transition: all .5s ease;
+
+    }
+
+
+    #sideNav li.nav-item{
+        transition: all .5s ease;
+        margin: 0 !important;
+    }
+
+    #sideNav.customActive li.nav-item{
+        margin: 10px 15px !important;
+        
+    }
+
+    #sideNav li span{
+        transition: all .5s ease;
+        display: none;
+    }
+
+    #sideNav.customActive li  span{
+        display: inline-block;
+    }
+    
+
+    /* ---------------Main content----------------*/
+    #mainContent {
+        position: absolute;
+        width: calc(100% - 10%);
+        left: 10%;
+        min-height: 100%;
+        transition: all .5s ease;
+    }
+    #sideNav.customActive~#mainContent {
+        width: calc(100% - 60%);
+        left: 60%;
+    }
+
+
+    /* Hide the Right banner */
+    #rightBanner {
+        display: none;
+    }
+}
+
+@media(max-width: 575px) {
+
+    #sideNav {
+        width: 10%;
+        transition: all .5s ease;
+    }
+
+    #sideNav.customActive {
+        width: 90%;
+    }
+
+    /* ---------------Main content----------------*/
+    #sideNav.customActive~#mainContent {
+        width: calc(100% - 90%);
+        left: 90%;
+    }
+
+}

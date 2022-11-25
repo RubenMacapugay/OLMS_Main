@@ -1,0 +1,123 @@
+
+/* subjects.php/tabpane */
+/*--(Students)-- student subject progress */
+#subjectMainContent .circular-progress {
+    position: relative;
+    height: 100px;
+    width: 100px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+#subjectMainContent #progress-tab-pane .card {
+    background-color: #113B65;
+}
+
+#subjectMainContent #progress-tab-pane h4,
+#subjectMainContent #progress-tab-pane .value-container {
+    color: white;
+}
+
+#subjectMainContent .circular-progress:before {
+    content: "";
+    position: absolute;
+    height: 74%;
+    width: 74%;
+    background-color: #fff;
+    border-radius: 50%;
+}
+
+#subjectMainContent .value-container {
+    position: relative;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.5rem;
+    color: #231c3d;
+}
+
+/*--(Students)-- end student subject progress */
+/***** end subjects.php ****/
+
+
+/***** student.profile.php *****/
+/* --(Student) profile-- */
+#studentProfile .img-section {
+    position: relative;
+    height: 300px;
+    width: 100%;
+   
+}
+
+#studentProfile p{
+    margin-bottom: 0;
+}
+
+#studentProfile .img-section .overlay-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    background-position: center;
+    background-size: cover;
+    opacity: .9;
+}
+
+#studentProfile .img-section .profile-img-cont {
+    position: absolute;
+    bottom: 0;
+    z-index: 99;
+    width: 150px; 
+    opacity: .9;
+}
+
+#studentProfile .img-section .profile-img {
+    width: 100%;
+    transform: translateY(50%);
+    border: 3px solid white;
+    border-radius: 50%;
+}
+
+#studentProfile .profile-content .profile-header{
+    
+    margin-left: 200px;
+    max-width: 300px;
+    /* width: fit-content; */
+}
+
+#studentProfile .profile-content h3{
+    width:available;
+}
+
+
+
+/* --(Student) profile-- */
+
+/***** subjects.php ****/
+/* ------------(Students) subjects.php------------ */
+.tab-content table tr td:nth-child(2),
+.tab-content table tr td:nth-child(3),
+.tab-content table tr td:nth-child(4),
+.tab-content table tr td:nth-child(5) {
+    width: 1%;
+    white-space: nowrap;
+    text-align: center;
+}
+
+#subjectMainContent .subject-section {
+    margin-top: 0.8rem;
+}
+
+#subjectMainContent .nav-tabs {
+    border-bottom: 0px solid transparent;
+    --bs-nav-tabs-border-width: 0px;
+}
+
+#subjectMainContent .nav-item .nav-link {
+    padding-left: .8rem;
+}
+
+#subjectMainContent .section-control {
+    background-color: #EFEFEF;
+}
+/***** end student.profile.php *****/

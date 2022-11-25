@@ -1,0 +1,93 @@
+	OLMS - oblates learning management system
+
+dififulties on 	current system
+	teachers
+		uploading files
+		responding on all quizes, activities , assignments
+		takes to much time to record the scores of the students
+	students	
+		dificulties on accessing accounts, passing assignments
+		early force close/ended of exams
+		cant download modules
+	parents
+		cant monitor the student performance due to tight schedule
+	
+
+
+FUNCTIONLITIES
+	accounts (profiles)
+		students, parents, teachers, admin
+	students enrolled subjects
+	school calendar
+	todo list
+	announcements
+	customization/access to tasks/activities
+		quizzes, assignments, exams, essays, multiple choice, identification, enumiration, matching type, 
+	uploading of learning materials
+	sms notification for parents (about the given activities)
+	generate reports
+
+ADMIN
+	CRUD of all account
+
+
+STUDENTS
+	change passwords 
+	access learning materials {modules, quiezes, activities, assignments, mojor examination, } for each subjects
+	track their own progress {grades, submissions, participation in subject}
+	
+
+	## SENIOR HIGH
+		access enrolled subjects with modules 
+
+	## ELEM
+		grade (1-6), subjects with modules
+
+	## HIGH SCHOOL
+		grade(7-10), subjects with modules
+
+
+
+PARENTS
+	have account
+	View the current subject of their children
+	submit tasks of their children
+	
+	What are the restriction for the parents?
+
+TEACHERS
+	manage learning materials and activities
+		give the modules, task
+		
+		
+	manage tasks for students (based on section?)
+		modes[multiple choice, identification, enumiration, essays]
+	give grade
+	track progress of each students
+	generate system reports{activities, assignments, submissions, not submitted}
+
+SYSTEM
+	school calendar - display activies for a particular month (with dues dates)
+	account profiles 
+	enrollment system {student name, school level, subjects}
+	
+	##due dates
+		tasks = 2-5 days
+		exam = 1h	
+
+	
+LIMITATIONS
+	cant access offline
+	cannot generate periodical grades 
+	will not replace the traditional methods
+	Not cover other Oblates School
+	Students and Parents do not have access on system data?
+	Only System administrator can:
+		manage user accounts 
+		upload learning materials [modules, presentations, subjects]
+
+app.creately.com
+overflow.io
+
+
+
