@@ -50,11 +50,11 @@ include('assets/header.view.php');
 ?>  
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Upload Files</h1>
+                <h1 class="modal-title fs-5" id="uploadModalLabel">Upload Files</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="teacher.code.php" method="POST" enctype="multipart/form-data">
@@ -174,7 +174,7 @@ include('assets/header.view.php');
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $firstGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#exampleModal"></i>
+                                                        <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                         <a class="nav-link content-collapse" type=""><?php echo $firstGradingTask;?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
@@ -252,7 +252,7 @@ include('assets/header.view.php');
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $secondGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                        <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                         <a class="nav-link content-collapse" type=""><?php echo $secondGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
@@ -328,7 +328,7 @@ include('assets/header.view.php');
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $thirdGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                        <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                         <a class="nav-link content-collapse" type=""><?php echo $thirdGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
@@ -404,7 +404,7 @@ include('assets/header.view.php');
                                                 <ul class="nav justify-content-between align-items-center">
                                                 <li class="nav-item"><?php echo $fourthGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <i class="fa-solid fa-circle-plus"></i>
+                                                        <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                         <a class="nav-link content-collapse" type=""><?php echo $fourthGradingTask; ?> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                     </li>

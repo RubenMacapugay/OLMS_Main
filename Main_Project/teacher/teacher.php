@@ -5,6 +5,7 @@
     //Getting results from subject_tbl
     $selectStudentSubjects = "SELECT * FROM subject_list_tbl where fk_teacher_id = {$_SESSION["teacher_id"]}";
     $resultSubject =  $conn->query($selectStudentSubjects) or die ($mysqli->error);
+
 ?>
 
 
@@ -30,7 +31,7 @@
                             <h3>Announcement</h3>
                         </div>
                         <div class="card-body">
-                            <p class="card-text text-header">Dear Charo,</p>
+                            <p class="card-text text-header">Good Day!</p>
                             <p class="card-text text-body">Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                 Illo
                                 aperiam
@@ -43,8 +44,7 @@
                                 distinctio. Quibusdam fugiat culpa nostrum unde, qui dolores?</p>
 
                             <div class="text-closing d-flex flex-column align-items-end">
-                                <p class="card-text text-remarks mb-0">I'm yours,</p>
-                                <p class="card-text text-author">Admin Addones</p>
+                                <p class="card-text text-author">Admin</p>
                             </div>
                         </div>
                     </div>
@@ -74,8 +74,8 @@
                                     </div>
 
                                     <h3 class="card-title"><?php echo $row['subject_list_name'];?></h3>
-                                    <p class="card-text">BSIT 4.1B</p>
-                                    <p class="card-text ">Prof. Domeng Zu Gat</p>
+                                    <p class="card-text">Section</p>
+                                    <p class="card-text ">Teacher</p>
                                     <div class="text-center my-3">
                                         <!-- Send the subject id to specific subject page **student.subject.php -->
                                         <form action="teacher.setSessionSubject.php" method="POST">
