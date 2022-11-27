@@ -4,9 +4,10 @@ require_once ('query.inc.php');
 
 
 # --- isEmpty Functions --- #
-    function emptyEssayTask($grading, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
+    function emptyEssayTask($grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
         $result;
         if(empty($grading) ||
+            !is_numeric($moduleSection) ||
             empty($taskname) ||
             empty($taskcontent) ||
             !is_numeric($tasktype) ||
@@ -26,10 +27,11 @@ require_once ('query.inc.php');
         return $result;
     }
 
-    function emptyWithAnswerTask($grading, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
+    function emptyWithAnswerTask($grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
         $result;
         if(
             empty($grading) ||
+            !is_numeric($moduleSection) ||
             empty($taskname) ||
             empty($questionitems) ||
             !is_numeric($tasktype) ||
@@ -219,25 +221,55 @@ require_once ('query.inc.php');
         }
             
     }
+
+    function moduleNameExist($conn, $moduleSectionName, $gradingId){
+        #query
+        $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ?;";
+
+        # start the preapred statement
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $selectModuleSectionName)){
+            header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
+            exit();
+        }
+        
+        # binding user input
+        mysqli_stmt_bind_param($stmt, "si", $moduleSectionName, $gradingId);
+        mysqli_stmt_execute($stmt);
+
+        # save result
+        $resultData = mysqli_stmt_get_result($stmt);
+
+        # check if theres returned data
+        if($row = mysqli_fetch_assoc($resultData)){
+            return $row;
+        } else{
+            $result = false; 
+            return false;
+        }
+
+        # close the statement
+        mysqli_stmt_close($stmt);
+    }
 # --- Exists Functions --- end #
 
 
 # --- Create Functions --- #
-    function createTask($conn, $subjectId, $grading, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
+    function createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
         
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_attempts`, `submission_choice`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxattempts', '$allowlate')";
         
         mysqli_query($conn, $sqlInsertTask);
 
         echo 'success';
     }
 
-    function createNoQuestion($conn, $subjectId, $grading, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
+    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
 
         // I need to capture the subject ID
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `task_name`, `task_content`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$taskname', '$taskcontent', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `task_content`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$taskcontent', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
         
         mysqli_query($conn, $sqlInsertTask);
         
@@ -289,6 +321,17 @@ require_once ('query.inc.php');
         mysqli_stmt_bind_param($stmt, "sii", $choices, $questionerId, $choiceIsCorrect);
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+    }
+
+    function createModuleSection($conn, $moduleSectionName, $moduleSectionDesc, $subjectId, $gradingId){
+        $sql = "INSERT INTO module_section_tbl (module_section_name, module_section_desc, fk_subject_list_id, fk_grading_id) VALUES ('$moduleSectionName', '$moduleSectionDesc', $subjectId, $gradingId)";
+        
+        $resultScore = $conn->query($sql);
+
+        $id = mysqli_insert_id($conn);
+
+        return $id;
+    
     }
 # --- Create Functions --- end #
 
@@ -431,3 +474,4 @@ function checkTaskCountPerGrading($conn, $subjectListId, $grading){
         return 0;
     }
 }
+

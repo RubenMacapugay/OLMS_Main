@@ -9,3 +9,5 @@ if(isset($_POST['submitSubjectId'])){
     header("location: assets/header.view.php");
     header("location: teacher.subject.php");
 }
+
+$_SESSION['gradingId'] = $_POST['service'];

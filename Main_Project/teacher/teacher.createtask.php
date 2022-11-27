@@ -1,6 +1,61 @@
 <?php include('assets/header.view.php')?>
 
 
+<?php 
+
+// set gradingRow variable
+require '../../includes/teacherDropdown.inc.php';
+$gradings = loadModuleSection();
+
+?>
+<!-- Modals -->
+<div class="modal" id="createModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="createModuleSection">Create Module Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <?php 
+                        //create a validation message here
+                    ?>
+                    <div class="form-group">
+                        <label>Grading</label>
+                        <select class="form-control" id="modalGrading" name="gradingModal">
+                            <option selected="" disabled="">Select grading</option>
+                            <?php 
+                                foreach ($gradings as $grading) {
+                                    echo "<option id='".$grading['grading_id']."' value='".$grading['grading_id']."'>".$grading['grading_name']."</option>";
+                                }
+
+                            ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Section name</label>
+                        <input type="text" name="moduleSectionName" class="form-control" placeholder="Module Section name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Section description</label>
+                        <input type="text" name="moduleSectinDesc" class="form-control" placeholder="Description" required>
+                    </div>
+                    
+                </div>
+
+                <input type="hidden" grading>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="createModuleSectionWithGrading" class="btn btn-primary">Create</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+<!-- Modals end -->
 <!--Body content -->
 <div class="container-fluid " id="content">
     <div class="row overflow-hidden">
@@ -41,7 +96,25 @@
                                     </div>';
                             }
 
+                            if($_SESSION['msg'] == "modulenametaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        Task name has been used! Please re-enter your inputs.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                            }
+                            
+
                             unset($_SESSION['msg']);
+                        }
+
+                        if(isset($_SESSION['moduleSectionCreated'])){
+                            if($_SESSION['moduleSectionCreated'] == 'yes'){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Module Section has been created!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                unset($_SESSION['moduleSectionCreated']);
+                            }
                         }
                     ?>
                     <h5 class="">Create Task Title</h5>
@@ -54,22 +127,47 @@
                         <div class="row">
                             <!-- Task Details -->
                             <div class="row task-details">
+
                                 <div class="form-group col-md-6">
+                                    <!-- Select Grading -->
                                     <div class="mb-3">
                                         <label for="gradingSelector">Select Grading</label>
-                                        <select class="form-select" name="grading" aria-label="select grading"
+                                        <!-- <select class="form-select" name="grading" aria-label="select grading"
                                             id="gradingSelector">
                                             <?php 
-                                            $sqli = "SELECT * FROM grading_tbl";
-                                            $result = mysqli_query($conn, $sqli);
-                                            while($row = mysqli_fetch_array($result)) {
-                                                $gradingId = $row['grading_id'];
-                                                echo '<option value="'.$gradingId.'">' .$row['grading_name']. '</option>';
-                                            } 
-                                        ?>
+                                            // $sqli = "SELECT * FROM grading_tbl";
+                                            // $result = mysqli_query($conn, $sqli);
+                                            // while($row = mysqli_fetch_array($result)) {
+                                            //     $gradingId = $row['grading_id'];
+                                            //     echo '<option value="'.$gradingId.'">' .$row['grading_name']. '</option>';
+                                            // } 
+                                            ?>
+                                        </select> -->
+
+                                        <select class="form-control" id="gradingSelector" name="grading">
+                                            <option selected="" disabled="">Select grading</option>
+                                            <?php 
+                                                
+                                                foreach ($gradings as $grading) {
+                                                    echo "<option id='".$grading['grading_id']."' value='".$grading['grading_id']."'>".$grading['grading_name']."</option>";
+                                                }
+                                            ?>
                                         </select>
 
                                     </div>
+
+                                    <!-- Create Module Section -->
+                                    <div class="mb-3">
+                                        <label for="gradingSelector">Module section</label>
+                                        <div class="d-flex">
+                                            <select class="form-select" id="moduleSection" name="moduleSection">
+                                                <option selected="" disabled="">Select module section</option>
+                                            </select>
+                                            <button class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFirstGrading" type="button">Add</button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Task Name -->
                                     <div class="mb-3">
                                         <label for="inputAssignmentDescription" class="form-label mb-0">Task
                                             Name</label>
@@ -77,11 +175,15 @@
                                             id="inputAssignmentDescription" aria-describedby="taskname"
                                             placeholder="sample: 01 Quiz 01">
                                     </div>
+
+                                    <!-- Task Content for Essay -->
                                     <div class="mb-3 ps-0" id="taskcontentDiv">
                                         <label for="">Task Content</label>
                                         <textarea class="form-control" name="taskcontent"
                                             placeholder="Content Description" id="floatingTextarea"></textarea>
                                     </div>
+
+                                    <!-- Question Items -->
                                     <div class="mb-3 w-50" id="questionItemsDiv">
                                         <label for="">Question items</label>
                                         <input type="number" class="form-control" name="questionitems"
@@ -90,7 +192,10 @@
                                 </div>
 
                                 <div class="form-group col-md-6">
+
+                                    <!-- Task type and Subtype -->
                                     <div class="row">
+                                        <!-- Task Type -->
                                         <div class="col-6 mb-3">
                                             <label for="inputTaskType">Task type</label>
                                             <div class="container-fluid p-0">
@@ -109,6 +214,7 @@
                                                 </select>
                                             </div>
                                         </div>
+                                        <!-- Sub Type -->
                                         <div class="col-6 mb-3">
                                             <label for="inputTaskType">Sub type</label>
                                             <select class="form-select" name="subtype" id="subtype"
@@ -117,36 +223,46 @@
                                             </select>
                                         </div>
                                     </div>
+
+                                    <!-- Duration -->
                                     <div class="mb-3">
                                         <label class="form-check-label" for="inputDates">Duration</label>
                                         <div class="d-flex align-items-center">
+                                            <!-- Start Duration -->
                                             <input type="date" class="form-control" name="datecreated"
                                                 id="inputStartDate">
                                             <span class="mx-2">to</span>
+                                            <!-- End Duration -->
                                             <input type="date" class="form-control" name="datedeadline"
                                                 id="inputEndDate">
                                         </div>
                                     </div>
+
+                                    <!-- Attempts and Time -->
                                     <div class="row">
+                                        <!-- Attempts -->
                                         <div class="col-6 mb-3">
                                             <label for="inputTime">Time</label>
                                             <input type="time" class="form-control" name="timelimit" id="inputTime">
                                         </div>
-
+                                        
+                                        <!-- Time -->
                                         <div class="col-6">
                                             <label for="inputMaxScore">Max attemps</label>
                                             <input type="number" class="form-control" name="maxattempts"
                                                 id="inputMaxScore">
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
 
+                                    <!-- Max score and allow late submission -->
+                                    <div class="row mb-3">
+                                        <!-- max score -->
                                         <div class="col-6 mb-3 " id="inputMaxScoreDiv">
                                             <label for="inputMaxScore">Max score</label>
                                             <input type="number" class="form-control" name="maxscore"
                                                 id="inputMaxScore">
                                         </div>
-
+                                        <!-- allow late submission -->
                                         <div class="col-6">
                                             <label>Allow late submission</label>
                                             <div class="mt-1">
@@ -214,10 +330,10 @@
 <script>
 // Map your choices to your option value
 var lookup = {
-    '1': ['Multiple Choice', 'Identification', 'Enumiration', 'True or False',  'Essay'],
-    '2': ['Multiple Choice', 'Identification', 'Enumiration', 'True or False', 'Essay'],
-    '3': ['Multiple Choice', 'Identification', 'Enumiration', 'True or False'],
-    '4': ['Multiple Choice', 'Identification', 'Enumiration', 'True or False']
+    '1': ['Multiple Choice', 'Identification', 'True or False',  'Essay'],
+    '2': ['Multiple Choice', 'Identification', 'True or False', 'Essay'],
+    '3': ['Multiple Choice', 'Identification', 'True or False'],
+    '4': ['Multiple Choice', 'Identification', 'True or False']
 };
 // When an option is changed, search the above for matching choices
 $('#options').on('change', function() {
@@ -239,7 +355,7 @@ $('#options').on('change', function() {
 document.getElementById('questionItemsDiv').style.display = "none";
 function showDiv(select) {
 
-    if (select.value == 4) {
+    if (select.value == 3) {
         document.getElementById('taskcontentDiv').style.display = "block";
         document.getElementById('questionItemsDiv').style.display = "none";
         document.getElementById('inputMaxScoreDiv').style.display = "block";
@@ -248,7 +364,7 @@ function showDiv(select) {
         document.getElementById('createWithQuestionBtn').style.display = "block";
         document.getElementById('createIdentificationBtn').style.display = "none";
         document.getElementById('createEnumerationBtn').style.display = "none";
-    } else if (select.value == 3) {
+    } else if (select.value == 2) {
         document.getElementById('taskcontentDiv').style.display = "none";
         document.getElementById('questionItemsDiv').style.display = "block";
         document.getElementById('createWithQuestionBtn').style.display = "none";
@@ -257,15 +373,6 @@ function showDiv(select) {
         document.getElementById('inputMaxScoreDiv').style.display = "none";
         document.getElementById('createIdentificationBtn').style.display = "none";
         document.getElementById('createEnumerationBtn').style.display = "none";
-    } else if (select.value == 2) {
-        document.getElementById('taskcontentDiv').style.display = "none";
-        document.getElementById('questionItemsDiv').style.display = "block";
-        document.getElementById('inputMaxScoreDiv').style.display = "block";
-        document.getElementById('createBtn').style.display = "none";
-        document.getElementById('createWithQuestionBtn').style.display = "none";
-        document.getElementById('createTrueOrFalse').style.display = "none";
-        document.getElementById('createIdentificationBtn').style.display = "none";
-        document.getElementById('createEnumerationBtn').style.display = "block";
     } else if (select.value == 1) {
         // type your code here
         document.getElementById('taskcontentDiv').style.display = "none";
@@ -293,6 +400,28 @@ var hideForm = document.querySelector("#questionerDiv");
 createBtn.addEventListener("click", function() {
     hideForm.classList.add("show-div");
 });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $("#gradingSelector").change(function(){
+            var aid = $("#gradingSelector").val();
+            $.ajax({
+                url: '../../includes/teacherDropdown.inc.php',
+                method: 'post',
+                data: 'gradingId=' + aid
+            }).done(function(moduleSection){
+                console.log(moduleSection);
+                moduleSection = JSON.parse(moduleSection);
+                $('#moduleSection').empty();
+                moduleSection.forEach(function(moduleSection){
+                    $('#moduleSection').append("<option value='" + moduleSection.module_section_id + "'>" + moduleSection.module_section_name + "</option>")
+                })
+            })
+        })
+    })
+
+   
 </script>
 
 </body>
