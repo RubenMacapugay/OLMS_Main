@@ -107,6 +107,10 @@ include('assets/header.view.php');
 
                 <div class="modal-body">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                    <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
+>>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
 =======
                     <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
 >>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
