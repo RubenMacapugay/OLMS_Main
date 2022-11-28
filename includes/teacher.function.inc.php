@@ -462,8 +462,8 @@ require_once ('query.inc.php');
         mysqli_query($conn, $updateTaskGiven);
     }
 
-    function updateModuleSection($conn, $moduleSectionId, $moduleSectionName, $moduleSectinDesc){
-        $sql  = "UPDATE module_section_tbl SET module_section_name =  '$moduleSectionName', module_section_desc =  '$moduleSectinDesc' WHERE module_section_id = '$moduleSectionId'";
+    function updateModuleSection($conn, $moduleSectionId, $moduleSectionName, $moduleSectionDesc){
+        $sql  = "UPDATE `module_section_tbl` SET `module_section_name`='$moduleSectionName',`module_section_desc`='$moduleSectionDesc' WHERE module_section_id = {$moduleSectionId}";
         mysqli_query($conn, $sql);
     }
 # --- Update Functions --- end #

@@ -110,7 +110,7 @@ include('assets/header.view.php');
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
-                    <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
+                    <input type="text" id="moduleSectionGradingId" name="moduleSectionGradingId">
                     <div class="form-group">
                         <label>Section name</label>
                         <input type="text" name="moduleSectionName" class="form-control" placeholder="Module Section name" required>
@@ -152,7 +152,7 @@ include('assets/header.view.php');
                     </div>
                     <div class="form-group">
                         <label>Section description</label>
-                        <input type="text" name="updateModuleSectinDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
+                        <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
                     </div>
                     
                 </div>
