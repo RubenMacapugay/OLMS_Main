@@ -1,5 +1,6 @@
 <?php 
 include('assets/header.view.php');
+
 // if(isset($_SESSION['subjectId'])){
 //     echo 'Section: '.$_SESSION['section_id'];
 // }else{
@@ -67,6 +68,8 @@ include('assets/header.view.php');
 ?>  
 
 <!-- Modal -->
+
+<!-- upload module -->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -96,6 +99,7 @@ include('assets/header.view.php');
     </div>
 </div>
 
+<!-- save grading section content -->
 <div class="modal fade" id="createModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -106,14 +110,7 @@ include('assets/header.view.php');
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-                    <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
->>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
-=======
-                    <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
->>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
+                    <input type="text" id="moduleSectionGradingId" name="moduleSectionGradingId">
                     <div class="form-group">
                         <label>Section name</label>
                         <input type="text" name="moduleSectionName" class="form-control" placeholder="Module Section name" required>
@@ -128,7 +125,7 @@ include('assets/header.view.php');
                 <input type="hidden" grading>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="createModuleSection" class="btn btn-primary">Create</button>
+                    <button type="submit" name="createModuleSection" class="btn btn-primary" id="modalCreateGradingSection">Create</button>
                 </div>
             </form>
 
@@ -136,9 +133,16 @@ include('assets/header.view.php');
     </div>
 </div>
 
+<!-- updating grading section content -->
+<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Module Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
-<<<<<<< HEAD
-=======
                 <div class="modal-body">
                     <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
                     <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
@@ -148,12 +152,20 @@ include('assets/header.view.php');
                     </div>
                     <div class="form-group">
                         <label>Section description</label>
-                        <input type="text" name="updateModuleSectinDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
+                        <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
                     </div>
                     
                 </div>
->>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
 
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
 <!-- End of Modal -->
 
 <!--Body content --> 
@@ -210,9 +222,25 @@ include('assets/header.view.php');
                                             Module Section has been created!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
-                            unset($_SESSION['moduleSectionCreated']);
+                                unset($_SESSION['moduleSectionCreated']);
+                            }
                         }
-                    }
+
+                        if(isset($_SESSION['msg'])){
+                            if($_SESSION['msg'] == "modulenametaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Module Section has been taken!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "modulesectionupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Module Section has been updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            unset($_SESSION['msg']);
+                        }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -282,10 +310,22 @@ include('assets/header.view.php');
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
-                                                            <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+
+                                                            <!-- for updating module_section -->
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
-                                                        <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+
+                                                        <!-- Module section task -->
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
@@ -317,36 +357,39 @@ include('assets/header.view.php');
                                                                         </td>
                                                                     </tr>
 
-                                                                <!-- Displaying Task Per Module_section_tbl -->
+                                                                    <!-- Displaying Task Per Module_section_tbl -->
 
-                                                                <?php while ($rowGrading = $resultTasksFirstGrading->fetch_assoc()) : ?>
-                                                                    <tr class="module-task ">
-                                                                        <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
-                                                                        <td>
-                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
-                                                                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
-                                                                        </td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">
-                                                                            <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                                <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id']; ?>">
-
-                                                                                <?php
-                                                                                $isGiven = $rowGrading['given'];
-                                                                                if ($isGiven == "Yes") {
-                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
-                                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
-                                                                                } else if ($isGiven == "" || $isGiven == "No") {
-                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
-                                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
-                                                                                }
-                                                                                ?>
-                                                                            </form>
-                                                                        </td>
-
-                                                                    </tr>
-                                                                <?php endwhile; ?>
+                                                                    <?php while($rowGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
+                                                                        <tr class="module-task ">
+                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
+                                                                            <td>
+                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
+                                                                                    type="button"></i>
+                                                                                <i class="fa-solid fa-trash text-danger me-2"
+                                                                                    type="button"></i>
+                                                                            </td>
+                                                                            <td class="">-</td>
+                                                                            <td class="">-</td>
+                                                                            <td class="">
+                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
+                                                                                    
+                                                                                    <?php 
+                                                                                        $isGiven = $rowGrading['given'];
+                                                                                        if($isGiven == "Yes"){
+                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                            
+                                                                                        } else if($isGiven == "" || $isGiven == "No"){
+                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                        }
+                                                                                    ?>
+                                                                                </form>
+                                                                            </td>
+                                                                            
+                                                                        </tr>
+                                                                    <?php endwhile; ?>
 
                                                             </tbody>
                                                         </table>
@@ -382,14 +425,22 @@ include('assets/header.view.php');
 
                                         <!-- Second Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-
-                                            <!-- Module Section resultModuleSectionFirstGrading -->
-                                            <?php while ($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()) : ?>
+                                            
+                                            <!-- Module Section resultModuleSectionSecondGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()): ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
-                                                            <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -487,14 +538,22 @@ include('assets/header.view.php');
 
                                         <!-- Third Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-
-                                            <!-- Module Section resultModuleSectionFirstGrading -->
-                                            <?php while ($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()) : ?>
+                                            
+                                            <!-- Module Section resultModuleSectionThirdGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()): ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
-                                                            <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -592,14 +651,22 @@ include('assets/header.view.php');
 
                                         <!-- Fourth Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-
-                                            <!-- Module Section resultModuleSectionFirstGrading -->
-                                            <?php while ($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()) : ?>
+                                                                
+                                            <!-- Module Section resultModuleSectionFourthGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()): ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
-                                                            <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -910,51 +977,27 @@ include('assets/header.view.php');
         }
     });
 
-    // set session for Grading buttons
-    $('#btnFirstGrading').on('click', function(e) {
-        var name = 1;
-        $.ajax({
-            type: 'POST',
-            url: 'teacher.setSessionSubject.php',
-            data: {
-                service: name
-            }
-        });
+    // Change update and create button for modalCreateUpdateGradingSection
+    $('#btnFirstGrading').on('click', function(e){
+        createDisplay();
     });
 
-    $('#btnSecondGrading').on('click', function(e) {
-        var name = 2;
-        $.ajax({
-            type: 'POST',
-            url: 'teacher.setSessionSubject.php',
-            data: {
-                service: name
-            }
-        });
-    });
-</script>
-
-    $('#btnThirdGrading').on('click', function(e) {
-        var name = 3;
-        $.ajax({
-            type: 'POST',
-            url: 'teacher.setSessionSubject.php',
-            data: {
-                service: name
-            }
-        });
+    $('#modalCreateUpdateGradingSection').on('click', function(e){
+        updateDisplay();
     });
 
-    $('#btnFourthGrading').on('click', function(e) {
-        var name = 4;
-        $.ajax({
-            type: 'POST',
-            url: 'teacher.setSessionSubject.php',
-            data: {
-                service: name
-            }
-        });
-    });
+    //  create button
+    function createDisplay(){
+        $('#modalUpdateGradingSection').hide();
+        $('#modalCreateGradingSection').show();
+    }
+
+    // update button
+    function updateDisplay(){
+        $('#modalCreateGradingSection').hide();
+        $('#modalUpdateGradingSection').show();
+    }
+
 </script>
 
 <script type="text/javascript">
@@ -996,7 +1039,6 @@ include('assets/header.view.php');
             var id = 4;
 
             $('#moduleSectionGradingId').val(id);
->>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
         });
     });
 </script>

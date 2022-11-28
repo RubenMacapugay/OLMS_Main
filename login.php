@@ -62,7 +62,7 @@
                                 <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
                                 <div class="col-lg-6">
                                     <div class="p-5">
-                                        <img src="./admin/img/HFA-Logo.png" alt="Logo" width="50" height="50">
+                                        <img src="./admin_project/admin/img/HFA-Logo.png" alt="Logo" width="50" height="50">
                                         <h1 class="h3 text-gray-900 mb-4 mt-4">Oblates Learning Management System</h1>
                                         <form action="includes/login.inc.php" method="POST" class="user">
                                             <div class="form-group">
