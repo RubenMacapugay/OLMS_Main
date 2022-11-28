@@ -216,46 +216,23 @@ if(isset($_POST['delete_teacher_btn']))
 //Admin Login
 if(isset($_POST['login_btn']))
 {   
-    $email_login = $_POST['login_email']; 
-    $password_login = $_POST['login_password']; 
+    $email_login = $_POST['admin_login']; 
+    $password_login = $_POST['admin_password']; 
 
-    $query = "SELECT * FROM register WHERE email = '$email_login' AND password = '$password_login'";
+    $query = "SELECT * FROM admin_acc WHERE username = '$email_login' AND admin_password = '$password_login'";
     $query_run = mysqli_query($connection, $query);
 
    if(mysqli_fetch_array($query_run))
-   //if($query_run)
    {
         $_SESSION['username'] = $email_login;
-        header('Location: index.php');
+        header('Location: admin_dashboard.php');
    } 
    else
    {
         $_SESSION['status'] = "Incorrect Password or Email";
-        header('Location: ../login2.php');
-   }
-}
-
-
-
-if(isset($_POST['student_login_btn']))
-{   
-    $email_login = $_POST['login_email']; 
-    $password_login = $_POST['login_password']; 
-
-    $query = "SELECT * FROM register WHERE email = '$email_login' AND password = '$password_login'";
-    $query_run = mysqli_query($connection, $query);
-
-   if(mysqli_fetch_array($query_run))
-   //if($query_run)
-   {
-        $_SESSION['username'] = $email_login;
         header('Location: index.php');
-   } 
-   else
-   {
-        $_SESSION['status'] = "Incorrect Password or Email";
-        header('Location: ../login2.php');
    }
 }
 
 
+?>
