@@ -1,5 +1,6 @@
 <?php
 include('assets/header.view.php');
+
 // if(isset($_SESSION['subjectId'])){
 //     echo 'Section: '.$_SESSION['section_id'];
 // }else{
@@ -67,6 +68,8 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
 ?>
 
 <!-- Modal -->
+
+<!-- upload module -->
 <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -106,6 +109,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
     </div>
 </div>
 
+<!-- save grading section content -->
 <div class="modal fade" id="createModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -116,6 +120,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
+                    <input type="text" id="moduleSectionGradingId" name="moduleSectionGradingId">
                     <div class="form-group">
                         <label>Section name</label>
                         <input type="text" name="moduleSectionName" class="form-control" placeholder="Module Section name" required>
@@ -130,7 +135,41 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                 <input type="hidden" grading>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" name="createModuleSection" class="btn btn-primary">Create</button>
+                    <button type="submit" name="createModuleSection" class="btn btn-primary" id="modalCreateGradingSection">Create</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- updating grading section content -->
+<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Module Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
+                    <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
+                    <div class="form-group">
+                        <label>Section name</label>
+                        <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Section description</label>
+                        <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
+                    </div>
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
                 </div>
             </form>
 
@@ -198,7 +237,26 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                             </div>';
                             unset($_SESSION['moduleSectionCreated']);
                         }
+<<<<<<< HEAD
                     }
+=======
+
+                        if(isset($_SESSION['msg'])){
+                            if($_SESSION['msg'] == "modulenametaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Module Section has been taken!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "modulesectionupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Module Section has been updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            unset($_SESSION['msg']);
+                        }
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -270,10 +328,27 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
+<<<<<<< HEAD
                                                             <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
                                                             <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+=======
+
+                                                            <!-- for updating module_section -->
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
                                                         </div>
-                                                        <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+
+                                                        <!-- Module section task -->
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
@@ -303,6 +378,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                                     </td>
                                                                 </tr>
 
+<<<<<<< HEAD
                                                                 <!-- Displaying Task Per Module_section_tbl -->
 
                                                                 <?php while ($rowGrading = $resultTasksFirstGrading->fetch_assoc()) : ?>
@@ -333,6 +409,39 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
 
                                                                     </tr>
                                                                 <?php endwhile; ?>
+=======
+                                                                    <?php while($rowGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
+                                                                        <tr class="module-task ">
+                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
+                                                                            <td>
+                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
+                                                                                    type="button"></i>
+                                                                                <i class="fa-solid fa-trash text-danger me-2"
+                                                                                    type="button"></i>
+                                                                            </td>
+                                                                            <td class="">-</td>
+                                                                            <td class="">-</td>
+                                                                            <td class="">
+                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
+                                                                                    
+                                                                                    <?php 
+                                                                                        $isGiven = $rowGrading['given'];
+                                                                                        if($isGiven == "Yes"){
+                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                            
+                                                                                        } else if($isGiven == "" || $isGiven == "No"){
+                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                        }
+                                                                                    ?>
+                                                                                </form>
+                                                                            </td>
+                                                                            
+                                                                        </tr>
+                                                                    <?php endwhile; ?>
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
 
                                                             </tbody>
                                                         </table>
@@ -367,6 +476,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
 
                                         <!-- Second Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
+<<<<<<< HEAD
 
                                             <!-- Module Section resultModuleSectionFirstGrading -->
                                             <?php while ($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()) : ?>
@@ -375,6 +485,24 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                         <div class="d-flex justify-content-between">
                                                             <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
                                                             <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+=======
+                                            
+                                            <!-- Module Section resultModuleSectionSecondGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()): ?>
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -466,6 +594,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
 
                                         <!-- Third Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
+<<<<<<< HEAD
 
                                             <!-- Module Section resultModuleSectionFirstGrading -->
                                             <?php while ($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()) : ?>
@@ -474,6 +603,24 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                         <div class="d-flex justify-content-between">
                                                             <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
                                                             <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+=======
+                                            
+                                            <!-- Module Section resultModuleSectionThirdGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()): ?>
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -565,6 +712,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
 
                                         <!-- Fourth Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
+<<<<<<< HEAD
 
                                             <!-- Module Section resultModuleSectionFirstGrading -->
                                             <?php while ($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()) : ?>
@@ -573,6 +721,24 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                         <div class="d-flex justify-content-between">
                                                             <h4 class="module-section-title"><?php echo $rowModuleTask['module_section_name']; ?></h4>
                                                             <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+=======
+                                                                
+                                            <!-- Module Section resultModuleSectionFourthGrading -->
+                                            <?php while($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()): ?>
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div class="d-flex">
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
+                                                                <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
+                                                                                        type="button"></i>
+                                                            </div>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -957,6 +1123,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
         }
     });
 
+<<<<<<< HEAD
     // set session for Grading buttons
     $('#btnFirstGrading').on('click', function(e) {
         var name = 1;
@@ -999,6 +1166,70 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
             data: {
                 service: name
             }
+=======
+    // Change update and create button for modalCreateUpdateGradingSection
+    $('#btnFirstGrading').on('click', function(e){
+        createDisplay();
+    });
+
+    $('#modalCreateUpdateGradingSection').on('click', function(e){
+        updateDisplay();
+    });
+
+    //  create button
+    function createDisplay(){
+        $('#modalUpdateGradingSection').hide();
+        $('#modalCreateGradingSection').show();
+    }
+
+    // update button
+    function updateDisplay(){
+        $('#modalCreateGradingSection').hide();
+        $('#modalUpdateGradingSection').show();
+    }
+
+</script>
+
+<script type="text/javascript">
+    // script for updating  module_section
+    $(document).ready(function (){
+        $(document).on('click', '.editGradingModuleSection', function(){
+            var moduleTaskGradingId = $(this).closest('div').find('#moduleGradingId').text();
+            var moduleTaskId = $(this).closest('div').find('#moduleTaskId').text();
+            var moduleTaskName = $(this).closest('div').find('#moduleTaskName').text();
+            var moduleTaskDesc = $(this).closest('div').find('#moduleTaskDesc').text();
+
+            $('#updateModuleSection').modal('show'); // load modal
+            $('.updateModuleSectionGradingId').val(moduleTaskGradingId);
+            $('.updateModuleSectionId').val(moduleTaskId);
+            $('.updateModuleSectionName').val(moduleTaskName);
+            $('.updateModuleSectinDesc').val(moduleTaskDesc);
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function (){
+        $(document).on('click', '#btnFirstGrading', function(){
+            var id = 1;
+
+            $('#moduleSectionGradingId').val(id);
+        });
+        $(document).on('click', '#btnSecondGrading', function(){
+            var id = 2;
+
+            $('#moduleSectionGradingId').val(id);
+        });
+        $(document).on('click', '#btnThirdGrading', function(){
+            var id = 3;
+
+            $('#moduleSectionGradingId').val(id);
+        });
+        $(document).on('click', '#btnFourthGrading', function(){
+            var id = 4;
+
+            $('#moduleSectionGradingId').val(id);
+>>>>>>> bf987634406599274e6b4eb963cb9f68bd7edb72
         });
     });
 </script>

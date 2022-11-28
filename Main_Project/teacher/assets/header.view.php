@@ -65,7 +65,7 @@
                             <li class="nav-item dropdown">
 
                                 <a href="" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">User </a>
+                                    aria-expanded="false"></a>
                                 <ul class="dropdown-menu  dropdown-menu-end">
 
                                     <li><a href="teacher.profile.php" class="dropdown-item">profile</a></li>

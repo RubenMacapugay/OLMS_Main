@@ -261,20 +261,22 @@ include_once 'teacher.function.inc.php';
         $moduleSectionName = $_POST['moduleSectionName'];
         $moduleSectionDesc = $_POST['moduleSectinDesc'];
         $subjectId = $_SESSION['subjectId'];
-        if(isset($_SESSION['gradingId'])){
-            $gradingId = $_SESSION['gradingId'];
-        }
+        $gradingId = $_POST['moduleSectionGradingId'];
+    
         #error handlers
         // validate here
 
         # check if task is taken
-        // validate here
+        if(moduleNameExist($conn, $moduleSectionName, $gradingId) !== false){
+            $_SESSION['msg'] = "modulenametaken";
+            header ("location: ../Main_Project/teacher/teacher.subject.php");
+            exit();
+        }
         
+        //Create the module section
         $id = createModuleSection($conn, $moduleSectionName, $moduleSectionDesc, $subjectId, $gradingId);
-        unset($_SESSION['gradingId']);
         $_SESSION['moduleSectionCreated'] = 'yes';
-
-        // echo 'ID: '.$id;
+        
         header ("location: ../Main_Project/teacher/assets/header.view.php");
         header ("location: ../Main_Project/teacher/teacher.subject.php");
         exit();
@@ -286,9 +288,13 @@ include_once 'teacher.function.inc.php';
         $subjectId = $_SESSION['subjectId'];
         $gradingId = $_POST['gradingModal'];
 
+        // Remove the white space
+        $trimModuleSectionName = rtrim($moduleSectionName);
 
         # check if task is taken
-        if(moduleNameExist($conn, $moduleSectionName, $subjectId, $gradingId) !== false){
+      
+
+        if(moduleNameExist($conn, $moduleSectionName, $gradingId) !== false){
             $_SESSION['msg'] = "modulenametaken";
             header ("location: ../Main_Project/teacher/teacher.createtask.php?currentSubject=$subjectId");
             exit();
@@ -786,4 +792,45 @@ include_once 'teacher.function.inc.php';
         exit();
         
     }
+
+    #update grading module section teacher.subject.php
+    if(isset($_POST['updateModuleSection'])){
+        $gradingId = $_POST['updateModuleSectionGradingId'];
+        $moduleSectionId = $_POST['updateModuleSectionId'];
+        $moduleSectionName = $_POST['updateModuleSectionName'];
+        $moduleSectionDesc = $_POST['updateModuleSectionDesc'];
+        $subjectId = $_SESSION['subjectId'];
+
+        // compare the name
+        $moduleName = getModuleName($conn, $moduleSectionId);
+        
+        $trimModuleSectionName = rtrim($moduleSectionName);
+        echo $trimModuleSectionName;
+
+        if($moduleName['module_section_name'] == $trimModuleSectionName){
+            // update ur data
+            updateModuleSection($conn, $moduleSectionId, $trimModuleSectionName, $moduleSectionDesc);
+            $_SESSION['msg'] = "modulesectionupdated";
+            header ("location: ../Main_Project/teacher/teacher.subject.php?1");
+            exit();
+        } else if(moduleNameExist($conn, $trimModuleSectionName, $gradingId) !== false){
+            // check if the task exist
+            $_SESSION['msg'] = "modulenametaken";
+            header ("location: ../Main_Project/teacher/teacher.subject.php?2");
+            exit();
+        }
+
+        // update function here
+        updateModuleSection($conn, $moduleSectionId, $trimModuleSectionName, $moduleSectionDesc);
+        
+        $_SESSION['msg'] = "modulesectionupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.subject.php?3");
+        exit();
+
+    }
 # --- Updates ---end #
+
+# --- Delete ---
+# --- Delete --- end #

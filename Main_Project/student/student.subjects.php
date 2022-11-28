@@ -13,6 +13,11 @@ $_SESSION['score'] = 0;
     //Getting the list of task in specific subject of student on subject_list_tbl
     $subjectId = $_SESSION['subjectId'];
     $studentId = $_SESSION['student_id'];
+
+
+    // get the subject name
+    //$subjectName = getSubjectName($conn, $subjectId);
+
     //unsetting question counter
     if(isset($_GET['msg'])){
         $msg = $_GET['msg'];
@@ -27,6 +32,21 @@ $_SESSION['score'] = 0;
     $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
     $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
 
+    # display the module section in first grading
+    $selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
+    $resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die ($mysqli->error);
+
+
+    $selectModuleSectionSecondGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
+    $resultModuleSectionSecondGrading =  $conn->query($selectModuleSectionSecondGrading) or die ($mysqli->error);
+
+    $selectModuleSectionThirdGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
+    $resultModuleSectionThirdGrading =  $conn->query($selectModuleSectionThirdGrading) or die ($mysqli->error);
+
+    $selectModuleSectionFourthGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
+    $resultModuleSectionFourthGrading =  $conn->query($selectModuleSectionFourthGrading) or die ($mysqli->error);
+
+
     // Leng query back
     $selectStudentTasks = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
     $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
@@ -35,21 +55,21 @@ $_SESSION['score'] = 0;
     // Display task per subjects
     # SELECT * FROM ((task_list_tbl INNER JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id) INNER JOIN task_tbl ON task_list_tbl.fk_task_type = task_tbl.task_id) WHERE submission_tbl.fk_student_id = $studentId
     # First Grading SELECT task_list_tbl.task_name, submission_tbl.score FROM ((task_list_tbl INNER JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id)) WHERE submission_tbl.fk_student_id = 6;
-    $selectStudentTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 1 AND task_list_tbl.fk_subject_list_id = $subjectId";
-    $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error);
+    // $selectStudentTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 1 AND task_list_tbl.fk_subject_list_id = $subjectId";
+    // $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error);
     
 
     # Second Grading 
-    $selectStudentTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 2 AND task_list_tbl.fk_subject_list_id = $subjectId";
-    $resultTasksSecondGrading =  $conn->query($selectStudentTasksSecondGrading) or die ($mysqli->error);
+    // $selectStudentTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 2 AND task_list_tbl.fk_subject_list_id = $subjectId";
+    // $resultTasksSecondGrading =  $conn->query($selectStudentTasksSecondGrading) or die ($mysqli->error);
 
     # Third Grading 
-    $selectStudentTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 3 AND task_list_tbl.fk_subject_list_id = $subjectId";
-    $resultTasksThirdGrading =  $conn->query($selectStudentTasksThirdGrading) or die ($mysqli->error);
+    // $selectStudentTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 3 AND task_list_tbl.fk_subject_list_id = $subjectId";
+    // $resultTasksThirdGrading =  $conn->query($selectStudentTasksThirdGrading) or die ($mysqli->error);
 
     # Fourth Grading 
-    $selectStudentTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 4 AND task_list_tbl.fk_subject_list_id = $subjectId";
-    $resultTasksFourthGrading =  $conn->query($selectStudentTasksFourthGrading) or die ($mysqli->error);
+    // $selectStudentTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 4 AND task_list_tbl.fk_subject_list_id = $subjectId";
+    // $resultTasksFourthGrading =  $conn->query($selectStudentTasksFourthGrading) or die ($mysqli->error);
 ?>
 
 <!--Body content -->
@@ -80,9 +100,9 @@ $_SESSION['score'] = 0;
                                 <div>
                                     Task
                                 </div>
-                                <div>
+                            <!-- <div>
                                     Progress
-                                </div>
+                                </div> -->
                             </div>
                             <div class="tab-indicator"></div>
                         </div>
@@ -118,7 +138,7 @@ $_SESSION['score'] = 0;
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $firstGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <a class="nav-link content-collapse" type="">3 Content
+                                                        <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -126,49 +146,85 @@ $_SESSION['score'] = 0;
                                         </div>
                                         <!-- First Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            <table class="table table-hover p-0 section-table">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th></th>
-                                                        <th>Type</th>
-                                                        <th>Score</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
 
-                                                <tbody>
-                                                    <tr>
-                                                        <td class=""><a class="section-link"
-                                                                href="student.module.php">01 Module
-                                                                1</a></td>
-                                                        <td class="">-</td>
-                                                        <td class="">-</td>
-                                                        <td class="">-</td>
-                                                    </tr>
-                                                    <?php while($rowFirstGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
-                                                        <?php if($rowFirstGrading['given'] == "Yes") { ?>
-                                                        <tr>
-                                                            <td class="">
-                                                                <form action="../../includes/student.process.php"
-                                                                    method="POST">
-                                                                    <input type="hidden" name="task_id"
-                                                                        value="<?php echo $rowFirstGrading['task_list_id']; ?>">
-                                                                    <input type="hidden" name="task_type"
-                                                                        value="<?php echo $rowFirstGrading['fk_task_type']; ?>">
-                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                        name="submitTaskDetails"><?php echo $rowFirstGrading['task_name']?></button>
-                                                                </form>
-                                                            </td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                            <td class="">-</td>
-                                                        </tr>
-                                                        <?php } ?>
-                                                    <?php endwhile; ?>
+                                            <!-- create loop inside the card to display the module_sections -->
+                                            <?php while($rowModuleTask = $resultModuleSectionFirstGrading->fetch_assoc()): ?>
+                                                <?php 
+
+                                                // query for displaying the task per module section
+                                                $selectStudentTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 1 AND task_list_tbl.fk_subject_list_id = $subjectId";
+                                                $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error);    
+                                               
+                                               ?>
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <!-- for updating module_section -->
+                                                       
+                                                        <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        </div>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        
+                                                        <!-- Module section task -->
+                                                        <table class="table table-hover p-0 section-table section-table-content custom-hide">
+                                                            <thead>
+                                                                <tr class="text-center">
+                                                                    <th></th>
+                                                                    <th>Type</th>
+                                                                    <th>Due</th>
+                                                                    <th>Score</th>
+                                                                    <!-- <th>Status</th> -->
+                                                                </tr>
+                                                            </thead>
+            
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class=""><a class="section-link"
+                                                                            href="student.module.php">01 Module
+                                                                            1</a></td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                </tr>
+                                                                <?php while($rowFirstGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
+                                                                    <?php 
+                                                                        
+                                                                        $gradingFirstTask = $rowFirstGrading['fk_module_section_id']; 
+                                                                        $moduleFirstSectionId = $rowModuleTask['module_section_id'];
+
+                                                                        //echo $gradingTask.' '.$moduleSectionId;
+                                                                    ?>
+                                                                    <?php if(($rowFirstGrading['given'] == "Yes") && $gradingFirstTask == $moduleFirstSectionId){ ?>
+                                                                    <tr>
+                                                                        <td class="">
+                                                                            <form action="../../includes/student.process.php"
+                                                                                method="POST">
+                                                                                <input type="hidden" name="task_id"
+                                                                                    value="<?php echo $rowFirstGrading['task_list_id']; ?>">
+                                                                                <input type="hidden" name="task_type"
+                                                                                    value="<?php echo $rowFirstGrading['fk_task_type']; ?>">
+                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                    name="submitTaskDetails"><?php echo $rowFirstGrading['task_name']?></button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>-</td>
+                                                                        <td>-</td>
+                                                                        <td class="">-</td>
+                                                                    </tr>
+                                                                    <?php } ?>
+                                                                <?php endwhile; ?>
+            
+            
+                                                            </tbody>
+                                                        </table>
+                                                        
+                                                    </div>
+                                            </div>
+                                            <?php endwhile; ?>
 
 
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
 
@@ -181,7 +237,7 @@ $_SESSION['score'] = 0;
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $secondGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <a class="nav-link content-collapse" type="">4 Content
+                                                        <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -190,50 +246,84 @@ $_SESSION['score'] = 0;
 
                                         <!-- Second Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            <table class="table table-hover p-0 section-table">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th></th>
-                                                        <th>Type</th>
-                                                        <th>Score</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
+                                            
+                                            <!-- create loop inside the card to display the module_sections -->
+                                            <?php while($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()): ?>
+                                                <?php 
+                                                $selectStudentTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 2 AND task_list_tbl.fk_subject_list_id = $subjectId";
+                                                $resultTasksSecondGrading =  $conn->query($selectStudentTasksSecondGrading) or die ($mysqli->error);    
+                                                ?>
+                                                
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <!-- for updating module_section -->
+                                                       
+                                                        <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        </div>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        
+                                                        <!-- Module section task -->
+                                                        <table class="table table-hover p-0 section-table section-table-content custom-hide">
+                                                            <thead>
+                                                                <tr class="text-center">
+                                                                    <th></th>
+                                                                    <th>Type</th>
+                                                                    <th>Due</th>
+                                                                    <th>Score</th>
+                                                                    <!-- <th>Status</th> -->
+                                                                </tr>
+                                                            </thead>
+            
+                                                            <tbody>
+                                                                <tr>
+            
+            
+                                                                    <td class=""><a class="section-link"
+                                                                            href="student.module.php">02 Module
+                                                                            1</a></td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                </tr>
+                                                                <?php while($rowSecondGrading = $resultTasksSecondGrading->fetch_assoc()): ?>
+                                                                    <?php 
+                                                                        
+                                                                        $gradingTask = $rowSecondGrading['fk_module_section_id']; 
+                                                                        $moduleSecondSectionId = $rowModuleTask['module_section_id'];
 
-                                                <tbody>
-                                                    <tr>
+                                                                        //echo $gradingTask.' '.$moduleSectionId;
+                                                                    ?>
+                                                                    <?php if(($rowFirstGrading['given'] == "Yes") && $gradingTask == $moduleSecondSectionId){ ?>
+                                                                    <tr>
+                                                                        <td class="">
+                                                                            <form action="../../includes/student.process.php"
+                                                                                method="POST">
+                                                                                <input type="hidden" name="task_id"
+                                                                                    value="<?php echo $rowSecondGrading['task_list_id']; ?>">
+                                                                                <input type="hidden" name="task_type"
+                                                                                    value="<?php echo $rowSecondGrading['fk_task_type']; ?>">
+                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                    name="submitTaskDetails"><?php echo $rowSecondGrading['task_name']?></button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td>-</td>
+                                                                        <td>-</td>
+                                                                        <td class="">-</td>
+                                                                    </tr>
+                                                                    <?php } ?>
+            
+                                                                <?php endwhile; ?>
+                                                            </tbody>
+                                                        </table>
+                                                       
+                                                    </div>
+                                                </div>
+                                            <?php endwhile; ?>
+                                            
 
-
-                                                        <td class=""><a class="section-link"
-                                                                href="student.module.php">02 Module
-                                                                1</a></td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                    </tr>
-                                                    <?php while($rowSecondGrading = $resultTasksSecondGrading->fetch_assoc()): ?>
-                                                        <?php if($rowSecondGrading['given'] == "Yes") { ?>
-                                                        <tr>
-                                                            <td class="">
-                                                                <form action="../../includes/student.process.php"
-                                                                    method="POST">
-                                                                    <input type="hidden" name="task_id"
-                                                                        value="<?php echo $rowSecondGrading['task_list_id']; ?>">
-                                                                    <input type="hidden" name="task_type"
-                                                                        value="<?php echo $rowSecondGrading['fk_task_type']; ?>">
-                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                        name="submitTaskDetails"><?php echo $rowSecondGrading['task_name']?></button>
-                                                                </form>
-                                                            </td>
-                                                            <td>-</td>
-                                                            <td>-</td>
-                                                            <td class="">-</td>
-                                                        </tr>
-                                                        <?php } ?>
-
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
 
@@ -246,7 +336,7 @@ $_SESSION['score'] = 0;
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $thirdGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <a class="nav-link content-collapse" type="">7 Content
+                                                        <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -255,50 +345,86 @@ $_SESSION['score'] = 0;
 
                                         <!-- Third Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            <table class="table table-hover p-0 section-table">
-                                                <thead>
-                                                    <tr class="text-center">
-                                                        <th></th>
-                                                        <th>Type</th>
-                                                        <th>Score</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
+                                            
+                                            <!-- create loop inside the card to display the module_sections -->
+                                            <?php while($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()): ?>
+                                                
+                                                <?php 
+                                                // query for displaying the task per module section
+                                                $selectStudentTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 3 AND task_list_tbl.fk_subject_list_id = $subjectId";
+                                                $resultTasksThirdGrading =  $conn->query($selectStudentTasksThirdGrading) or die ($mysqli->error);    
+                                                ?>
+                                                
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <!-- for updating module_section -->
+                                                       
+                                                        <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        </div>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        
+                                                        <!-- Module section task -->
+                                                        <table class="table table-hover p-0 section-table section-table-content custom-hide">
+                                                            <thead>
+                                                                <tr class="text-center">
+                                                                    <th></th>
+                                                                    <th>Type</th>
+                                                                    <th>Due</th>
+                                                                    <th>Score</th>
+                                                                    <!-- <th>Status</th> -->
+                                                                </tr>
+                                                            </thead>
+            
+                                                            <tbody>
+            
+                                                                <tr>
+                                                                    <td class=""><a class="section-link"
+                                                                            href="student.module.php">03 Module
+                                                                            1</a></td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                </tr>
+                                                                <?php while($rowThirdGrading = $resultTasksThirdGrading->fetch_assoc()): ?>
+                                                                    <?php 
+                                                                        
+                                                                        $gradingThirdTask = $rowThirdGrading['fk_module_section_id']; 
+                                                                        $moduleThirdSectionId = $rowModuleTask['module_section_id'];
 
-                                                <tbody>
+                                                                        //echo $gradingTask.' '.$moduleSectionId;
+                                                                    ?>
+                                                                    <?php if(($rowThirdGrading['given'] == "Yes") && $gradingThirdTask == $moduleThirdSectionId){ ?>
+                                                                    <tr>
+                                                                        <td class="">
+                                                                            <form action="../../includes/student.process.php"
+                                                                                method="POST">
+                                                                                <input type="hidden" name="task_id"
+                                                                                    value="<?php echo $rowThirdGrading['task_list_id']; ?>">
+                                                                                <input type="hidden" name="task_type"
+                                                                                    value="<?php echo $rowThirdGrading['fk_task_type']; ?>">
+                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                    name="submitTaskDetails"><?php echo $rowThirdGrading['task_name']?></button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                    </tr>
+                                                                    <?php } ?>
+            
+                                                                <?php endwhile; ?>
+            
+                                                            </tbody>
+                                                        </table>
+                                                        
+                                                    </div>
+                                                </div>
+                                            <?php endwhile; ?>
 
-                                                    <tr>
-                                                        <td class=""><a class="section-link"
-                                                                href="student.module.php">03 Module
-                                                                1</a></td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                    </tr>
-                                                    <?php while($rowThirdGrading = $resultTasksThirdGrading->fetch_assoc()): ?>
-                                                        <?php if($rowThirdGrading['given'] == "Yes") { ?>
-                                                        <tr>
-                                                            <td class="">
-                                                                <form action="../../includes/student.process.php"
-                                                                    method="POST">
-                                                                    <input type="hidden" name="task_id"
-                                                                        value="<?php echo $rowThirdGrading['task_list_id']; ?>">
-                                                                    <input type="hidden" name="task_type"
-                                                                        value="<?php echo $rowThirdGrading['fk_task_type']; ?>">
-                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                        name="submitTaskDetails"><?php echo $rowThirdGrading['task_name']?></button>
-                                                                </form>
-                                                            </td>
-                                                            <td class="">-</td>
-                                                            <td class="">-</td>
-                                                            <td class="">-</td>
-                                                        </tr>
-                                                        <?php } ?>
-
-                                                    <?php endwhile; ?>
-
-                                                </tbody>
-                                            </table>
+                                        
                                         </div>
                                     </div>
 
@@ -311,7 +437,7 @@ $_SESSION['score'] = 0;
                                                 <ul class="nav justify-content-between align-items-center">
                                                     <li class="nav-item"><?php echo $fourthGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
-                                                        <a class="nav-link content-collapse" type="">7 Content
+                                                        <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
@@ -320,47 +446,80 @@ $_SESSION['score'] = 0;
 
                                         <!-- Fourth Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            <table class="table table-hover p-0 section-table">
-                                                <thead class="text-center">
-                                                    <tr class="text-center">
-                                                        <th></th>
-                                                        <th>Type</th>
-                                                        <th>Score</th>
-                                                        <th>Status</th>
-                                                    </tr>
-                                                </thead>
+                                            
+                                            <!-- create loop inside the card to display the module_sections -->
+                                            <?php while($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()): ?>
+                                                <?php 
+                                                $selectStudentTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_grading_id = 4 AND task_list_tbl.fk_subject_list_id = $subjectId";
+                                                $resultTasksFourthGrading =  $conn->query($selectStudentTasksFourthGrading) or die ($mysqli->error);    
+                                                ?>
+                                                <div class="card mb-2">
+                                                    <div class="card-body">
+                                                    <div class="d-flex justify-content-between">
+                                                        <!-- for updating module_section -->
+                                                       
+                                                        <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
+                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        </div>
+                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        
+                                                        <!-- Module section task -->
+                                                        <table class="table table-hover p-0 section-table section-table-content custom-hide">
+                                                            <thead class="text-center">
+                                                                <tr class="text-center">
+                                                                    <th></th>
+                                                                    <th>Type</th>
+                                                                    <th>Due</th>
+                                                                    <th>Score</th>
+                                                                    <!-- <th>Status</th> -->
+                                                                </tr>
+                                                            </thead>
+            
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td class=""><a class="section-link"
+                                                                            href="student.module.php">04 Module
+                                                                            1</a></td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                    <td>-</td>
+                                                                </tr>
+                                                                <?php while($rowFourthGrading = $resultTasksFourthGrading->fetch_assoc()): ?>
+                                                                    <?php 
+                                                                        
+                                                                        $gradingFourthTask = $rowFourthGrading['fk_module_section_id']; 
+                                                                        $moduleFourthSectionId = $rowModuleTask['module_section_id'];
 
-                                                <tbody>
-                                                    <tr>
-                                                        <td class=""><a class="section-link"
-                                                                href="student.module.php">04 Module
-                                                                1</a></td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                        <td>-</td>
-                                                    </tr>
-                                                    <?php while($rowFourthGrading = $resultTasksFourthGrading->fetch_assoc()): ?>
-                                                        <?php if($rowThirdGrading['given'] == "Yes") { ?>
-                                                        <tr>
-                                                            <td class="">
-                                                                <form action="../../includes/student.process.php"
-                                                                    method="POST">
-                                                                    <input type="hidden" name="task_id"
-                                                                        value="<?php echo $rowThirdGrading['task_list_id']; ?>">
-                                                                    <input type="hidden" name="task_type"
-                                                                        value="<?php echo $rowThirdGrading['fk_task_type']; ?>">
-                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                        name="submitTaskDetails"><?php echo $rowThirdGrading['task_name']?></button>
-                                                                </form>
-                                                            </td>
-                                                            <td class="">-</td>
-                                                            <td class="">-</td>
-                                                            <td class="">-</td>
-                                                        </tr>
-                                                        <?php } ?>
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                            </table>
+                                                                        //echo $gradingTask.' '.$moduleSectionId;
+                                                                    ?>
+                                                                    <?php if(($rowFourthGrading['given'] == "Yes") && $gradingFourthTask == $moduleFourthSectionId){ ?>
+                                                                    <tr>
+                                                                        <td class="">
+                                                                            <form action="../../includes/student.process.php"
+                                                                                method="POST">
+                                                                                <input type="hidden" name="task_id"
+                                                                                    value="<?php echo $rowFourthGrading['task_list_id']; ?>">
+                                                                                <input type="hidden" name="task_type"
+                                                                                    value="<?php echo $rowFourthGrading['fk_task_type']; ?>">
+                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                    name="submitTaskDetails"><?php echo $rowFourthGrading['task_name']?></button>
+                                                                            </form>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                    </tr>
+                                                                    <?php } ?>
+                                                                <?php endwhile; ?>
+                                                            </tbody>
+                                                        </table>
+                                                        
+                                                    </div>
+                                                </div>
+                                            <?php endwhile; ?>
+                                            
+                                        
                                         </div>
                                     </div>
 
@@ -397,9 +556,9 @@ $_SESSION['score'] = 0;
                                         <thead>
                                             <tr>
                                                 <th scope="col">Task List</th>
-                                                <th scope="col" class="text-center">Score</th>
                                                 <th scope="col" class="text-center">Duration</th>
-                                                <th scope="col" class="text-center">Status</th>
+                                                <th scope="col" class="text-center">Score</th>
+                                                <!-- <th scope="col" class="text-center">Status</th> -->
 
                                             </tr>
                                         </thead>
@@ -419,22 +578,20 @@ $_SESSION['score'] = 0;
                                                             name="submitTaskDetails"><?php echo $row['task_name']?></button>
                                                     </form>
                                                 </td>
-                                                <!-- edit -->
                                                 <td>-</td>
                                                 <td>-</td>
-
-                                                <!-- edit -->
-                                                <td>-</td>
+                                                <!-- <td>-</td> -->
                                             </tr>
+                                           
 
                                             <?php endwhile; ?>
-
+                                            
                                         </tbody>
                                     </table>
                                 </div>
 
                                 <!-- Subject Progress -->
-                                <div class="tab-content">
+                                <!-- <div class="tab-content">
                                     <div class="custom-border p-5">
 
                                         <div class="container-fluid">
@@ -497,7 +654,7 @@ $_SESSION['score'] = 0;
                                         </div>
 
                                     </div>
-                                </div>
+                                </div> -->
 
 
                             </div>
