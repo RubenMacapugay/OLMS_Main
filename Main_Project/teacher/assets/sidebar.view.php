@@ -14,6 +14,14 @@
                      <i class="fa-solid fa-book side-logo"></i>
                      <span class="link_name">Subjects</span></a>
              </li>
+             <li class="nav-item"><a href="#" class="nav-link">
+                     <i class="fa-solid fa-file-upload side-logo"></i>
+                     <span class="link_name">Upload File</span></a>
+             </li>
+             <li class="nav-item"><a href="#" class="nav-link">
+                     <i class="fa-solid fa-table-list side-logo"></i>
+                     <span class="link_name">Grade Book</span></a>
+             </li>
                 <!-- change me -->
          </ul>
      </div>

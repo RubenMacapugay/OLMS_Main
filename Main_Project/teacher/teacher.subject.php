@@ -1,4 +1,4 @@
-<?php 
+<?php
 include('assets/header.view.php');
 
 // if(isset($_SESSION['subjectId'])){
@@ -8,64 +8,64 @@ include('assets/header.view.php');
 // }
 ?>
 
-<?php 
-    $subjectId = $_SESSION['subjectId'];
-    $teacherId = $_SESSION['teacher_id'];
-
-    
-    // get subject
-    $currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
-    //echo $currentSubjectData['subject_list_name'];
-
-    // getTask count per grading;
-    $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
-    $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
-    $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
-    $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
-
-    # display the module section in first grading
-    $selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die ($mysqli->error);
+<?php
+$subjectId = $_SESSION['subjectId'];
+$teacherId = $_SESSION['teacher_id'];
 
 
-    $selectModuleSectionSecondGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionSecondGrading =  $conn->query($selectModuleSectionSecondGrading) or die ($mysqli->error);
+// get subject
+$currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
+//echo $currentSubjectData['subject_list_name'];
 
-    $selectModuleSectionThirdGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionThirdGrading =  $conn->query($selectModuleSectionThirdGrading) or die ($mysqli->error);
+// getTask count per grading;
+$firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
+$secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
+$thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
+$fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
 
-    $selectModuleSectionFourthGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionFourthGrading =  $conn->query($selectModuleSectionFourthGrading) or die ($mysqli->error);
+# display the module section in first grading
+$selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
+$resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die($mysqli->error);
+
+
+$selectModuleSectionSecondGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
+$resultModuleSectionSecondGrading =  $conn->query($selectModuleSectionSecondGrading) or die($mysqli->error);
+
+$selectModuleSectionThirdGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
+$resultModuleSectionThirdGrading =  $conn->query($selectModuleSectionThirdGrading) or die($mysqli->error);
+
+$selectModuleSectionFourthGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
+$resultModuleSectionFourthGrading =  $conn->query($selectModuleSectionFourthGrading) or die($mysqli->error);
 
 
 
-    # First Grading 
-    $selectTeacherTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
-    $resultTasksFirstGrading =  $conn->query($selectTeacherTasksFirstGrading) or die ($mysqli->error);
+# First Grading 
+$selectTeacherTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
+$resultTasksFirstGrading =  $conn->query($selectTeacherTasksFirstGrading) or die($mysqli->error);
 
-    $selectTeacherTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
-    $resultTasksSecondGrading =  $conn->query($selectTeacherTasksSecondGrading) or die ($mysqli->error);
+$selectTeacherTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
+$resultTasksSecondGrading =  $conn->query($selectTeacherTasksSecondGrading) or die($mysqli->error);
 
-    $selectTeacherTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
-    $resultTasksThirdGrading =  $conn->query($selectTeacherTasksThirdGrading) or die ($mysqli->error);
+$selectTeacherTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
+$resultTasksThirdGrading =  $conn->query($selectTeacherTasksThirdGrading) or die($mysqli->error);
 
-    $selectTeacherTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
-    $resultTasksFourthGrading =  $conn->query($selectTeacherTasksFourthGrading) or die ($mysqli->error);
-    
-    // Display all subject's students by section
-    $selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id WHERE subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
-    $resultStudentsSubjectSection =  $conn->query($selectStudentsSubjectSection) or die ($mysqli->error);
+$selectTeacherTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
+$resultTasksFourthGrading =  $conn->query($selectTeacherTasksFourthGrading) or die($mysqli->error);
 
-    //display the subject name
-    $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
+// Display all subject's students by section
+$selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id WHERE subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
+$resultStudentsSubjectSection =  $conn->query($selectStudentsSubjectSection) or die($mysqli->error);
 
-    //display Task List
-    $selectTaskListStudentsSection = "SELECT task_list_tbl.task_name, subject_list_tbl.fk_teacher_id FROM ((subject_list_tbl INNER JOIN task_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id)) WHERE subject_list_id = $subjectId";
-    $resultTaskList =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
-     
-    $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
-     
-?>  
+//display the subject name
+$selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
+
+//display Task List
+$selectTaskListStudentsSection = "SELECT task_list_tbl.task_name, subject_list_tbl.fk_teacher_id FROM ((subject_list_tbl INNER JOIN task_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id)) WHERE subject_list_id = $subjectId";
+$resultTaskList =  $conn->query($selectTaskListStudentsSection) or die($mysqli->error);
+
+$resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli->error);
+
+?>
 
 <!-- Modal -->
 
@@ -83,6 +83,15 @@ include('assets/header.view.php');
                     <div class="form-group">
                         <label>File Name</label>
                         <input type="text" name="file_name" class="form-control" placeholder="Subject Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Section</label>
+                        <select class="form-select" aria-label="Default select example">
+                            <option selected>Open this select menu</option>
+                            <option value="1">One</option>
+                            <option value="2">Two</option>
+                            <option value="3">Three</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Upload Files</label>
@@ -119,7 +128,7 @@ include('assets/header.view.php');
                         <label>Section description</label>
                         <input type="text" name="moduleSectinDesc" class="form-control" placeholder="Description" required>
                     </div>
-                    
+
                 </div>
 
                 <input type="hidden" grading>
@@ -154,7 +163,7 @@ include('assets/header.view.php');
                         <label>Section description</label>
                         <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
                     </div>
-                    
+
                 </div>
 
                 <div class="modal-footer">
@@ -168,10 +177,10 @@ include('assets/header.view.php');
 </div>
 <!-- End of Modal -->
 
-<!--Body content --> 
+<!--Body content -->
 <div class="container-fluid " id="content">
 
-    <div class="row overflow-hidden"> 
+    <div class="row overflow-hidden">
 
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
@@ -184,63 +193,63 @@ include('assets/header.view.php');
 
                 <div class="container-fluid">
                     <!-- <button class="dangerBtn" onclick="showTab()">Danger</button> -->
-                    
+
                     <!-- validation message -->
-                    <?php 
-                        if(isset($_SESSION["taskGiven"])){
-                            if($_SESSION["taskGiven"] == "taskGiven"){
-                                if($_SESSION['taskGivenStatus'] == "Yes"){
-                                    echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?php
+                    if (isset($_SESSION["taskGiven"])) {
+                        if ($_SESSION["taskGiven"] == "taskGiven") {
+                            if ($_SESSION['taskGivenStatus'] == "Yes") {
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                         Task is now visible!
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>';
-                                } else if($_SESSION['taskGivenStatus'] == "No"){
-                                    echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
+                            } else if ($_SESSION['taskGivenStatus'] == "No") {
+                                echo '<div class="alert alert-warning alert-dismissible fade show" role="alert">
                                         Task is now not visible!
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                         </div>';
-                                }
+                            }
 
-                                if($_GET['tab'] == "moduleTab"){
-                                    echo "<script> window.onload = function() {
+                            if ($_GET['tab'] == "moduleTab") {
+                                echo "<script> window.onload = function() {
                                         showGradingTab();
                                     }; </script>";
-                                } else if($_GET['tab'] == "taskTab"){
-                                    echo "<script> window.onload = function() {
+                            } else if ($_GET['tab'] == "taskTab") {
+                                echo "<script> window.onload = function() {
                                         showTaskTab();
                                     }; </script>";
-                                }
-                                
-        
-                                unset($_SESSION["taskGiven"]);
                             }
-                        }
 
-                        if(isset($_SESSION['moduleSectionCreated'])){
-                            if($_SESSION['moduleSectionCreated'] == 'yes'){
-                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+
+                            unset($_SESSION["taskGiven"]);
+                        }
+                    }
+
+                    if (isset($_SESSION['moduleSectionCreated'])) {
+                        if ($_SESSION['moduleSectionCreated'] == 'yes') {
+                            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                             Module Section has been created!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
-                                unset($_SESSION['moduleSectionCreated']);
-                            }
+                            unset($_SESSION['moduleSectionCreated']);
                         }
+                    }
 
-                        if(isset($_SESSION['msg'])){
-                            if($_SESSION['msg'] == "modulenametaken"){
-                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    if (isset($_SESSION['msg'])) {
+                        if ($_SESSION['msg'] == "modulenametaken") {
+                            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             Module Section has been taken!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
-                            }
-                            if($_SESSION['msg'] == "modulesectionupdated"){
-                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                        }
+                        if ($_SESSION['msg'] == "modulesectionupdated") {
+                            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                             Module Section has been updated!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
-                            }
-                            unset($_SESSION['msg']);
                         }
+                        unset($_SESSION['msg']);
+                    }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -256,6 +265,9 @@ include('assets/header.view.php');
                                 <div>
                                     Students
                                 </div>
+                                <div>
+                                    Grade Book
+                                </div>
                             </div>
                             <div class="tab-indicator"></div>
                         </div>
@@ -270,7 +282,7 @@ include('assets/header.view.php');
                                 <div class="active tab-content p-2">
                                     <div class="card">
                                         <div class="card-header">
-                                            <h2><?php echo $currentSubjectData['subject_list_name']?></h2>
+                                            <h2><?php echo $currentSubjectData['subject_list_name'] ?></h2>
                                             <p>Section</p>
                                             <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -295,8 +307,7 @@ include('assets/header.view.php');
                                                     <li class="nav-item"><?php echo $firstGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
-                                                        <a class="nav-link content-collapse" type=""><?php echo $firstGradingTask;?> Content <i
-                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        <a class="nav-link content-collapse" type=""><?php echo $firstGradingTask; ?> Content <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -306,90 +317,83 @@ include('assets/header.view.php');
                                         <div class="card-body section-table-content custom-hide">
 
                                             <!-- Module Section resultModuleSectionFirstGrading -->
-                                            <?php while($rowModuleTask = $resultModuleSectionFirstGrading->fetch_assoc()): ?>
+                                            <?php while ($rowModuleTask = $resultModuleSectionFirstGrading->fetch_assoc()) : ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
 
                                                             <!-- for updating module_section -->
                                                             <div class="d-flex">
-                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
-                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id'];?></span>
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id']; ?></span>
+                                                                <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
                                                                 <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
-                                                                                        type="button"></i>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
-                                                                    class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
-                                                        <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
+                                                        <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
 
                                                         <!-- Module section task -->
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
-                                                                    <thead>
-                                                                        <tr class="text-center">
-                                                                            <th></th>
-                                                                            <th>Actions</th>
-                                                                            <th>Start</th>
-                                                                            <th>Due</th>
-                                                                            <th>Permit</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                    <!-- Display the list of modules here per Module Section -->
-                                                                    <tr class="module-module">
-                                                                        <td class="">
-                                                                            <a class="section-link" href="student.module.php">01 Module 1</a>
-                                                                        </td>
-                                                                        <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                        </td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">
-                                                                            <input class="btn btn-success fs-6 py-0" type="submit" value="give">
-                                                                        </td>
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th></th>
+                                                                        <th>Actions</th>
+                                                                        <th>Start</th>
+                                                                        <th>Due</th>
+                                                                        <th>Permit</th>
                                                                     </tr>
+                                                                </thead>
 
-                                                                    <!-- Displaying Task Per Module_section_tbl -->
+                                                                <!-- Display the list of modules here per Module Section -->
+                                                                <tr class="module-module">
+                                                                    <td class="">
+                                                                        <a class="section-link" href="student.module.php">01 Module 1</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                    </td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">
+                                                                        <input class="btn btn-success fs-6 py-0" type="submit" value="give">
+                                                                    </td>
+                                                                </tr>
 
-                                                                    <?php while($rowGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
-                                                                        <tr class="module-task ">
-                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
-                                                                            <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                            </td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">
-                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
-                                                                                    
-                                                                                    <?php 
-                                                                                        $isGiven = $rowGrading['given'];
-                                                                                        if($isGiven == "Yes"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
-                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
-                                                                                            
-                                                                                        } else if($isGiven == "" || $isGiven == "No"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
-                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
-                                                                                        }
-                                                                                    ?>
-                                                                                </form>
-                                                                            </td>
-                                                                            
-                                                                        </tr>
-                                                                    <?php endwhile; ?>
+                                                                <!-- Displaying Task Per Module_section_tbl -->
+
+                                                                <?php while ($rowGrading = $resultTasksFirstGrading->fetch_assoc()) : ?>
+                                                                    <tr class="module-task ">
+                                                                        <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
+                                                                        <td>
+                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">
+                                                                            <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id']; ?>">
+
+                                                                                <?php
+                                                                                $isGiven = $rowGrading['given'];
+                                                                                if ($isGiven == "Yes") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                } else if ($isGiven == "" || $isGiven == "No") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                }
+                                                                                ?>
+                                                                            </form>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                <?php endwhile; ?>
 
                                                             </tbody>
                                                         </table>
@@ -397,7 +401,7 @@ include('assets/header.view.php');
                                                 </div>
                                             <?php endwhile; ?>
 
-                                            
+
 
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFirstGrading">Add Section</button>
 
@@ -409,15 +413,14 @@ include('assets/header.view.php');
                                         <div class="card-header">
                                             <h3 class="section-title ">Second Grading</h3>
                                             <br>
-                                            
+
                                             <!-- Adding module -->
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
-                                                <li class="nav-item"><?php echo $secondGradingTask; ?> task</li>
+                                                    <li class="nav-item"><?php echo $secondGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
-                                                        <a class="nav-link content-collapse" type=""><?php echo $secondGradingTask; ?> Content <i
-                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        <a class="nav-link content-collapse" type=""><?php echo $secondGradingTask; ?> Content <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -425,87 +428,80 @@ include('assets/header.view.php');
 
                                         <!-- Second Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            
+
                                             <!-- Module Section resultModuleSectionSecondGrading -->
-                                            <?php while($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()): ?>
+                                            <?php while ($rowModuleTask = $resultModuleSectionSecondGrading->fetch_assoc()) : ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="d-flex">
-                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
                                                                 <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
-                                                                                        type="button"></i>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
-                                                                    class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
-                                                                    <thead>
-                                                                        <tr class="text-center">
-                                                                            <th></th>
-                                                                            <th>Actions</th>
-                                                                            <th>Start</th>
-                                                                            <th>Due</th>
-                                                                            <th>Permit</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                    <!-- Display the list of modules here per Module Section -->
-                                                                    <tr class="module-module">
-                                                                        <td class="">
-                                                                            <a class="section-link" href="student.module.php">01 Module 1</a>
-                                                                        </td>
-                                                                        <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                        </td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">
-                                                                            <input class="btn btn-success fs-6 py-0" type="submit" value="give">
-                                                                        </td>
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th></th>
+                                                                        <th>Actions</th>
+                                                                        <th>Start</th>
+                                                                        <th>Due</th>
+                                                                        <th>Permit</th>
                                                                     </tr>
+                                                                </thead>
 
-                                                                    <!-- Displaying Task Per Module_section_tbl -->
-                                                                    <?php while($rowGrading = $resultTasksSecondGrading->fetch_assoc()): ?>
-                                                                        <tr class="module-task">
-                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
-                                                                            <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                            </td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">
-                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
-                                                                                    
-                                                                                    <?php 
-                                                                                        $isGiven = $rowGrading['given'];
-                                                                                        if($isGiven == "Yes"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
-                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
-                                                                                            
-                                                                                        } else if($isGiven == "" ||$isGiven == "No"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
-                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
-                                                                                        }
-                                                                                    ?>
-                                                                                </form>
-                                                                            </td>
-                                                                            
-                                                                        </tr>
-                                                                    <?php endwhile; ?>
+                                                                <!-- Display the list of modules here per Module Section -->
+                                                                <tr class="module-module">
+                                                                    <td class="">
+                                                                        <a class="section-link" href="student.module.php">01 Module 1</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                    </td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">
+                                                                        <input class="btn btn-success fs-6 py-0" type="submit" value="give">
+                                                                    </td>
+                                                                </tr>
+
+                                                                <!-- Displaying Task Per Module_section_tbl -->
+                                                                <?php while ($rowGrading = $resultTasksSecondGrading->fetch_assoc()) : ?>
+                                                                    <tr class="module-task">
+                                                                        <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
+                                                                        <td>
+                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">
+                                                                            <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id']; ?>">
+
+                                                                                <?php
+                                                                                $isGiven = $rowGrading['given'];
+                                                                                if ($isGiven == "Yes") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                } else if ($isGiven == "" || $isGiven == "No") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                }
+                                                                                ?>
+                                                                            </form>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                <?php endwhile; ?>
 
                                                             </tbody>
                                                         </table>
@@ -513,7 +509,7 @@ include('assets/header.view.php');
                                                 </div>
                                             <?php endwhile; ?>
 
-                                           
+
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnSecondGrading">Add Section</button>
                                         </div>
                                     </div>
@@ -526,11 +522,10 @@ include('assets/header.view.php');
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
-                                                <li class="nav-item"><?php echo $thirdGradingTask; ?> task</li>
+                                                    <li class="nav-item"><?php echo $thirdGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
-                                                        <a class="nav-link content-collapse" type=""><?php echo $thirdGradingTask; ?> Content <i
-                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        <a class="nav-link content-collapse" type=""><?php echo $thirdGradingTask; ?> Content <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -538,87 +533,80 @@ include('assets/header.view.php');
 
                                         <!-- Third Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                            
+
                                             <!-- Module Section resultModuleSectionThirdGrading -->
-                                            <?php while($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()): ?>
+                                            <?php while ($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()) : ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="d-flex">
-                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
                                                                 <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
-                                                                                        type="button"></i>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
-                                                                    class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
-                                                                    <thead>
-                                                                        <tr class="text-center">
-                                                                            <th></th>
-                                                                            <th>Actions</th>
-                                                                            <th>Start</th>
-                                                                            <th>Due</th>
-                                                                            <th>Permit</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                    <!-- Display the list of modules here per Module Section -->
-                                                                    <tr class="module-module">
-                                                                        <td class="">
-                                                                            <a class="section-link" href="student.module.php">01 Module 1</a>
-                                                                        </td>
-                                                                        <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                        </td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">
-                                                                            <input class="btn btn-success fs-6 py-0" type="submit" value="give">
-                                                                        </td>
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th></th>
+                                                                        <th>Actions</th>
+                                                                        <th>Start</th>
+                                                                        <th>Due</th>
+                                                                        <th>Permit</th>
                                                                     </tr>
+                                                                </thead>
 
-                                                                    <!-- Displaying Task Per Module_section_tbl -->
-                                                                    <?php while($rowGrading = $resultTasksThirdGrading->fetch_assoc()): ?>
-                                                                        <tr class="module-task">
-                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
-                                                                            <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                            </td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">
-                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
-                                                                                    
-                                                                                    <?php 
-                                                                                        $isGiven = $rowGrading['given'];
-                                                                                        if($isGiven == "Yes"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
-                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
-                                                                                            
-                                                                                        } else if($isGiven == "" ||$isGiven == "No"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
-                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
-                                                                                        }
-                                                                                    ?>
-                                                                                </form>
-                                                                            </td>
-                                                                            
-                                                                        </tr>
-                                                                    <?php endwhile; ?>
+                                                                <!-- Display the list of modules here per Module Section -->
+                                                                <tr class="module-module">
+                                                                    <td class="">
+                                                                        <a class="section-link" href="student.module.php">01 Module 1</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                    </td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">
+                                                                        <input class="btn btn-success fs-6 py-0" type="submit" value="give">
+                                                                    </td>
+                                                                </tr>
+
+                                                                <!-- Displaying Task Per Module_section_tbl -->
+                                                                <?php while ($rowGrading = $resultTasksThirdGrading->fetch_assoc()) : ?>
+                                                                    <tr class="module-task">
+                                                                        <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
+                                                                        <td>
+                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">
+                                                                            <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id']; ?>">
+
+                                                                                <?php
+                                                                                $isGiven = $rowGrading['given'];
+                                                                                if ($isGiven == "Yes") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                } else if ($isGiven == "" || $isGiven == "No") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                }
+                                                                                ?>
+                                                                            </form>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                <?php endwhile; ?>
 
                                                             </tbody>
                                                         </table>
@@ -626,10 +614,10 @@ include('assets/header.view.php');
                                                 </div>
                                             <?php endwhile; ?>
 
-                                            
+
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnThirdGrading">Add Section</button>
                                         </div>
-                                        
+
                                     </div>
 
                                     <!-- Fourth Grading -->
@@ -639,11 +627,10 @@ include('assets/header.view.php');
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
-                                                <li class="nav-item"><?php echo $fourthGradingTask; ?> task</li>
+                                                    <li class="nav-item"><?php echo $fourthGradingTask; ?> task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
-                                                        <a class="nav-link content-collapse" type=""><?php echo $fourthGradingTask; ?> Content <i
-                                                                class="fa-solid fa-chevron-down"></i></a>
+                                                        <a class="nav-link content-collapse" type=""><?php echo $fourthGradingTask; ?> Content <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -651,87 +638,80 @@ include('assets/header.view.php');
 
                                         <!-- Fourth Grading Content -->
                                         <div class="card-body section-table-content custom-hide">
-                                                                
+
                                             <!-- Module Section resultModuleSectionFourthGrading -->
-                                            <?php while($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()): ?>
+                                            <?php while ($rowModuleTask = $resultModuleSectionFourthGrading->fetch_assoc()) : ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                         <div class="d-flex justify-content-between">
                                                             <div class="d-flex">
-                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id'];?></span>
+                                                                <span class="d-none" id="moduleGradingId"><?php echo $rowModuleTask['fk_grading_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskId"><?php echo $rowModuleTask['module_section_id']; ?></span>
                                                                 <span class="d-none" id="moduleTaskDesc"><?php echo $rowModuleTask['module_section_desc']; ?></span>
                                                                 <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2"
-                                                                                        type="button"></i>
+                                                                <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i
-                                                                    class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
                                                             <tbody>
                                                                 <!-- Display the Module Section tasks and modules -->
-                                                                    <thead>
-                                                                        <tr class="text-center">
-                                                                            <th></th>
-                                                                            <th>Actions</th>
-                                                                            <th>Start</th>
-                                                                            <th>Due</th>
-                                                                            <th>Permit</th>
-                                                                        </tr>
-                                                                    </thead>
-
-                                                                    <!-- Display the list of modules here per Module Section -->
-                                                                    <tr class="module-module">
-                                                                        <td class="">
-                                                                            <a class="section-link" href="student.module.php">01 Module 1</a>
-                                                                        </td>
-                                                                        <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                        </td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">-</td>
-                                                                        <td class="">
-                                                                            <input class="btn btn-success fs-6 py-0" type="submit" value="give">
-                                                                        </td>
+                                                                <thead>
+                                                                    <tr class="text-center">
+                                                                        <th></th>
+                                                                        <th>Actions</th>
+                                                                        <th>Start</th>
+                                                                        <th>Due</th>
+                                                                        <th>Permit</th>
                                                                     </tr>
+                                                                </thead>
 
-                                                                    <!-- Displaying Task Per Module_section_tbl -->
-                                                                    <?php while($rowGrading = $resultTasksFourthGrading->fetch_assoc()): ?>
-                                                                        <tr class="module-task">
-                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
-                                                                            <td>
-                                                                                <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                                                    type="button"></i>
-                                                                                <i class="fa-solid fa-trash text-danger me-2"
-                                                                                    type="button"></i>
-                                                                            </td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">-</td>
-                                                                            <td class="">
-                                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id'];?>"> 
-                                                                                    
-                                                                                    <?php 
-                                                                                        $isGiven = $rowGrading['given'];
-                                                                                        if($isGiven == "Yes"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
-                                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
-                                                                                            
-                                                                                        } else if($isGiven == "" ||$isGiven == "No"){
-                                                                                            echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
-                                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
-                                                                                        }
-                                                                                    ?>
-                                                                                </form>
-                                                                            </td>
-                                                                            
-                                                                        </tr>
-                                                                    <?php endwhile; ?>
+                                                                <!-- Display the list of modules here per Module Section -->
+                                                                <tr class="module-module">
+                                                                    <td class="">
+                                                                        <a class="section-link" href="student.module.php">01 Module 1</a>
+                                                                    </td>
+                                                                    <td>
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                    </td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">-</td>
+                                                                    <td class="">
+                                                                        <input class="btn btn-success fs-6 py-0" type="submit" value="give">
+                                                                    </td>
+                                                                </tr>
+
+                                                                <!-- Displaying Task Per Module_section_tbl -->
+                                                                <?php while ($rowGrading = $resultTasksFourthGrading->fetch_assoc()) : ?>
+                                                                    <tr class="module-task">
+                                                                        <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
+                                                                        <td>
+                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                        </td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">-</td>
+                                                                        <td class="">
+                                                                            <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                                <input type="hidden" type="hidden" name="taskId" value="<?php echo $rowGrading['task_list_id']; ?>">
+
+                                                                                <?php
+                                                                                $isGiven = $rowGrading['given'];
+                                                                                if ($isGiven == "Yes") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="No">';
+                                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGive" value="ungive">';
+                                                                                } else if ($isGiven == "" || $isGiven == "No") {
+                                                                                    echo '<input type="hidden" type="hidden" name="isGiven" value="Yes">';
+                                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGive" value="give">';
+                                                                                }
+                                                                                ?>
+                                                                            </form>
+                                                                        </td>
+
+                                                                    </tr>
+                                                                <?php endwhile; ?>
 
                                                             </tbody>
                                                         </table>
@@ -739,7 +719,7 @@ include('assets/header.view.php');
                                                 </div>
                                             <?php endwhile; ?>
 
-                                           
+
 
                                             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFourthGrading">Add Section</button>
                                         </div>
@@ -754,9 +734,8 @@ include('assets/header.view.php');
                                             <div class="col-8 d-flex justify-content-start align-items-center">
                                                 <div class="dropdown">
                                                     <!-- Send subject id on url -->
-                                                    <?php $currentSubject = $_SESSION['subjectId'];?>
-                                                    <a class="btn btn-primary" type="button"
-                                                        href="teacher.createtask.php?currentSubject=<?php echo $currentSubject; ?>">
+                                                    <?php $currentSubject = $_SESSION['subjectId']; ?>
+                                                    <a class="btn btn-primary" type="button" href="teacher.createtask.php?currentSubject=<?php echo $currentSubject; ?>">
                                                         Create Task <i class="fa-solid fa-circle-plus ms-1"></i>
                                                     </a>
                                                 </div>
@@ -765,9 +744,8 @@ include('assets/header.view.php');
 
                                             <div class="col-4 d-flex">
                                                 <div class="module-actions d-flex justify-content-end align-items-center p-2">
-                                                 
-                                                    <select class="form-select w-100"
-                                                        aria-label="Default select example">
+
+                                                    <select class="form-select w-100" aria-label="Default select example">
                                                         <option selected>All</option>
                                                         <option value="1">Quizzes</option>
                                                         <option value="2">Activity</option>
@@ -791,35 +769,32 @@ include('assets/header.view.php');
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php 
-                                                //Getting results from subject_tbl
-                                                $subjectId = $_SESSION['subjectId'];
-                                                $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
-                                                $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
+                                            <?php
+                                            //Getting results from subject_tbl
+                                            $subjectId = $_SESSION['subjectId'];
+                                            $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
+                                            $resultList =  $conn->query($selectTaskList) or die($mysqli->error);
                                             ?>
-                                            <?php while($row = $resultList->fetch_assoc()): ?>
+                                            <?php while ($row = $resultList->fetch_assoc()) : ?>
                                                 <tr>
-                                                    <td><a href=""><?php echo $row['task_name']?></a></td>
+                                                    <td><a href=""><?php echo $row['task_name'] ?></a></td>
                                                     <td>
-                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                            type="button"></i>
-                                                        <i class="fa-solid fa-trash text-danger me-2"
-                                                            type="button"></i>
+                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
                                                     </td>
-                                                    <td><?php echo $row['date_created']?> - <?php echo $row['date_deadline']?></td>
+                                                    <td><?php echo $row['date_created'] ?> - <?php echo $row['date_deadline'] ?></td>
                                                     <td>
                                                         <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                            <input type="hidden" type="hidden" name="taskId" value="<?php echo $row['task_list_id'];?>"> 
-                                                            <?php 
-                                                                $isGivenTask = $row['given'];
-                                                                if($isGivenTask == "Yes"){
-                                                                    echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
-                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
-                                                                    
-                                                                } else if($isGivenTask == "" || $isGivenTask == "No"){
-                                                                    echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
-                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
-                                                                }
+                                                            <input type="hidden" type="hidden" name="taskId" value="<?php echo $row['task_list_id']; ?>">
+                                                            <?php
+                                                            $isGivenTask = $row['given'];
+                                                            if ($isGivenTask == "Yes") {
+                                                                echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
+                                                                echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
+                                                            } else if ($isGivenTask == "" || $isGivenTask == "No") {
+                                                                echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
+                                                                echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
+                                                            }
                                                             ?>
                                                         </form>
                                                     </td>
@@ -829,13 +804,89 @@ include('assets/header.view.php');
                                     </table>
                                 </div>
 
-                                <!-- Subject Students -->
+                                <!-- Students List -->
+                                <div class="tab-content " id="StudentList">
+                                    <!-- Sort -->
+                                    <div class="container-fluid d-flex justify-content-between align-items-center py-2">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <h4 class="mb-0">Section</h4>
+                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
+                                        </div>
+                                        <!-- <select class="form-select w-25" aria-label="Default select example">
+                                            <option selected>All</option>
+                                            <option value="1">Assignment</option>
+                                            <option value="2">Activity</option>
+                                            <option value="3">Project</option>
+                                            <option value="4">Quiz</option>
+                                            <option value="5">Exam</option>
+                                        </select> -->
+                                    </div>
+                                    <div class="student-table ms-1">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="">Task List</th>
+                                                    <th scope="col" class="">Progress</th>
+                                                    <th scope="col" class="">Grades</th>
+                                                    <th scope="col" class="">Enrolled</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- resultStudentsSubjectSection -->
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 1</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">87.0</td>
+                                                    <td scope="col" class="text-center">Aug 20 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 2</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">80.0</td>
+                                                    <td scope="col" class="text-center">Aug 13 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 3</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">89.0</td>
+                                                    <td scope="col" class="text-center">Aug 25 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 4</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">90.0</td>
+                                                    <td scope="col" class="text-center">Sept 01 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 5</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">84.0</td>
+                                                    <td scope="col" class="text-center">Aug 23 2022</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+                                <!-- Subject Students Grades-->
                                 <div class="tab-content " id="subjectStudentList">
                                     <!-- Sort -->
                                     <div class="container-fluid d-flex justify-content-between align-items-center py-2">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <h4 class="mb-0">BSIT 4.1B</h4>
-                                            <p class="text-muted ms-2 mb-0">Data Algorithm</p>
+                                            <h4 class="mb-0">Section</h4>
+                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
                                         </div>
                                         <select class="form-select w-25" aria-label="Default select example">
                                             <option selected>All</option>
@@ -853,26 +904,26 @@ include('assets/header.view.php');
                                                     <th scope="col" class="">Task List</th>
 
                                                     <!-- Display Task List -->
-                                                    <?php while($rowTaskList = $resultTaskList->fetch_assoc()): ?>
-                                                        <th scope="col" class="text-center"><?php echo $rowTaskList['task_name'];?></th>
+                                                    <?php while ($rowTaskList = $resultTaskList->fetch_assoc()) : ?>
+                                                        <th scope="col" class="text-center"><?php echo $rowTaskList['task_name']; ?></th>
                                                     <?php endwhile; ?>
                                                 </tr>
                                             </thead>
-                                            <tbody> 
+                                            <tbody>
                                                 <!-- resultStudentsSubjectSection -->
-                                                <?php while($rowResult = $resultStudentsSubjectSection->fetch_assoc()): ?>
-                                                
+                                                <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
+
                                                     <tr>
-                                                        <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name']?></a></td>
-                                                        
-                                                        <?php while($rowTaskList2 = $resultTaskList2->fetch_assoc()): ?>
-                                                            
+                                                        <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
+
+                                                        <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : ?>
+
                                                             <td scope="col" class="text-center"></td>
                                                         <?php endwhile; ?>
                                                     </tr>
 
                                                 <?php endwhile; ?>
-                                                
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -889,14 +940,14 @@ include('assets/header.view.php');
 
         <!-- Right Banner -->
         <div class="custom-border col-md-2 mt-4" id="rightBanner">
-            <?php include('assets/banner.view.php')?>
+            <?php include('assets/banner.view.php') ?>
         </div>
 
     </div>
 </div>
 
 <!-- Script Links Bootstrap/Jquery -->
-<?php include('assets/scriptlink.view.php')?>
+<?php include('assets/scriptlink.view.php') ?>
 
 <script>
     //Tabpane
@@ -924,20 +975,20 @@ include('assets/header.view.php');
     //Tester
     function showGradingTab() {
         tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-            tabsPane[0].classList.add("active");
-            tabBody.getElementsByClassName("active")[0].classList.remove("active");
-            tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
+        tabsPane[0].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
 
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
     }
 
     function showTaskTab() {
         tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-            tabsPane[1].classList.add("active");
-            tabBody.getElementsByClassName("active")[0].classList.remove("active");
-            tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
+        tabsPane[1].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
 
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
     }
 
 
@@ -978,32 +1029,31 @@ include('assets/header.view.php');
     });
 
     // Change update and create button for modalCreateUpdateGradingSection
-    $('#btnFirstGrading').on('click', function(e){
+    $('#btnFirstGrading').on('click', function(e) {
         createDisplay();
     });
 
-    $('#modalCreateUpdateGradingSection').on('click', function(e){
+    $('#modalCreateUpdateGradingSection').on('click', function(e) {
         updateDisplay();
     });
 
     //  create button
-    function createDisplay(){
+    function createDisplay() {
         $('#modalUpdateGradingSection').hide();
         $('#modalCreateGradingSection').show();
     }
 
     // update button
-    function updateDisplay(){
+    function updateDisplay() {
         $('#modalCreateGradingSection').hide();
         $('#modalUpdateGradingSection').show();
     }
-
 </script>
 
 <script type="text/javascript">
     // script for updating  module_section
-    $(document).ready(function (){
-        $(document).on('click', '.editGradingModuleSection', function(){
+    $(document).ready(function() {
+        $(document).on('click', '.editGradingModuleSection', function() {
             var moduleTaskGradingId = $(this).closest('div').find('#moduleGradingId').text();
             var moduleTaskId = $(this).closest('div').find('#moduleTaskId').text();
             var moduleTaskName = $(this).closest('div').find('#moduleTaskName').text();
@@ -1019,23 +1069,23 @@ include('assets/header.view.php');
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function (){
-        $(document).on('click', '#btnFirstGrading', function(){
+    $(document).ready(function() {
+        $(document).on('click', '#btnFirstGrading', function() {
             var id = 1;
 
             $('#moduleSectionGradingId').val(id);
         });
-        $(document).on('click', '#btnSecondGrading', function(){
+        $(document).on('click', '#btnSecondGrading', function() {
             var id = 2;
 
             $('#moduleSectionGradingId').val(id);
         });
-        $(document).on('click', '#btnThirdGrading', function(){
+        $(document).on('click', '#btnThirdGrading', function() {
             var id = 3;
 
             $('#moduleSectionGradingId').val(id);
         });
-        $(document).on('click', '#btnFourthGrading', function(){
+        $(document).on('click', '#btnFourthGrading', function() {
             var id = 4;
 
             $('#moduleSectionGradingId').val(id);
