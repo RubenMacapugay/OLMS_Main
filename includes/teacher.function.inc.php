@@ -244,12 +244,17 @@ require_once ('query.inc.php');
         if($row = mysqli_fetch_assoc($resultData)){
             return $row;
         } else{
-            $result = false; 
             return false;
         }
 
         # close the statement
         mysqli_stmt_close($stmt);
+    }
+
+    function getModuleName($conn, $id){
+        $sql = "SELECT * FROM module_section_tbl where module_section_id = '$id'";
+        $row = mysqli_query($conn, $sql);
+        return $result = mysqli_fetch_assoc($row); 
     }
 # --- Exists Functions --- end #
 
@@ -455,6 +460,11 @@ require_once ('query.inc.php');
     function updateTaskGiven($conn, $isGiven,  $taskId){
         $updateTaskGiven  = "UPDATE `task_list_tbl` SET `given` =  '$isGiven' WHERE task_list_id = {$taskId}";
         mysqli_query($conn, $updateTaskGiven);
+    }
+
+    function updateModuleSection($conn, $moduleSectionId, $moduleSectionName, $moduleSectinDesc){
+        $sql  = "UPDATE module_section_tbl SET module_section_name =  '$moduleSectionName', module_section_desc =  '$moduleSectinDesc' WHERE module_section_id = '$moduleSectionId'";
+        mysqli_query($conn, $sql);
     }
 # --- Update Functions --- end #
 
