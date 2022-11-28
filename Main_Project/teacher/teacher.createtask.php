@@ -77,7 +77,7 @@ $gradings = loadModuleSection();
                         if(isset($_SESSION['msg'])){
                             if($_SESSION['msg'] == "emptyinput"){
                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                        Missing Fields! Please re-enter your inputs.
+                                        Missing Fillds! Please re-enter your inputs.
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>';
                             }

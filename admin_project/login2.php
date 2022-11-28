@@ -9,16 +9,16 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>OLMS - Admin Login</title>
+    <title>OLMS - Login</title>
 
     <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="admin/css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="img/HFA-Logo.png">
 
 </head>
@@ -42,8 +42,10 @@ session_start();
                             <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
                             <div class="col-lg-6">  
                                 <div class="p-5">
-                                    <img src="./img/HFA-Logo.png" alt="Logo" width="50" height="50">
-                                    <h1 class="h3 text-gray-900 mb-4 mt-4">Oblates Learning Management System</h1>
+                                    <div class="text-center">
+                                        <img src="./img/HFA-Logo.png" alt="Logo" width="100" height="100" >
+                                        <h1 class="h4 text-gray-900 mb-4 mt-4">Oblates Learning Management System</h1>
+                                    </div>
                                     <?php
                                     if(isset($_SESSION['status']) && $_SESSION['status'] !='') 
                                     {
@@ -51,30 +53,25 @@ session_start();
                                         unset($_SESSION['status']);
                                     }
                                     ?>
-                                    <form action ="code.php" method = "POST" class="user">
-                                    <div class="form-group">
-                                                <h5>Admin Page</h5>
-                                            </div>
+                                    <form action ="admin/code.php" method = "POST" class="user">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user"
+                                            <input type="email" class="form-control form-control-user"
                                                 id="exampleInputEmail" aria-describedby="emailHelp"
-                                                placeholder="Username"
-                                                name = "admin_login"
-                                                required>
+                                                placeholder="Enter Email Address..."
+                                                name = "login_email">
                                         </div>
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
                                                 id="exampleInputPassword" placeholder="Password"
-                                                name = "admin_password"
-                                                required>
+                                                name = "login_password">
                                         </div>
-                                        <!-- <div class="form-group">
+                                        <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">Remember
                                                     Me</label>
                                             </div>
-                                        </div> -->
+                                        </div>
                                         <button type="submit" class="btn btn-primary btn-user btn-block" name = "login_btn">
                                             Login
                                         </button>
@@ -106,14 +103,14 @@ session_start();
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="admin/vendor/jquery/jquery.min.js"></script>
+    <script src="admin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="admin/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
+    <script src="admin/js/sb-admin-2.min.js"></script>
 
 </body>
 
