@@ -106,6 +106,10 @@ include('assets/header.view.php');
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
+<<<<<<< HEAD
+=======
+                    <input type="hidden" id="moduleSectionGradingId" name="moduleSectionGradingId">
+>>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
                     <div class="form-group">
                         <label>Section name</label>
                         <input type="text" name="moduleSectionName" class="form-control" placeholder="Module Section name" required>
@@ -129,6 +133,22 @@ include('assets/header.view.php');
 </div>
 
 
+<<<<<<< HEAD
+=======
+                <div class="modal-body">
+                    <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
+                    <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
+                    <div class="form-group">
+                        <label>Section name</label>
+                        <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Section description</label>
+                        <input type="text" name="updateModuleSectinDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
+                    </div>
+                    
+                </div>
+>>>>>>> parent of bf98763 (update validation for creation of grading  module_section)
 
 <!-- End of Modal -->
 
