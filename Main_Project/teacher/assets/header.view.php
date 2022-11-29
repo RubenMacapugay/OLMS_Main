@@ -37,7 +37,7 @@
             <nav class="navbar navbar-expand-md navbar-top">
                 <div class="container-fluid">
                     <!-- Left -->
-                    <img src="images/HFA-Logo.png" alt="Logo" width="50" height="50" class="ms-5">
+                    <img src="images/HFA-Logo.png" alt="Logo" width="40" height="40" class="ms-5">
                     <a href="teacher.php" class="navbar-brand fs-3 page-title">Home</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop"
                         aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
