@@ -16,11 +16,11 @@ $_SESSION['score'] = 0;
 
 
     // get the subject name
-<<<<<<< Updated upstream
+// <<<<<<< Updated upstream
     //$subjectName = getSubjectName($conn, $subjectId);
-=======
+// =======
     // $subjectName = getSubjectName($conn, $subjectId);
->>>>>>> Stashed changes
+// >>>>>>> Stashed changes
 
     //unsetting question counter
     if(isset($_GET['msg'])){
