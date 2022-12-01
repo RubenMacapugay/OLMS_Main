@@ -47,7 +47,6 @@ $_SESSION['score'] = 0;
 
     $date_now = date("Y-m-d h:i"); 
     $date_Today = date("Y-m-d"); 
-    echo $date_Today;
 
 
     # tester --- 
@@ -344,11 +343,11 @@ $_SESSION['score'] = 0;
                                                                                 # echo 'last day na'.$date_Today. ' to ' .$endDate ;
                                                                                 #endregion
                                                                                 if(time() >= strtotime($newTaskTimeFormat)){
-                                                                                    echo 'Time na';
+                                                                                    # echo 'Time na';
                                                                                     $isGiven = "No";
                                                                                     updateTaskGiven($conn, $isGiven, $taskId);
                                                                                 }else{
-                                                                                    echo 'Mamaya pa';
+                                                                                    # echo 'Mamaya pa';
                                                                                 }
                                                                             } else if($date_Today > $endDate){
                                                                                 #region
@@ -370,7 +369,6 @@ $_SESSION['score'] = 0;
                                                                                 //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
                                                                                 //    echo $rowFourthGrading['task_list_id'];
                                                                             # * debugging purpose
-
                                                                     ?>
                                                                         <tr>
                                                                             <td class="">
@@ -478,7 +476,6 @@ $_SESSION['score'] = 0;
                                                                         $taskId = $rowSecondGrading['task_list_id'];
                                                                         
                                                                         // save date variables
-                                                                        $date_now = date("Y-m-d"); // this format is string comparable
                                                                         $startDate = $rowSecondGrading['date_created'];
                                                                         $endDate = $rowSecondGrading['date_deadline'];
 
@@ -498,7 +495,7 @@ $_SESSION['score'] = 0;
                                                                         }
 
                                                                         $taskTime = $rowSecondGrading["time_limit"];
-                                                                        $newTaskFormat = date('h:i A', strtotime($taskTime));
+                                                                        $newTaskTimeFormat = date('h:i A', strtotime($taskTime));
                                                                         
                                                                         # * debugging purpose
                                                                             //echo $newTaskFormat;
@@ -517,15 +514,26 @@ $_SESSION['score'] = 0;
 
                                                                     <?php if(($rowSecondGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
                                                                        
-                                                                       // create an update here that trigger the ungive
-                                                                       if($endDate > $date_now){
-                                                                            $isGiven = "No";
-                                                                            //updateTaskGiven($conn, $isGiven, $taskId);
-                                                                        } else if($endDate = $date_now) {
-                                                                            if(time() >= strtotime($newTaskFormat)){
+                                                                        // create an update here that trigger the ungive
+                                                                        if($date_Today == $endDate) {
+                                                                            #region
+                                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                                            # echo 'last day na'.$date_Today. ' to ' .$endDate ;
+                                                                            #endregion
+                                                                            if(time() >= strtotime($newTaskTimeFormat)){
+                                                                                # echo 'Time na';
                                                                                 $isGiven = "No";
-                                                                                //updateTaskGiven($conn, $isGiven, $taskId);
+                                                                                updateTaskGiven($conn, $isGiven, $taskId);
+                                                                            }else{
+                                                                                # echo 'Mamaya pa';
                                                                             }
+                                                                        } else if($date_Today > $endDate){
+                                                                            #region
+                                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
+                                                                            # echo 'deadline na'.$date_now. ' to ' .$endDate ;
+                                                                            #endregion
+                                                                            $isGiven = "No";
+                                                                            updateTaskGiven($conn, $isGiven, $taskId);
                                                                         } 
 
                                                                         # * debugging purpose
@@ -659,7 +667,7 @@ $_SESSION['score'] = 0;
                                                                         }
 
                                                                         $taskTime = $rowThirdGrading["time_limit"];
-                                                                        $newTaskFormat = date('h:i A', strtotime($taskTime));
+                                                                        $newTaskTimeFormat = date('h:i A', strtotime($taskTime));
                                                                         
                                                                         # * debugging purpose
                                                                             //echo $newTaskFormat;
@@ -678,14 +686,25 @@ $_SESSION['score'] = 0;
 
                                                                     <?php if(($rowThirdGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
                                                                             // create an update here that trigger the ungive
-                                                                            if($endDate > $date_now){
-                                                                                $isGiven = "No";
-                                                                                //updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            } else if($endDate = $date_now) {
-                                                                                if(time() >= strtotime($newTaskFormat)){
+                                                                            if($date_Today == $endDate) {
+                                                                                #region
+                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                                                # echo 'last day na'.$date_Today. ' to ' .$endDate ;
+                                                                                #endregion
+                                                                                if(time() >= strtotime($newTaskTimeFormat)){
+                                                                                    # echo 'Time na';
                                                                                     $isGiven = "No";
-                                                                                    //updateTaskGiven($conn, $isGiven, $taskId);
+                                                                                    updateTaskGiven($conn, $isGiven, $taskId);
+                                                                                }else{
+                                                                                    # echo 'Mamaya pa';
                                                                                 }
+                                                                            } else if($date_Today > $endDate){
+                                                                                #region
+                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
+                                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
+                                                                                #endregion
+                                                                                $isGiven = "No";
+                                                                                updateTaskGiven($conn, $isGiven, $taskId);
                                                                             } 
 
                                                                             # * debugging purpose
@@ -840,14 +859,25 @@ $_SESSION['score'] = 0;
 
                                                                     <?php if(($rowFourthGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
                                                                             // create an update here that trigger the ungive
-                                                                            if($endDate > $date_now){
-                                                                                $isGiven = "No";
-                                                                                //updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            } else if($endDate = $date_now) {
-                                                                                if(time() >= strtotime($newTaskFormat)){
+                                                                            if($date_Today == $endDate) {
+                                                                                #region
+                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                                                # echo 'last day na'.$date_Today. ' to ' .$endDate ;
+                                                                                #endregion
+                                                                                if(time() >= strtotime($newTaskTimeFormat)){
+                                                                                    # echo 'Time na';
                                                                                     $isGiven = "No";
-                                                                                    //updateTaskGiven($conn, $isGiven, $taskId);
+                                                                                    updateTaskGiven($conn, $isGiven, $taskId);
+                                                                                }else{
+                                                                                    # echo 'Mamaya pa';
                                                                                 }
+                                                                            } else if($date_Today > $endDate){
+                                                                                #region
+                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
+                                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
+                                                                                #endregion
+                                                                                $isGiven = "No";
+                                                                                updateTaskGiven($conn, $isGiven, $taskId);
                                                                             } 
 
                                                                             # * debugging purpose
