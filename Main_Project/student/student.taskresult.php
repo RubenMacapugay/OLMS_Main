@@ -2,11 +2,10 @@
 
 //getting the score from database
 $taskId = $_GET['taskId'];
-$maxAttempt = getMaxAttempt($conn, $taskId);
-
-// echo 'Submission attempt: '.$maxAttempt;
-$studentAnswer = getScore($conn, $taskId, $maxAttempt);
 $studentId = $_SESSION["student_id"];
+
+$maxAttempt = getMaxAttempt($conn, $taskId, $studentId);
+$studentAnswer = getScore($conn, $taskId, $maxAttempt, $studentId);
 // get the task
 $taskName = getCurrentTask($conn, $taskId);
 ?>

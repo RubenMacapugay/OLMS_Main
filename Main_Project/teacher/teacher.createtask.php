@@ -6,7 +6,7 @@
 // set gradingRow variable
 require '../../includes/teacherDropdown.inc.php';
 $gradings = loadModuleSection();
-
+// echo $_SESSION['subjectId'];
 ?>
 <!-- Modals -->
 <div class="modal" id="createModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
@@ -122,8 +122,10 @@ $gradings = loadModuleSection();
                     <!-- Create Task form -->
                     <form method='POST' action='../../includes/teacher.createtask.inc.php'>
                         <!-- Capturing the subject ID -->
-                        <?php $subjectId = $_GET['currentSubject']; ?>
-                        <input type="hidden" name="subjectid" value="<?php echo $subjectId; ?>">
+                        <?php //$subjectId = $_GET['currentSubject']; ?>
+                        <?php $subjectId = $_SESSION['subjectId']; ?>
+
+                        <input type="hidden" name="subjectid" id="subjectIdHidden" value="<?php echo $subjectId; ?>">
                         <div class="row">
                             <!-- Task Details -->
                             <div class="row task-details">
@@ -406,10 +408,12 @@ createBtn.addEventListener("click", function() {
     $(document).ready(function(){
         $("#gradingSelector").change(function(){
             var aid = $("#gradingSelector").val();
+            var subId = $("#subjectIdHidden").val();
+
             $.ajax({
                 url: '../../includes/teacherDropdown.inc.php',
                 method: 'post',
-                data: 'gradingId=' + aid
+                data: 'gradingId=' + aid + '&subjectId=' + subId 
             }).done(function(moduleSection){
                 console.log(moduleSection);
                 moduleSection = JSON.parse(moduleSection);
@@ -422,6 +426,7 @@ createBtn.addEventListener("click", function() {
     })
 
 // test   
+// test 2
 </script>
 
 </body>

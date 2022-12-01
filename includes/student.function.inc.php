@@ -135,17 +135,47 @@ function checkTaskCountPerGrading($conn, $subjectListId, $grading){
     }
 }
 
-function getMaxAttempt($conn, $taskId){
-    $sql = "SELECT MAX(attempt) FROM submitted_answer_tbl where fk_task_list_id = $taskId";
+function getMaxAttempt($conn, $taskId, $studentId){
+    $sql = "SELECT MAX(attempt) FROM submitted_answer_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
     $attemptRow = mysqli_query($conn, $sql);
     $result = mysqli_fetch_assoc($attemptRow);
     return $result['MAX(attempt)'];
 }
 
-function getScore($conn, $taskId, $maxAttempt){
-    $scoreQuery = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId";
+function getScore($conn, $taskId, $maxAttempt, $studentId){
+    $scoreQuery = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId and fk_student_id = $studentId";
     $scoreRow = mysqli_query($conn, $scoreQuery);
     return $studentAnswer = mysqli_fetch_assoc($scoreRow);
+
+   
+}
+
+function getMaxAttempt2($conn, $taskId, $studentId){
+    $sql = "SELECT MAX(attempt) FROM submission_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
+    $resultQuery = mysqli_query($conn, $sql);
+    // return mysqli_fetch_assoc($result);
+    $result;
+    if($row = mysqli_fetch_array($resultQuery)){
+        $result = $row;
+    }else{
+        $result = "No data";
+    }
+    return $result;
+
+}
+
+function getScore2($conn, $taskId, $maxAttempt, $studentId){
+    $sql = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId and fk_student_id = $studentId";
+    $resultQuery = mysqli_query($conn, $sql);
+    // return mysqli_fetch_assoc($result);
+    $result;
+    if($row = mysqli_fetch_array($resultQuery)){
+        $result = $row;
+    }else{
+        $result = false;
+    }
+
+    return $result;
 }
 
 // function getScore($conn, $taskId){
@@ -241,6 +271,11 @@ function saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitte
 function updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionTblId){
     $updateQuery = "UPDATE submitted_answer_tbl SET fk_submission_tbl_id = '$submissionTblId' where fk_task_list_id = '$taskId' and attempt = '$attempt'";
     $resultScore = mysqli_query($conn, $updateQuery);
+}
+
+function updateTaskGiven($conn, $isGiven,  $taskId){
+    $updateTaskGiven  = "UPDATE `task_list_tbl` SET `given` =  '$isGiven' WHERE task_list_id = {$taskId}";
+    mysqli_query($conn, $updateTaskGiven);
 }
 
 # Delete 
