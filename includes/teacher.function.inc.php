@@ -222,9 +222,9 @@ require_once ('query.inc.php');
             
     }
 
-    function moduleNameExist($conn, $moduleSectionName, $gradingId){
+    function moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId){
         #query
-        $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ?;";
+        $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ? and fk_subject_list_id = ?;";
 
         # start the preapred statement
         $stmt = mysqli_stmt_init($conn);
@@ -234,7 +234,7 @@ require_once ('query.inc.php');
         }
         
         # binding user input
-        mysqli_stmt_bind_param($stmt, "si", $moduleSectionName, $gradingId);
+        mysqli_stmt_bind_param($stmt, "sii", $moduleSectionName, $gradingId, $subjectId);
         mysqli_stmt_execute($stmt);
 
         # save result

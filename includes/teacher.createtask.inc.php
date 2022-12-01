@@ -294,7 +294,7 @@ include_once 'teacher.function.inc.php';
         # check if task is taken
       
 
-        if(moduleNameExist($conn, $moduleSectionName, $gradingId) !== false){
+        if(moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId) !== false){
             $_SESSION['msg'] = "modulenametaken";
             header ("location: ../Main_Project/teacher/teacher.createtask.php?currentSubject=$subjectId");
             exit();
@@ -813,7 +813,7 @@ include_once 'teacher.function.inc.php';
             $_SESSION['msg'] = "modulesectionupdated";
             header ("location: ../Main_Project/teacher/teacher.subject.php?1");
             exit();
-        } else if(moduleNameExist($conn, $trimModuleSectionName, $gradingId) !== false){
+        } else if(moduleNameExist($conn, $trimModuleSectionName, $gradingId, $subjectId) !== false){
             // check if the task exist
             $_SESSION['msg'] = "modulenametaken";
             header ("location: ../Main_Project/teacher/teacher.subject.php?2");

@@ -240,10 +240,7 @@ $_SESSION['score'] = 0;
 
                                             <!-- create loop inside the card to display the module_sections -->
                                             <?php while($rowModuleTask = $resultModuleSectionFirstGrading->fetch_assoc()): ?>
-                                                <?php echo $date_Today; # remove?>
-
                                                 <?php 
-                                                
 
                                                     // query for displaying the task per module section
                                                     $moduleSectionId = $rowModuleTask['module_section_id'];
