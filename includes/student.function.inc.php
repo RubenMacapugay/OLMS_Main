@@ -178,6 +178,18 @@ function getScore2($conn, $taskId, $maxAttempt, $studentId){
     return $result;
 }
 
+function getModuleSection($conn, $subjectId, $gradingId){
+    $selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = $gradingId AND fk_subject_list_id = $subjectId)";
+    $resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die ($mysqli->error);
+    return $resultModuleSectionFirstGrading;
+}
+
+function getTasksPerGrading($conn, $studentId, $subjectId, $gradingId, $moduleSectionId){
+    $selectStudentTasksFirstGrading = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl) WHERE task_list_tbl.fk_grading_id = $gradingId and task_list_tbl.fk_module_section_id = $moduleSectionId";
+    $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error); 
+    return $resultTasksFirstGrading;
+}
+
 // function getScore($conn, $taskId){
 //     $scoreQuery = "SELECT * FROM submission_tbl where attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) and fk_task_list_id = $taskId";
 //     $scoreRow = mysqli_query($conn, $scoreQuery);
@@ -284,3 +296,31 @@ function deleteSubmittedAnswer($conn){
     $resultScore = mysqli_query($conn, $sql);
     unset($_SESSION['questionCount']);
 }
+
+# boolean
+function isDeadline($date_Today, $endDate, $newTaskTimeFormat){
+    if( (($date_Today == $endDate) && (time() >= strtotime($newTaskTimeFormat))) ||
+        ($date_Today > $endDate)){
+        # echo $rowFirstGrading['task_name'].'Time na<br>';
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function isGiven($value){
+    if($value == "Yes"){
+        return true;
+    }else{
+        return false;
+    }
+}
+
+function isAttemptReached($taskMaxAttempt, $maxAttempt){
+    if($taskMaxAttempt > $maxAttempt){
+        return true;
+    }else{
+        return false;
+    }
+}
+

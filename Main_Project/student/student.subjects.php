@@ -1,31 +1,3 @@
-<!-- Skip to content
-Search or jump to…
-Pull requests
-Issues
-Codespaces
-Marketplace
-Explore
- 
-@Carlozzzzz 
-RubenMacapugay
-/
-OLMS_Main
-Private
-Code
-Issues
-Pull requests
-Actions
-Projects
-Security
-Insights
-OLMS_Main/Main_Project/student/student.subjects.php /
-@Carlozzzzz
-Carlozzzzz add coments
-Latest commit 01de99f 11 hours ago
- History
- 2 contributors
-@Rubenjr1999@Carlozzzzz
-765 lines (635 sloc)  49.8 KB -->
 <?php 
 include('assets../header.view.php'); 
 # * debugging purpose
@@ -95,13 +67,7 @@ $_SESSION['score'] = 0;
 
 
     // get the subject name
-    // <<<<<<< Updated upstream
-        //$subjectName = getSubjectName($conn, $subjectId);
-    // =======
-        // $subjectName = getSubjectName($conn, $subjectId);
-    // >>>>>>> Stashed changes
 
-    //unsetting question counter
     if(isset($_GET['msg'])){
         $msg = $_GET['msg'];
         if($msg == "cancelled"){
@@ -110,34 +76,27 @@ $_SESSION['score'] = 0;
     }
 
     # getTask count per grading ---
-        $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
+        $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
         $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
         $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
         $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
     # getTask count per grading --- end
 
     # display the module section in first grading ---
-        $selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
-        $resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die ($mysqli->error);
-
-
-        $selectModuleSectionSecondGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
-        $resultModuleSectionSecondGrading =  $conn->query($selectModuleSectionSecondGrading) or die ($mysqli->error);
-
-        $selectModuleSectionThirdGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
-        $resultModuleSectionThirdGrading =  $conn->query($selectModuleSectionThirdGrading) or die ($mysqli->error);
-
-        $selectModuleSectionFourthGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
-        $resultModuleSectionFourthGrading =  $conn->query($selectModuleSectionFourthGrading) or die ($mysqli->error);
-
+        
+        $resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
+        $resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
+        $resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
+        $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
 
         // Leng query back
-        $selectStudentTasks = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl)";
-        // $selectStudentTasks = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
+        // $selectStudentTasks = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl)";
+        $selectStudentTasks = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
         $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
+
     # display the module section in first grading --- end
 
-
+    
     
     # Display task per subjects ----
         # SELECT * FROM ((task_list_tbl INNER JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id) INNER JOIN task_tbl ON task_list_tbl.fk_task_type = task_tbl.task_id) WHERE submission_tbl.fk_student_id = $studentId
@@ -241,15 +200,10 @@ $_SESSION['score'] = 0;
                                             <!-- create loop inside the card to display the module_sections -->
                                             <?php while($rowModuleTask = $resultModuleSectionFirstGrading->fetch_assoc()): ?>
                                                 <?php 
-
                                                     // query for displaying the task per module section
                                                     $moduleSectionId = $rowModuleTask['module_section_id'];
-                                                    $selectStudentTasksFirstGrading = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl) WHERE task_list_tbl.fk_grading_id = 1 and task_list_tbl.fk_module_section_id = $moduleSectionId";
-                                                    $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error); 
+                                                    $resultTasksFirstGrading = getTasksPerGrading($conn, $studentId, $subjectId, 1, $moduleSectionId);
                                                     //echo 'Module Section ID:'.$moduleSectionId;
-                                                
-                                                
-                                               
                                                ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
@@ -268,7 +222,6 @@ $_SESSION['score'] = 0;
                                                                 <tr class="text-center">
                                                                     <th></th>
                                                                     <th>Type</th>
-                                                                    <th>Start</th>
                                                                     <th>Due</th>
                                                                     <th>Score</th>
                                                                     <!-- <th>Status</th> -->
@@ -283,10 +236,10 @@ $_SESSION['score'] = 0;
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
-                                                                    <td class="">-</td>
                                                                 </tr>
 
                                                                 <?php while($rowFirstGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
+                                                                    
                                                                     <?php  //displaying the task backend code
                                                                         
                                                                         // saving the id's 
@@ -332,58 +285,25 @@ $_SESSION['score'] = 0;
                                                                         # * debugging purpose end
                                                                     ?>
 
-                                                                    <?php if(($rowFirstGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
-                                                                            // create an update here that trigger the ungive
-                                                                            if($date_Today == $endDate) {
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                # echo 'last day na'.$date_Today. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                if(time() >= strtotime($newTaskTimeFormat)){
-                                                                                    # echo 'Time na';
-                                                                                    $isGiven = "No";
-                                                                                    updateTaskGiven($conn, $isGiven, $taskId);
-                                                                                }else{
-                                                                                    # echo 'Mamaya pa';
-                                                                                }
-                                                                            } else if($date_Today > $endDate){
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
-                                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                $isGiven = "No";
-                                                                                updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            } 
-                                                                            #region 
-                                                                            # else if($date_Today < $endDate){
-                                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                            # echo 'showing task'.$date_Today. ' to ' .$endDate ;
-                                                                            # // }
-                                                                            #endregion
-
-                                                                            # * debugging purpose
-                                                                                //    echo "Deadline.";
-                                                                                //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                //    echo $rowFourthGrading['task_list_id'];
-                                                                            # * debugging purpose
-                                                                    ?>
-                                                                        <tr>
-                                                                            <td class="">
-                                                                                <form action="../../includes/student.process.php"
-                                                                                    method="POST">
-                                                                                    <input type="hidden" name="task_id"
-                                                                                        value="<?php echo $rowFirstGrading['task_list_id']; ?>">
-                                                                                    <input type="hidden" name="task_type"
-                                                                                        value="<?php echo $rowFirstGrading['fk_task_type']; ?>">
-                                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                                        name="submitTaskDetails"><?php echo $rowFirstGrading['task_name']?></button>
-                                                                                </form>
-                                                                            </td>
-                                                                            <td>-</td>
-                                                                            <td class=""><?php echo $startDate;?></td>
-                                                                            <td class=""><?php echo $endDate;?></td>
-                                                                            <td class=""><?php echo $scoreResult;?></td>
-                                                                        </tr>
+                                                                    <?php if(isGiven($rowFirstGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0])){ 
+                                                                                if(isDeadline($date_Today, $endDate, $newTaskTimeFormat) !== true){ ?> 
+                                                                                    <tr>
+                                                                                        <td class="">
+                                                                                            <form action="../../includes/student.process.php"
+                                                                                                method="POST">
+                                                                                                <input type="hidden" name="task_id"
+                                                                                                    value="<?php echo $rowFirstGrading['task_list_id']; ?>">
+                                                                                                <input type="hidden" name="task_type"
+                                                                                                    value="<?php echo $rowFirstGrading['fk_task_type']; ?>">
+                                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                                    name="submitTaskDetails"><?php echo $rowFirstGrading['task_name']?></button>
+                                                                                            </form>
+                                                                                        </td>
+                                                                                        <td>-</td>
+                                                                                        <td class=""><?php echo $endDate.' '.$newTaskTimeFormat;?></td>
+                                                                                        <td class=""><?php echo $scoreResult;?></td>
+                                                                                    </tr>
+                                                                    <?php       }?>
                                                                     <?php } ?>
                                                                 <?php endwhile; ?>
             
@@ -424,9 +344,7 @@ $_SESSION['score'] = 0;
 
                                                 // query for displaying the task per module section
                                                 $moduleSectionId = $rowModuleTask['module_section_id'];
-                                                //echo 'Module Section ID:'.$moduleSectionId;
-                                                $selectStudentTasksSecondGrading = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl) WHERE task_list_tbl.fk_grading_id = 2 and task_list_tbl.fk_module_section_id = $moduleSectionId";
-                                                $resultTasksSecondGrading =  $conn->query($selectStudentTasksSecondGrading) or die ($mysqli->error); 
+                                                $resultTasksSecondGrading = getTasksPerGrading($conn, $studentId, $subjectId, 2, $moduleSectionId);
                                            
                                                 ?>
                                                 <div class="card mb-2">
@@ -446,7 +364,6 @@ $_SESSION['score'] = 0;
                                                                 <tr class="text-center">
                                                                     <th></th>
                                                                     <th>Type</th>
-                                                                    <th>Start</th>
                                                                     <th>Due</th>
                                                                     <th>Score</th>
                                                                     <!-- <th>Status</th> -->
@@ -461,9 +378,9 @@ $_SESSION['score'] = 0;
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
-                                                                    <td class="">-</td>
                                                                 </tr>
                                                                 <?php while($rowSecondGrading = $resultTasksSecondGrading->fetch_assoc()): ?>
+                                                                    
                                                                     <?php  //displaying the task backend code
                                                                         
                                                                         
@@ -509,54 +426,26 @@ $_SESSION['score'] = 0;
                                                                         # * debugging purpose end
                                                                     ?>
 
-                                                                    <?php if(($rowSecondGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
-                                                                       
-                                                                        // create an update here that trigger the ungive
-                                                                        if($date_Today == $endDate) {
-                                                                            #region
-                                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                            # echo 'last day na'.$date_Today. ' to ' .$endDate ;
-                                                                            #endregion
-                                                                            if(time() >= strtotime($newTaskTimeFormat)){
-                                                                                # echo 'Time na';
-                                                                                $isGiven = "No";
-                                                                                updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            }else{
-                                                                                # echo 'Mamaya pa';
-                                                                            }
-                                                                        } else if($date_Today > $endDate){
-                                                                            #region
-                                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
-                                                                            # echo 'deadline na'.$date_now. ' to ' .$endDate ;
-                                                                            #endregion
-                                                                            $isGiven = "No";
-                                                                            updateTaskGiven($conn, $isGiven, $taskId);
-                                                                        } 
-
-                                                                        # * debugging purpose
-                                                                            //    echo "Deadline.";
-                                                                            //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                            //    echo $rowFourthGrading['task_list_id'];
-                                                                        # * debugging purpose   
-                                                                   ?>
-                                                                        <tr>
-                                                                            <td class="">
-                                                                                <form action="../../includes/student.process.php"
-                                                                                    method="POST">
-                                                                                    <input type="hidden" name="task_id"
-                                                                                        value="<?php echo $rowSecondGrading['task_list_id']; ?>">
-                                                                                    <input type="hidden" name="task_type"
-                                                                                        value="<?php echo $rowSecondGrading['fk_task_type']; ?>">
-                                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                                        name="submitTaskDetails"><?php echo $rowSecondGrading['task_name']?></button>
-                                                                                </form>
-                                                                            </td>
-                                                                            <td>-</td>
-                                                                            <td class=""><?php echo $startDate;?></td>
-                                                                            <td class=""><?php echo $endDate;?></td>
-                                                                            <td class=""><?php echo $scoreResult;?></td>
-                                                                        </tr>
-                                                                    <?php } ?>
+                                                                        <?php if(isGiven($rowSecondGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0])){ 
+                                                                                    if(isDeadline($date_Today, $endDate, $newTaskTimeFormat) !== true){ ?> 
+                                                                                        <tr>
+                                                                                            <td class="">
+                                                                                                <form action="../../includes/student.process.php"
+                                                                                                    method="POST">
+                                                                                                    <input type="hidden" name="task_id"
+                                                                                                        value="<?php echo $rowSecondGrading['task_list_id']; ?>">
+                                                                                                    <input type="hidden" name="task_type"
+                                                                                                        value="<?php echo $rowSecondGrading['fk_task_type']; ?>">
+                                                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                                        name="submitTaskDetails"><?php echo $rowSecondGrading['task_name']?></button>
+                                                                                                </form>
+                                                                                            </td>
+                                                                                            <td>-</td>
+                                                                                            <td class=""><?php echo $endDate.' '.$newTaskTimeFormat;?></td>
+                                                                                            <td class=""><?php echo $scoreResult;?></td>
+                                                                                        </tr>
+                                                                        <?php       }?>
+                                                                        <?php } ?>
                                                                 <?php endwhile; ?>
 
 
@@ -592,15 +481,13 @@ $_SESSION['score'] = 0;
                                             
                                             <!-- create loop inside the card to display the module_sections -->
                                             <?php while($rowModuleTask = $resultModuleSectionThirdGrading->fetch_assoc()): ?>
+                                                
                                                 <?php 
-
                                                 // query for displaying the task per module section
                                                 $moduleSectionId = $rowModuleTask['module_section_id'];
-                                                $selectStudentTasksThirdGrading = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl) WHERE task_list_tbl.fk_grading_id = 3 and task_list_tbl.fk_module_section_id = $moduleSectionId";
-                                                $resultTasksThirdGrading =  $conn->query($selectStudentTasksThirdGrading) or die ($mysqli->error); 
-                                                # echo 'Module Section ID:'.$moduleSectionId;
-                                                
+                                                $resultTasksThirdGrading = getTasksPerGrading($conn, $studentId, $subjectId, 3, $moduleSectionId);
                                                 ?>
+
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                     <div class="d-flex justify-content-between">
@@ -618,7 +505,6 @@ $_SESSION['score'] = 0;
                                                                 <tr class="text-center">
                                                                     <th></th>
                                                                     <th>Type</th>
-                                                                    <th>Start</th>
                                                                     <th>Due</th>
                                                                     <th>Score</th>
                                                                     <!-- <th>Status</th> -->
@@ -633,9 +519,9 @@ $_SESSION['score'] = 0;
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
-                                                                    <td class="">-</td>
                                                                 </tr>
                                                                 <?php while($rowThirdGrading = $resultTasksThirdGrading->fetch_assoc()): ?>
+                                                                    
                                                                     <?php  //displaying the task backend code
                                                                         
                                                                         // saving the id's 
@@ -681,54 +567,27 @@ $_SESSION['score'] = 0;
                                                                         # * debugging purpose end
                                                                     ?>
 
-                                                                    <?php if(($rowThirdGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
-                                                                            // create an update here that trigger the ungive
-                                                                            if($date_Today == $endDate) {
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                # echo 'last day na'.$date_Today. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                if(time() >= strtotime($newTaskTimeFormat)){
-                                                                                    # echo 'Time na';
-                                                                                    $isGiven = "No";
-                                                                                    updateTaskGiven($conn, $isGiven, $taskId);
-                                                                                }else{
-                                                                                    # echo 'Mamaya pa';
-                                                                                }
-                                                                            } else if($date_Today > $endDate){
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
-                                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                $isGiven = "No";
-                                                                                updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            } 
-
-                                                                            # * debugging purpose
-                                                                                //    echo "Deadline.";
-                                                                                //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                //    echo $rowFourthGrading['task_list_id'];
-                                                                            # * debugging purpose
-                                                                           
-                                                                   ?>
-                                                                        <tr>
-                                                                            <td class="">
-                                                                                <form action="../../includes/student.process.php"
-                                                                                    method="POST">
-                                                                                    <input type="hidden" name="task_id"
-                                                                                        value="<?php echo $rowThirdGrading['task_list_id']; ?>">
-                                                                                    <input type="hidden" name="task_type"
-                                                                                        value="<?php echo $rowThirdGrading['fk_task_type']; ?>">
-                                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                                        name="submitTaskDetails"><?php echo $rowThirdGrading['task_name']?></button>
-                                                                                </form>
-                                                                            </td>
-                                                                            <td>-</td>
-                                                                            <td class=""><?php echo $startDate;?></td>
-                                                                            <td class=""><?php echo $endDate;?></td>
-                                                                            <td class=""><?php echo $scoreResult;?></td>
-                                                                        </tr>
+                                                                    <?php if(isGiven($rowThirdGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0])){ 
+                                                                                if(isDeadline($date_Today, $endDate, $newTaskTimeFormat) !== true){ ?> 
+                                                                                    <tr>
+                                                                                        <td class="">
+                                                                                            <form action="../../includes/student.process.php"
+                                                                                                method="POST">
+                                                                                                <input type="hidden" name="task_id"
+                                                                                                    value="<?php echo $rowThirdGrading['task_list_id']; ?>">
+                                                                                                <input type="hidden" name="task_type"
+                                                                                                    value="<?php echo $rowThirdGrading['fk_task_type']; ?>">
+                                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                                    name="submitTaskDetails"><?php echo $rowThirdGrading['task_name']?></button>
+                                                                                            </form>
+                                                                                        </td>
+                                                                                        <td>-</td>
+                                                                                        <td class=""><?php echo $endDate.' '.$newTaskTimeFormat;?></td>
+                                                                                        <td class=""><?php echo $scoreResult;?></td>
+                                                                                    </tr>
+                                                                    <?php       }?>
                                                                     <?php } ?>
+                                                                    
                                                                 <?php endwhile; ?>
 
 
@@ -769,16 +628,15 @@ $_SESSION['score'] = 0;
 
                                                 // query for displaying the task per module section
                                                 $moduleSectionId = $rowModuleTask['module_section_id'];
-                                                $selectStudentTasksFourthGrading = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl) WHERE task_list_tbl.fk_grading_id = 4 and task_list_tbl.fk_module_section_id = $moduleSectionId";
-                                                $resultTasksFourthGrading =  $conn->query($selectStudentTasksFourthGrading) or die ($mysqli->error); 
-                                                # echo 'Module Section ID:'.$moduleSectionId;
+                                                $resultTasksFourthGrading = getTasksPerGrading($conn, $studentId, $subjectId, 4, $moduleSectionId);
+
                                                
                                                ?>
                                                 <div class="card mb-2">
                                                     <div class="card-body">
                                                     <div class="d-flex justify-content-between">
+                                                        
                                                         <!-- for updating module_section -->
-                                                       
                                                         <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
                                                         <a class="nav-link text-primary content-collapse" type=""> Hide <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
@@ -791,7 +649,6 @@ $_SESSION['score'] = 0;
                                                                 <tr class="text-center">
                                                                     <th></th>
                                                                     <th>Type</th>
-                                                                    <th>Start</th>
                                                                     <th>Due</th>
                                                                     <th>Score</th>
                                                                     <!-- <th>Status</th> -->
@@ -806,9 +663,9 @@ $_SESSION['score'] = 0;
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
-                                                                    <td class="">-</td>
                                                                 </tr>
                                                                 <?php while($rowFourthGrading = $resultTasksFourthGrading->fetch_assoc()): ?>
+                                                                    
                                                                     <?php  //displaying the task backend code
                                                                   
                                                                         // saving the id's 
@@ -853,54 +710,27 @@ $_SESSION['score'] = 0;
                                                                             // echo '<br><br>';
                                                                         # * debugging purpose end
                                                                     ?>
-
-                                                                    <?php if(($rowFourthGrading['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){ 
-                                                                            // create an update here that trigger the ungive
-                                                                            if($date_Today == $endDate) {
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                # echo 'last day na'.$date_Today. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                if(time() >= strtotime($newTaskTimeFormat)){
-                                                                                    # echo 'Time na';
-                                                                                    $isGiven = "No";
-                                                                                    updateTaskGiven($conn, $isGiven, $taskId);
-                                                                                }else{
-                                                                                    # echo 'Mamaya pa';
-                                                                                }
-                                                                            } else if($date_Today > $endDate){
-                                                                                #region
-                                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
-                                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
-                                                                                #endregion
-                                                                                $isGiven = "No";
-                                                                                updateTaskGiven($conn, $isGiven, $taskId);
-                                                                            } 
-
-                                                                            # * debugging purpose
-                                                                                //    echo "Deadline.";
-                                                                                //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                                                //    echo $rowFourthGrading['task_list_id'];
-                                                                            # * debugging purpose
-                                                                   ?>
-                                                                        <tr>
-                                                                            <td class="">
-                                                                                <form action="../../includes/student.process.php"
-                                                                                    method="POST">
-                                                                                    <input type="hidden" name="task_id"
-                                                                                        value="<?php echo $rowFourthGrading['task_list_id']; ?>">
-                                                                                    <input type="hidden" name="task_type"
-                                                                                        value="<?php echo $rowFourthGrading['fk_task_type']; ?>">
-                                                                                    <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
-                                                                                        name="submitTaskDetails"><?php echo $rowFourthGrading['task_name']?></button>
-                                                                                </form>
-                                                                            </td>
-                                                                            <td>-</td>
-                                                                            <td class=""><?php echo $startDate;?></td>
-                                                                            <td class=""><?php echo $endDate;?></td>
-                                                                            <td class=""><?php echo $scoreResult;?></td>
-                                                                        </tr>
+                                                                    <?php if(isGiven($rowFourthGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0])){ 
+                                                                                if(isDeadline($date_Today, $endDate, $newTaskTimeFormat) !== true){ ?> 
+                                                                                    <tr>
+                                                                                        <td class="">
+                                                                                            <form action="../../includes/student.process.php"
+                                                                                                method="POST">
+                                                                                                <input type="hidden" name="task_id"
+                                                                                                    value="<?php echo $rowFourthGrading['task_list_id']; ?>">
+                                                                                                <input type="hidden" name="task_type"
+                                                                                                    value="<?php echo $rowFourthGrading['fk_task_type']; ?>">
+                                                                                                <button class="list-group-item list-group-item-action text-primary text-decoration-underline" type="submit"
+                                                                                                    name="submitTaskDetails"><?php echo $rowFourthGrading['task_name']?></button>
+                                                                                            </form>
+                                                                                        </td>
+                                                                                        <td>-</td>
+                                                                                        <td class=""><?php echo $endDate.' '.$newTaskTimeFormat;?></td>
+                                                                                        <td class=""><?php echo $scoreResult;?></td>
+                                                                                    </tr>
+                                                                    <?php       }?>
                                                                     <?php } ?>
+                                                                    
                                                                 <?php endwhile; ?>
             
             
@@ -991,16 +821,30 @@ $_SESSION['score'] = 0;
                                                 ?>
 
                                                 <?php if(($row['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){
-                                                        if($date_now > $endDate){
-                                                            $isGiven = "No";
-                                                            //updateTaskGiven($conn, $isGiven, $taskId);
-                                                        } else if($endDate = $date_now) {
-                                                            if(time() >= strtotime($newTaskFormat)){
+                                                        if($date_Today == $endDate) {
+                                                            #region
+                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                            # echo 'last day na'.$date_Today. ' to ' .$endDate ;
+                                                            #endregion
+                                                            if(time() >= strtotime($newTaskTimeFormat)){
+                                                                # echo 'Time na';
                                                                 $isGiven = "No";
-                                                                //updateTaskGiven($conn, $isGiven, $taskId);
+                                                                //# updateTaskGiven($conn, $isGiven, $taskId);
                                                             }else{
+                                                                # echo 'Mamaya pa';
                                                             }
-                                                        } 
+                                                        } else if($date_Today > $endDate){
+                                                        #region
+                                                        # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
+                                                        # echo 'deadline na'.$date_now. ' to ' .$endDate ;
+                                                        #endregion
+                                                        $isGiven = "No";
+
+                                                        // remove
+                                                        
+
+                                                        //# updateTaskGiven($conn, $isGiven, $taskId);
+                                                    }  
 
                                                 # * debugging purpose
                                                     //    echo "Deadline.";
@@ -1011,23 +855,23 @@ $_SESSION['score'] = 0;
                                                 // create an update here that trigger the ungive
                                                                 
                                                 ?>
-                                                    <tr>
-                                                        <td>
-                                                            <form action="../../includes/student.process.php" method="POST">
-                                                                <input type="hidden" name="task_id"
-                                                                    value="<?php echo $row['task_list_id']; ?>">
-                                                                <input type="hidden" name="task_type"
-                                                                    value="<?php echo $row['fk_task_type']; ?>">
-                                                                <button type="submit" class="list-group-item list-group-item-action text-primary text-decoration-underline"
-                                                                    name="submitTaskDetails"><?php echo $row['task_name']?></button>
-                                                            </form>
-                                                        </td>
-                                                        <td>-</td>
-                                                        <td class=""><?php echo $startDate;?></td>
-                                                        <td class=""><?php echo $endDate;?></td>
-                                                        <td class=""><?php echo $scoreResult;?></td>
-                                                        <!-- <td>-</td> -->
-                                                    </tr>
+                                                <tr>
+                                                    <td>
+                                                        <form action="../../includes/student.process.php" method="POST">
+                                                            <input type="hidden" name="task_id"
+                                                                value="<?php echo $row['task_list_id']; ?>">
+                                                            <input type="hidden" name="task_type"
+                                                                value="<?php echo $row['fk_task_type']; ?>">
+                                                            <button type="submit" class="list-group-item list-group-item-action text-primary text-decoration-underline"
+                                                                name="submitTaskDetails"><?php echo $row['task_name']?></button>
+                                                        </form>
+                                                    </td>
+                                                    <td>-</td>
+                                                    <td class=""><?php echo $startDate;?></td>
+                                                    <td class=""><?php echo $endDate.' ',$newTaskTimeFormat;?></td>
+                                                    <td class=""><?php echo $scoreResult;?></td>
+                                                    <!-- <td>-</td> -->
+                                                </tr>
                                                 <?php } ?>
                                             <?php endwhile; ?>
                                             
@@ -1097,9 +941,11 @@ $_SESSION['score'] = 0;
                             </div>
                         </div>
                     </div>
+                    
                 </div>
 
             </div>
+
         </div>
 
         <!-- Right Banner -->
