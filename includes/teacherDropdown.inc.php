@@ -4,8 +4,9 @@
 	if(isset($_POST['gradingId'])) {
 		$db = new DbConnect;
 		$conn = $db->connect();
-
-		$stmt = $conn->prepare("SELECT * FROM module_section_tbl WHERE fk_grading_id = " . $_POST['gradingId']);
+		$gradingId = $_POST['gradingId'];
+		$subjectId = $_POST['subjectId'];
+		$stmt = $conn->prepare("SELECT * FROM module_section_tbl WHERE fk_grading_id = $gradingId AND fk_subject_list_id  = $subjectId");
 		$stmt->execute();
 		$moduleSection = $stmt->fetchAll(PDO::FETCH_ASSOC);
 		echo json_encode($moduleSection);

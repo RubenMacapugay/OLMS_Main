@@ -20,7 +20,7 @@
         rel="stylesheet">
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/72c32f013b.js" crossorigin="anonymous"></script>
-
+    
     <link rel="icon" type="image/x-icon" href="images/HFA-Logo.png">
 </head>
 
@@ -48,11 +48,11 @@
                     <div class="collapse navbar-collapse" id="navbarTop">
                         <ul class="navbar-nav ms-auto me-0">
                             <li class="nav-item">
-                                <a href="student.announcement.php" class="nav-link"><i
+                                <a href="teacher.announcement.php" class="nav-link"><i
                                         class="fa-solid fa-bullhorn"></i></a>
                             </li>
                             <li class="nab-item">
-                                <a href="student.calendar.php" class="nav-link"><i
+                                <a href="teacher.calendar.php" class="nav-link"><i
                                         class="fa-regular fa-calendar"></i></a>
                             </li>
                             <li class="nav-item">
