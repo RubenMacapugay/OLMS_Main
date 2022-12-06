@@ -389,25 +389,26 @@ $gradings = loadModuleSection();
 </script>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $("#gradingSelector").change(function() {
+    $(document).ready(function(){
+        $("#gradingSelector").change(function(){
             var aid = $("#gradingSelector").val();
             var subId = $("#subjectIdHidden").val();
 
             $.ajax({
                 url: '../../includes/teacherDropdown.inc.php',
                 method: 'post',
-                data: 'gradingId=' + aid
+                data: 'gradingId=' + aid + '&subjectId=' + subId 
             }).done(function(moduleSection){
                 console.log(moduleSection);
                 moduleSection = JSON.parse(moduleSection);
                 $('#moduleSection').empty();
-                moduleSection.forEach(function(moduleSection) {
+                moduleSection.forEach(function(moduleSection){
                     $('#moduleSection').append("<option value='" + moduleSection.module_section_id + "'>" + moduleSection.module_section_name + "</option>")
                 })
             })
         })
     })
+
 
    
 </script>
