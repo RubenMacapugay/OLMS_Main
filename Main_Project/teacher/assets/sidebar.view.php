@@ -2,8 +2,8 @@
  <?php
 
 // set gradingRow variable
-require '../../includes/teacherDropdown.inc.php';
-$gradings = loadModuleSection();
+// require '../../includes/teacherDropdown.inc.php';
+// $gradings = loadModuleSection();
 
 ?>
 
