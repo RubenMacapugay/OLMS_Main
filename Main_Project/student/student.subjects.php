@@ -75,24 +75,27 @@ $_SESSION['score'] = 0;
         }
     }
 
+    # display the subject data
+    $resultStudentSubject = getSubjectData($conn, $studentId);
+
     # getTask count per grading ---
-        $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
-        $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
-        $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
-        $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
+    $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
+    $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
+    $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
+    $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
     # getTask count per grading --- end
 
     # display the module section in first grading ---
-        
-        $resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
-        $resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
-        $resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
-        $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
+    
+    $resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
+    $resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
+    $resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
+    $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
 
-        // Leng query back
-        // $selectStudentTasks = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl)";
-        $selectStudentTasks = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
-        $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
+    // Leng query back
+    // $selectStudentTasks = "SELECT * FROM task_list_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id AND submission_tbl.fk_student_id = $studentId AND task_list_tbl.fk_subject_list_id = $subjectId AND submission_tbl.attempt = (SELECT MAX(attempt) FROM submitted_answer_tbl)";
+    $selectStudentTasks = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
+    $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
 
     # display the module section in first grading --- end
 
@@ -165,18 +168,13 @@ $_SESSION['score'] = 0;
                                 <!-- Subject Modules Tab -->
                                 <div class="active tab-content p-2">
                                     <div class="card">
+
                                         <div class="card-header">
                                             <!-- Change this -->
-                                            <h3>Mapehhhehe Design </h3>
-                                            <p>BSIT 4.1B</p>
-                                            <p>Course Description</p>
-                                            <p>description Lorem, ipsum dolor sit amet consectetur adipisicing
-                                                elit.
-                                                Atque
-                                                ipsum
-                                                reprehenderit voluptas sed et sint.</p>
+                                            <h3><?php echo $resultStudentSubject['subject_list_name'];?></h3>
+                                            <p><?php echo $resultStudentSubject['grade_level_name'].' - '.$resultStudentSubject['section_name'];?></p>
                                         </div>
-
+                                        
                                     </div>
 
                                     <!-- First Grading -->

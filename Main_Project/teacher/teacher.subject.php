@@ -23,47 +23,28 @@ include('assets/header.view.php');
     $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
     $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
 
+    # Display task per grading
+    $resultTasksFirstGrading = getTasksPerGrading($conn, $subjectId, 1);
+    $resultTasksSecondGrading = getTasksPerGrading($conn, $subjectId, 2);
+    $resultTasksThirdGrading = getTasksPerGrading($conn, $subjectId, 3);
+    $resultTasksFourthGrading = getTasksPerGrading($conn, $subjectId, 4);
+
     # display the module section in first grading
-    $selectModuleSectionFirstGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionFirstGrading =  $conn->query($selectModuleSectionFirstGrading) or die ($mysqli->error);
-
-
-    $selectModuleSectionSecondGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionSecondGrading =  $conn->query($selectModuleSectionSecondGrading) or die ($mysqli->error);
-
-    $selectModuleSectionThirdGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionThirdGrading =  $conn->query($selectModuleSectionThirdGrading) or die ($mysqli->error);
-
-    $selectModuleSectionFourthGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
-    $resultModuleSectionFourthGrading =  $conn->query($selectModuleSectionFourthGrading) or die ($mysqli->error);
-
-
-
-    # First Grading 
-    $selectTeacherTasksFirstGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 1 AND fk_subject_list_id = $subjectId)";
-    $resultTasksFirstGrading =  $conn->query($selectTeacherTasksFirstGrading) or die ($mysqli->error);
-
-    $selectTeacherTasksSecondGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 2 AND fk_subject_list_id = $subjectId)";
-    $resultTasksSecondGrading =  $conn->query($selectTeacherTasksSecondGrading) or die ($mysqli->error);
-
-    $selectTeacherTasksThirdGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 3 AND fk_subject_list_id = $subjectId)";
-    $resultTasksThirdGrading =  $conn->query($selectTeacherTasksThirdGrading) or die ($mysqli->error);
-
-    $selectTeacherTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = 4 AND fk_subject_list_id = $subjectId)";
-    $resultTasksFourthGrading =  $conn->query($selectTeacherTasksFourthGrading) or die ($mysqli->error);
+    $resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
+    $resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
+    $resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
+    $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
     
     // Display all subject's students by section
-    $selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl";
-    $resultStudentsSubjectSection =  $conn->query($selectStudentsSubjectSection) or die ($mysqli->error);
+    $resultStudentsSubjectSection = getSubjectStudents($conn);
 
     //display the subject name
     $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
 
     //display Task List
-    $selectTaskListStudentsSection = "SELECT task_list_tbl.task_name, subject_list_tbl.fk_teacher_id FROM ((subject_list_tbl INNER JOIN task_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id)) WHERE subject_list_id = $subjectId";
-    $resultTaskList =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
-     
-    $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
+    
+    $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
+    $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
      
 ?>  
 
@@ -272,11 +253,11 @@ include('assets/header.view.php');
                                         <div class="card-header">
                                             <h2><?php echo $currentSubjectData['subject_list_name']?></h2>
                                             <p>Section</p>
-                                            <p>Subject Description</p>
+                                            <!-- <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                                                 Atque
                                                 ipsum
-                                                reprehenderit voluptas sed et sint.</p>
+                                                reprehenderit voluptas sed et sint.</p> -->
                                         </div>
 
                                     </div>
@@ -522,7 +503,7 @@ include('assets/header.view.php');
 
                                     <div class="section-module mt-2 card">
                                         <div class="card-header">
-                                            <h4 class="section-title">Third Grading</h4>
+                                            <h3 class="section-title">Third Grading</h3>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
@@ -635,7 +616,7 @@ include('assets/header.view.php');
                                     <!-- Fourth Grading -->
                                     <div class="section-module mt-2 card">
                                         <div class="card-header">
-                                            <h4 class="section-title">Forth Grading</h4>
+                                            <h3 class="section-title">Forth Grading</h3>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">

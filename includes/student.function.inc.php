@@ -1,7 +1,69 @@
 <?php
 
+# Answer
+function correctAnswer($conn, $questionId){
+    $query = "SELECT * FROM choices_tbl WHERE fk_question_id = $questionId AND is_correct = 1";
+    $result = mysqli_query($conn,$query);
 
-# Task
+    if($row = mysqli_fetch_assoc($result)){
+        return $row;
+    } else{
+        return false;
+    }
+
+}
+
+function correctTruOrFalseAnswer($conn, $questionId){
+    $query = "SELECT * FROM answer_tbl WHERE fk_question_id = $questionId";
+    $result = mysqli_query($conn,$query);
+
+    if($row = mysqli_fetch_assoc($result)){
+        return $row;
+    } else{
+        return false;
+    }
+}
+
+function correctIdentificationAnswer($conn, $questionId){
+    $queryAnswer = "SELECT * FROM answer_tbl WHERE fk_question_id = $questionId";
+	$answer = mysqli_query($conn,$queryAnswer);
+    return $answerRow = mysqli_fetch_assoc($answer);
+}
+
+
+# Question
+function totalQuestionMultiple($conn, $taskId){
+    $queryTotalQuestion = "SELECT * FROM question_tbl where fk_task_list_id = $taskId";
+    return $total_questions = mysqli_num_rows(mysqli_query($conn,$queryTotalQuestion));
+}
+
+function totalQuestion($conn, $taskId){
+    $queryTotalQuestion = "SELECT * FROM question_tbl where fk_task_list_id = $taskId";
+    return $total_questions = mysqli_num_rows(mysqli_query($conn,$queryTotalQuestion));
+}
+
+function firstQuestion($conn, $questionId, $taskId){
+    $result = '';
+    $nextQuery= mysqli_query($conn, "SELECT * FROM question_tbl WHERE question_id > $questionId AND fk_task_list_id = $taskId order by question_id ASC");
+    if($row = mysqli_fetch_array($nextQuery)){
+        $result = $row;
+    }else{
+        $result = false;
+    }
+    return $result;
+}
+
+
+# Retrieve or Select
+
+#region
+// function getCurrentSubmittedAnswerAttemptRow($conn,$taskId, $studentId){
+//     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) AND fk_task_list_id = $taskId and fk_student_id = $studentId";
+//     return $submittedAnswers = mysqli_query($conn,$submittedQuery);
+    
+// }
+#endregion
+
 function getTaskName($conn, $taskId){
     #query
     $selectTaskName = "SELECT * FROM task_list_tbl where task_list_id = ?;";
@@ -61,62 +123,6 @@ function getCurrentTask($conn, $taskId){
     mysqli_stmt_close($stmt);
 }
 
-
-# Answer
-function correctAnswer($conn, $questionId){
-    $query = "SELECT * FROM choices_tbl WHERE fk_question_id = $questionId AND is_correct = 1";
-    $result = mysqli_query($conn,$query);
-
-    if($row = mysqli_fetch_assoc($result)){
-        return $row;
-    } else{
-        return false;
-    }
-
-}
-
-function correctTruOrFalseAnswer($conn, $questionId){
-    $query = "SELECT * FROM answer_tbl WHERE fk_question_id = $questionId";
-    $result = mysqli_query($conn,$query);
-
-    if($row = mysqli_fetch_assoc($result)){
-        return $row;
-    } else{
-        return false;
-    }
-}
-
-function correctIdentificationAnswer($conn, $questionId){
-    $queryAnswer = "SELECT * FROM answer_tbl WHERE fk_question_id = $questionId";
-	$answer = mysqli_query($conn,$queryAnswer);
-    return $answerRow = mysqli_fetch_assoc($answer);
-}
-
-
-# Question
-function totalQuestionMultiple($conn, $taskId){
-    $queryTotalQuestion = "SELECT * FROM question_tbl where fk_task_list_id = $taskId";
-    return $total_questions = mysqli_num_rows(mysqli_query($conn,$queryTotalQuestion));
-}
-
-function totalQuestion($conn, $taskId){
-    $queryTotalQuestion = "SELECT * FROM question_tbl where fk_task_list_id = $taskId";
-    return $total_questions = mysqli_num_rows(mysqli_query($conn,$queryTotalQuestion));
-}
-
-function firstQuestion($conn, $questionId, $taskId){
-    $result;
-    $nextQuery= mysqli_query($conn, "SELECT * FROM question_tbl WHERE question_id > $questionId AND fk_task_list_id = $taskId order by question_id ASC");
-    if($row = mysqli_fetch_array($nextQuery)){
-        $result = $row;
-    }else{
-        $result = false;
-    }
-    return $result;
-}
-
-
-# Retrieve or Select
 function checkSubmittedCount($conn, $studentId, $taskId){
     $queryTotalQuestion = "SELECT * FROM submission_tbl where fk_student_id = $studentId and fk_task_list_id = $taskId";
     if($total_questions = mysqli_num_rows(mysqli_query($conn,$queryTotalQuestion))){
@@ -154,7 +160,7 @@ function getMaxAttempt2($conn, $taskId, $studentId){
     $sql = "SELECT MAX(attempt) FROM submission_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
     $resultQuery = mysqli_query($conn, $sql);
     // return mysqli_fetch_assoc($result);
-    $result;
+    $result = '';
     if($row = mysqli_fetch_array($resultQuery)){
         $result = $row;
     }else{
@@ -168,14 +174,12 @@ function getScore2($conn, $taskId, $maxAttempt, $studentId){
     $sql = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId and fk_student_id = $studentId";
     $resultQuery = mysqli_query($conn, $sql);
     // return mysqli_fetch_assoc($result);
-    $result;
     if($row = mysqli_fetch_array($resultQuery)){
-        $result = $row;
+        return $row;
     }else{
-        $result = false;
+        return false;
     }
 
-    return $result;
 }
 
 function getModuleSection($conn, $subjectId, $gradingId){
@@ -189,12 +193,6 @@ function getTasksPerGrading($conn, $studentId, $subjectId, $gradingId, $moduleSe
     $resultTasksFirstGrading =  $conn->query($selectStudentTasksFirstGrading) or die ($mysqli->error); 
     return $resultTasksFirstGrading;
 }
-
-// function getScore($conn, $taskId){
-//     $scoreQuery = "SELECT * FROM submission_tbl where attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) and fk_task_list_id = $taskId";
-//     $scoreRow = mysqli_query($conn, $scoreQuery);
-//     return $studentAnswer = mysqli_fetch_assoc($scoreRow); 
-// }
 
 function getCurrentAttemptAnswer($conn, $taskId){
     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) AND fk_task_list_id = $taskId";
@@ -215,11 +213,6 @@ function getChoicesRow($conn, $quesionId){
     return $choices;
 }
 
-// function getCurrentSubmittedAnswerAttemptRow($conn,$taskId, $studentId){
-//     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) AND fk_task_list_id = $taskId and fk_student_id = $studentId";
-//     return $submittedAnswers = mysqli_query($conn,$submittedQuery);
-    
-// }
 
 function getSubmittedAnswerRow($conn,$taskId, $studentId, $maxAttempt){
     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = $maxAttempt AND fk_task_list_id = $taskId and fk_student_id = $studentId";
@@ -242,6 +235,12 @@ function getCurrentSubmissionIdRow($conn, $taskId, $studentId){
 function getCorrectAnswerIdentification($conn, $questionId){
     $sql = "SELECT * from answer_tbl where fk_question_id = $questionId";
     $correctAnswer = mysqli_query($conn,$sql);
+    return $result = mysqli_fetch_assoc($correctAnswer); 
+}
+
+function getSubjectData($conn, $studentId){
+    $selectStudentSubjects = "SELECT * FROM (((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id)INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) WHERE student_subjects_tbl.fk_student_id = $studentId";
+    $correctAnswer = mysqli_query($conn, $selectStudentSubjects);
     return $result = mysqli_fetch_assoc($correctAnswer); 
 }
 

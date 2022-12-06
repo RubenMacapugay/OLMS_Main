@@ -469,11 +469,34 @@ require_once ('query.inc.php');
 # --- Update Functions --- end #
 
 
-# All
+#region --- Retrieve ---#
 function getScore($conn, $taskId, $studentId){
     $scoreQuery = "SELECT * FROM submission_tbl where attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) and fk_task_list_id = $taskId and fk_student_id = $studentId";
     $scoreRow = mysqli_query($conn, $scoreQuery);
     return $studentAnswer = mysqli_fetch_assoc($scoreRow); 
+}
+
+function getModuleSection($conn, $subjectId, $gradingId){
+    $selectModuleSectionPerGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = $gradingId AND fk_subject_list_id = $subjectId)";
+    $resultModuleSection =  $conn->query($selectModuleSectionPerGrading) or die ($mysqli->error);
+    return $resultModuleSection;
+}
+function getTasks($conn, $subjectId, $teacherId){
+    $selectTaskListStudentsSection = "SELECT task_list_tbl.task_name, subject_list_tbl.fk_teacher_id FROM ((subject_list_tbl INNER JOIN task_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id)) WHERE subject_list_id = $subjectId and fk_teacher_id = $teacherId";
+    $resultTaskList =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
+    return $resultTaskList;
+}
+function getTasksPerGrading($conn, $subjectId, $gradingId){
+    $selectTeacherTasksPerGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = $gradingId AND fk_subject_list_id = $subjectId)";
+    $resultTasksPerGrading =  $conn->query($selectTeacherTasksPerGrading) or die ($mysqli->error);
+    return $resultTasksPerGrading;
+}
+
+function getSubjectStudents($conn){
+    $selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl";
+    $result =  $conn->query($selectStudentsSubjectSection) or die ($mysqli->error);
+    return $result;
+
 }
 
 function checkTaskCountPerGrading($conn, $subjectListId, $grading){
@@ -484,4 +507,4 @@ function checkTaskCountPerGrading($conn, $subjectListId, $grading){
         return 0;
     }
 }
-
+#endregion --- Retrieve --- end #
