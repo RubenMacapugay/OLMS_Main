@@ -267,7 +267,7 @@ include_once 'teacher.function.inc.php';
         // validate here
 
         # check if task is taken
-        if(moduleNameExist($conn, $moduleSectionName, $gradingId) !== false){
+        if(moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId) !== false){
             $_SESSION['msg'] = "modulenametaken";
             header ("location: ../Main_Project/teacher/teacher.subject.php");
             exit();

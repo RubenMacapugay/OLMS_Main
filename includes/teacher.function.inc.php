@@ -5,7 +5,6 @@ require_once ('query.inc.php');
 
 # --- isEmpty Functions --- #
     function emptyEssayTask($grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
-        $result;
         if(empty($grading) ||
             !is_numeric($moduleSection) ||
             empty($taskname) ||
@@ -28,7 +27,6 @@ require_once ('query.inc.php');
     }
 
     function emptyWithAnswerTask($grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
-        $result;
         if(
             empty($grading) ||
             !is_numeric($moduleSection) ||
@@ -67,7 +65,6 @@ require_once ('query.inc.php');
 
     # check question input fields if empty
     function emptyInputQuestion($questioner, $answerselect, $choiceA, $choiceB, $choiceC, $choiceD){
-        $result;
         if(empty($questioner) || empty($answerselect) || empty($choiceA) || empty($choiceB) || empty($choiceC) || empty($choiceD)){
             $result = true;
         } else{
@@ -79,7 +76,6 @@ require_once ('query.inc.php');
     } 
 
     function emptyInputIdentification($identificationAnswer, $identificationQuestion){
-        $result;
         if(empty($identificationAnswer) || empty($identificationQuestion)){
             $result = true;
         } else{
@@ -90,7 +86,6 @@ require_once ('query.inc.php');
     }
 
     function emptyInputTrueOrFalse($trueOrFalseQuestion, $trueOrFalseAnswer){
-        $result;
         if(empty($trueOrFalseQuestion) || $trueOrFalseAnswer == "" ){
             $result = true;
         } else{
@@ -431,7 +426,6 @@ require_once ('query.inc.php');
     }
 
     function updateTrueOrFalseAnswer($conn, $answerID, $answer){
-        $newAnswer;
         if($answer == "True"){
             $updateQuestion  = "UPDATE answer_tbl SET answer_key = 'True'  WHERE answer_id = $answerID";
             mysqli_query($conn, $updateQuestion);
@@ -507,4 +501,7 @@ function checkTaskCountPerGrading($conn, $subjectListId, $grading){
         return 0;
     }
 }
+
+
+
 #endregion --- Retrieve --- end #

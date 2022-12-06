@@ -171,7 +171,7 @@ $_SESSION['score'] = 0;
 
                                         <div class="card-header">
                                             <!-- Change this -->
-                                            <h3><?php echo $resultStudentSubject['subject_list_name'];?></h3>
+                                            <h3><?php echo $resultStudentSubject['subject_name'];?></h3>
                                             <p><?php echo $resultStudentSubject['grade_level_name'].' - '.$resultStudentSubject['section_name'];?></p>
                                         </div>
                                         
