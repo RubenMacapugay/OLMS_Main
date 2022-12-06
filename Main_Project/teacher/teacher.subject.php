@@ -9,43 +9,42 @@ include('assets/header.view.php');
 ?>
 
 <?php 
-    $subjectId = $_SESSION['subjectId'];
-    $teacherId = $_SESSION['teacher_id'];
+$subjectId = $_SESSION['subjectId'];
+$teacherId = $_SESSION['teacher_id'];
 
-    
-    // get subject
-    $currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
-    //echo $currentSubjectData['subject_list_name'];
 
-    // getTask count per grading;
-    $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
-    $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
-    $thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
-    $fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
+// get subject
+$currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
 
-    # Display task per grading
-    $resultTasksFirstGrading = getTasksPerGrading($conn, $subjectId, 1);
-    $resultTasksSecondGrading = getTasksPerGrading($conn, $subjectId, 2);
-    $resultTasksThirdGrading = getTasksPerGrading($conn, $subjectId, 3);
-    $resultTasksFourthGrading = getTasksPerGrading($conn, $subjectId, 4);
 
-    # display the module section in first grading
-    $resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
-    $resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
-    $resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
-    $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
-    
-    // Display all subject's students by section
-    $resultStudentsSubjectSection = getSubjectStudents($conn);
+// getTask count per grading;
+$firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
+$secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
+$thirdGradingTask = checkTaskCountPerGrading($conn, $subjectId, 3);
+$fourthGradingTask = checkTaskCountPerGrading($conn, $subjectId, 4);
 
-    //display the subject name
-    $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
+# Display task per grading
+$resultTasksFirstGrading = getTasksPerGrading($conn, $subjectId, 1);
+$resultTasksSecondGrading = getTasksPerGrading($conn, $subjectId, 2);
+$resultTasksThirdGrading = getTasksPerGrading($conn, $subjectId, 3);
+$resultTasksFourthGrading = getTasksPerGrading($conn, $subjectId, 4);
 
-    //display Task List
-    
-    $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
-    $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
-     
+# display the module section in first grading
+$resultModuleSectionFirstGrading = getModuleSection($conn, $subjectId, 1);
+$resultModuleSectionSecondGrading = getModuleSection($conn, $subjectId, 2);
+$resultModuleSectionThirdGrading = getModuleSection($conn, $subjectId, 3);
+$resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
+
+// Display all subject's students by section
+$resultStudentsSubjectSection = getSubjectStudents($conn);
+
+//display the subject name
+$selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
+
+//display Task List
+
+$resultTaskList =  getTasks($conn, $subjectId, $teacherId);
+$resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 ?>  
 
 <!-- Modal -->
@@ -115,13 +114,14 @@ include('assets/header.view.php');
 </div>
 
 <!-- updating grading section content -->
-<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+<div class="modal fade" id="updateTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Module Section</h1>
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Task Content</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
@@ -143,6 +143,42 @@ include('assets/header.view.php');
                     <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
                 </div>
             </form>
+
+        </div>
+    </div>
+</div>
+<!-- End of Modal -->
+
+<!-- update task details -->
+<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Module Section</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="container-fluid">
+                <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
+                        <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
+                        <div class="form-group">
+                            <label>Section name</label>
+                            <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Section description</label>
+                            <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
+                        </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
+                    </div>
+                </form>
+            </div>
 
         </div>
     </div>
@@ -236,6 +272,9 @@ include('assets/header.view.php');
                                 </div>
                                 <div>
                                     Students
+                                </div>
+                                <div>
+                                    Grade Book
                                 </div>
                             </div>
                             <div class="tab-indicator"></div>
@@ -760,13 +799,13 @@ include('assets/header.view.php');
                                         </div>
                                     </div>
 
-
                                     <table class="table table-hover ms-1 ">
                                         <thead>
                                             <tr>
                                                 <th scope="col">Task List</th>
                                                 <th scope="col" class="text-center">Action</th>
-                                                <th scope="col" class="text-center">Duration</th>
+                                                <th scope="col" class="text-center">Start</th>
+                                                <th scope="col" class="text-center">Due</th>
                                                 <th scope="col" class="text-center">Status</th>
 
                                             </tr>
@@ -787,7 +826,8 @@ include('assets/header.view.php');
                                                         <i class="fa-solid fa-trash text-danger me-2"
                                                             type="button"></i>
                                                     </td>
-                                                    <td><?php echo $row['date_created']?> - <?php echo $row['date_deadline']?></td>
+                                                    <td><?php echo $row['date_created']?></td>
+                                                    <td><?php echo $row['date_deadline']?></td>
                                                     <td>
                                                         <form method='POST' action='../../includes/teacher.createtask.inc.php'>
                                                             <input type="hidden" type="hidden" name="taskId" value="<?php echo $row['task_list_id'];?>"> 
@@ -810,13 +850,89 @@ include('assets/header.view.php');
                                     </table>
                                 </div>
 
-                                <!-- Subject Students -->
+                                <!-- Students List -->
+                                <div class="tab-content " id="StudentList">
+                                    <!-- Sort -->
+                                    <div class="container-fluid d-flex justify-content-between align-items-center py-2">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <h4 class="mb-0">Section</h4>
+                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
+                                        </div>
+                                        <!-- <select class="form-select w-25" aria-label="Default select example">
+                                            <option selected>All</option>
+                                            <option value="1">Assignment</option>
+                                            <option value="2">Activity</option>
+                                            <option value="3">Project</option>
+                                            <option value="4">Quiz</option>
+                                            <option value="5">Exam</option>
+                                        </select> -->
+                                    </div>
+                                    <div class="student-table ms-1">
+                                        <table class="table">
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col" class="">Task List</th>
+                                                    <th scope="col" class="text-center">Progress</th>
+                                                    <th scope="col" class="text-center">Task Completed</th>
+                                                    <th scope="col" class="text-center">Enrolled</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- resultStudentsSubjectSection -->
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 1</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">87.0</td>
+                                                    <td scope="col" class="text-center">Aug 20 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 2</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">80.0</td>
+                                                    <td scope="col" class="text-center">Aug 13 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 3</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">89.0</td>
+                                                    <td scope="col" class="text-center">Aug 25 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 4</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">90.0</td>
+                                                    <td scope="col" class="text-center">Sept 01 2022</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <a href="student_subject.progress.php">Student 5</a>
+                                                    </td>
+                                                    <td scope="col" class="text-center"></td>
+                                                    <td scope="col" class="text-center">84.0</td>
+                                                    <td scope="col" class="text-center">Aug 23 2022</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+                                </div>
+
+                                <!-- Subject Students Grades-->
                                 <div class="tab-content " id="subjectStudentList">
                                     <!-- Sort -->
                                     <div class="container-fluid d-flex justify-content-between align-items-center py-2">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <h4 class="mb-0">BSIT 4.1B</h4>
-                                            <p class="text-muted ms-2 mb-0">Data Algorithm</p>
+                                            <h4 class="mb-0">Section</h4>
+                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
                                         </div>
                                         <select class="form-select w-25" aria-label="Default select example">
                                             <option selected>All</option>
@@ -834,26 +950,26 @@ include('assets/header.view.php');
                                                     <th scope="col" class="">Task List</th>
 
                                                     <!-- Display Task List -->
-                                                    <?php while($rowTaskList = $resultTaskList->fetch_assoc()): ?>
-                                                        <th scope="col" class="text-center"><?php echo $rowTaskList['task_name'];?></th>
+                                                    <?php while ($rowTaskList = $resultTaskList->fetch_assoc()) : ?>
+                                                        <th scope="col" class="text-center"><?php echo $rowTaskList['task_name']; ?></th>
                                                     <?php endwhile; ?>
                                                 </tr>
                                             </thead>
-                                            <tbody> 
+                                            <tbody>
                                                 <!-- resultStudentsSubjectSection -->
-                                                <?php while($rowResult = $resultStudentsSubjectSection->fetch_assoc()): ?>
-                                                
+                                                <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
+
                                                     <tr>
-                                                        <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name']?></a></td>
+                                                        <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
                                                         
-                                                        <?php while($rowTaskList2 = $resultTaskList2->fetch_assoc()): ?>
+                                                        <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : ?>
                                                             
-                                                            <td scope="col" class="text-center"></td>
+                                                            <td scope="col" class="text-center">test</td>
                                                         <?php endwhile; ?>
                                                     </tr>
 
                                                 <?php endwhile; ?>
-                                                
+
                                             </tbody>
                                         </table>
                                     </div>
@@ -880,47 +996,6 @@ include('assets/header.view.php');
 <?php include('assets/scriptlink.view.php')?>
 
 <script>
-    //Tabpane
-    let tabHeader = document.getElementsByClassName("tab-header")[0];
-    let tabIndicator = document.getElementsByClassName("tab-indicator")[0];
-    let tabBody = document.getElementsByClassName("tab-body")[0];
-
-    let tabsPane = tabHeader.getElementsByTagName("div");
-
-    let danger = document.getElementsByClassName("dangerBtn");
-
-    for (let i = 0; i < tabsPane.length; i++) {
-        tabsPane[i].addEventListener("click", function() {
-            tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-            tabsPane[i].classList.add("active");
-            tabBody.getElementsByClassName("active")[0].classList.remove("active");
-            tabBody.getElementsByClassName("tab-content")[i].classList.add("active");
-
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
-        });
-
-
-    }
-
-    //Tester
-    function showGradingTab() {
-        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-            tabsPane[0].classList.add("active");
-            tabBody.getElementsByClassName("active")[0].classList.remove("active");
-            tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
-
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
-    }
-
-    function showTaskTab() {
-        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-            tabsPane[1].classList.add("active");
-            tabBody.getElementsByClassName("active")[0].classList.remove("active");
-            tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
-
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
-    }
-
 
     //Module collapse
     let hideContent = document.querySelectorAll("#teacherSubjectContent .content-collapse");
