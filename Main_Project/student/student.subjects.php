@@ -67,7 +67,6 @@ $_SESSION['score'] = 0;
 
 
     // get the subject name
-    //$subjectName = getSubjectName($conn, $subjectId);
 
     if(isset($_GET['msg'])){
         $msg = $_GET['msg'];
