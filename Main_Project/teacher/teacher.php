@@ -1,10 +1,13 @@
 <?php include('assets../header.view.php')?> 
 
 <!-- Testing query --> 
-<?php 
+<?php
+    $teacherId = $_SESSION["teacher_id"];
+
     //Getting results from subject_tbl
-    $selectStudentSubjects = "SELECT * FROM subject_list_tbl where fk_teacher_id = {$_SESSION["teacher_id"]}";
-    $resultSubject =  $conn->query($selectStudentSubjects) or die ($mysqli->error);
+    // $selectTeacherSubject = "SELECT * FROM subject_list_tbl where fk_teacher_id = $subjectId";
+    $selectTeacherSubject = "SELECT * FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id)INNER JOIN teacher_tbl ON teacher_tbl.teacher_id = subject_list_tbl.fk_teacher_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId";
+    $resultSubject =  $conn->query($selectTeacherSubject) or die ($mysqli->error);
 
 ?>
 
@@ -73,8 +76,8 @@
                                         </div>
                                     </div>
 
-                                    <h3 class="card-title"><?php echo $row['subject_list_name'];?></h3>
-                                    <p class="card-text">Section</p>
+                                    <h3 class="card-title"><?php echo $row['subject_name'];?></h3>
+                                    <p class="card-text"><?php echo $row['grade_level_name'].' - '.$row['section_name'];?></p>
                                     <p class="card-text ">Teacher</p>
                                     <div class="text-center my-3">
                                         <!-- Send the subject id to specific subject page **student.subject.php -->
