@@ -67,9 +67,9 @@
                         <select class="form-control" id="modalGrading" name="gradingModal">
                             <option selected="" disabled="">Select grading</option>
                             <?php
-                        foreach ($gradings as $grading) {
-                            echo "<option id='" . $grading['grading_id'] . "' value='" . $grading['grading_id'] . "'>" . $grading['grading_name'] . "</option>";
-                        }
+                        // foreach ($gradings as $grading) {
+                        //     echo "<option id='" . $grading['grading_id'] . "' value='" . $grading['grading_id'] . "'>" . $grading['grading_name'] . "</option>";
+                        // }
 
                         ?>
                         </select>

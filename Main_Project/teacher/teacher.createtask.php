@@ -1,13 +1,6 @@
 <?php include('assets/header.view.php')?>
 
 
-<?php 
-
-// set gradingRow variable
-require '../../includes/teacherDropdown.inc.php';
-$gradings = loadModuleSection();
-// echo $_SESSION['subjectId'];
-?>
 <!-- Modals -->
 <div class="modal" id="createModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -161,39 +154,14 @@ $gradings = loadModuleSection();
                                     <!-- Create Module Section -->
                                     <div class="mb-3">
                                         <label for="gradingSelector">Module section</label>
+                                       
                                         <div class="d-flex">
-                                            <select class="form-select" id="moduleSection" name="moduleSection">
+                                            <select class="form-select" id="moduleSection2" name="moduleSection2">
                                                 <option selected="" disabled="">Select module section</option>
                                             </select>
                                             <button class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFirstGrading" type="button">Add</button>
                                         </div>
                                     </div>
-
-                                    <!-- Task Name -->
-                                    <div class="mb-3">
-                                        <label for="inputAssignmentDescription" class="form-label mb-0">Task
-                                            Name</label>
-                                        <input type="name" class="form-control" name="taskname"
-                                            id="inputAssignmentDescription" aria-describedby="taskname"
-                                            placeholder="sample: 01 Quiz 01">
-                                    </div>
-
-                                    <!-- Task Content for Essay -->
-                                    <div class="mb-3 ps-0" id="taskcontentDiv">
-                                        <label for="">Task Content</label>
-                                        <textarea class="form-control" name="taskcontent"
-                                            placeholder="Content Description" id="floatingTextarea"></textarea>
-                                    </div>
-
-                                    <!-- Question Items -->
-                                    <div class="mb-3 w-50" id="questionItemsDiv">
-                                        <label for="">Question items</label>
-                                        <input type="number" class="form-control" name="questionitems"
-                                            placeholder="0"></input>
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-md-6">
 
                                     <!-- Task type and Subtype -->
                                     <div class="row">
@@ -225,6 +193,34 @@ $gradings = loadModuleSection();
                                             </select>
                                         </div>
                                     </div>
+
+                                    
+
+                                    <!-- Task Content for Essay -->
+                                    <div class="mb-3 ps-0" id="taskcontentDiv">
+                                        <label for="">Task Content</label>
+                                        <textarea class="form-control" name="taskcontent"
+                                            placeholder="Content Description" id="floatingTextarea"></textarea>
+                                    </div>
+
+                                    <!-- Question Items -->
+                                    <div class="mb-3 w-50" id="questionItemsDiv">
+                                        <label for="">Question items</label>
+                                        <input type="number" class="form-control" name="questionitems"
+                                            placeholder="0"></input>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <!-- Task Name -->
+                                    <div class="mb-3">
+                                        <label for="inputAssignmentDescription" class="form-label mb-0">Task
+                                            Name</label>
+                                        <input type="name" class="form-control" name="taskname"
+                                            id="inputAssignmentDescription" aria-describedby="taskname"
+                                            placeholder="sample: 01 Quiz 01">
+                                    </div>
+                                    
 
                                     <!-- Duration -->
                                     <div class="mb-3">
@@ -409,24 +405,76 @@ createBtn.addEventListener("click", function() {
         $("#gradingSelector").change(function(){
             var aid = $("#gradingSelector").val();
             var subId = $("#subjectIdHidden").val();
-
+            // alert(aid+subId);
             $.ajax({
                 url: '../../includes/teacherDropdown.inc.php',
                 method: 'post',
                 data: 'gradingId=' + aid + '&subjectId=' + subId 
             }).done(function(moduleSection){
-                console.log(moduleSection);
                 moduleSection = JSON.parse(moduleSection);
-                $('#moduleSection').empty();
+                console.log(moduleSection);
+                $('#moduleSection2').empty();
                 moduleSection.forEach(function(moduleSection){
-                    $('#moduleSection').append("<option value='" + moduleSection.module_section_id + "'>" + moduleSection.module_section_name + "</option>")
-                })
-            })
-        })
-    })
+                    $('#moduleSection2').append("<option value='" + moduleSection.module_section_id + "'>" + moduleSection.module_section_name + "</option>")
+                });
+            });
+        });
+    });
 
-// test   
-// test 2
+</script>
+
+
+
+<script>
+    //Tabpane
+let tabHeader = document.getElementsByClassName("tab-header")[0];
+let tabIndicator = document.getElementsByClassName("tab-indicator")[0];
+let tabBody = document.getElementsByClassName("tab-body")[0];
+
+let tabsPane = tabHeader.getElementsByTagName("div");
+
+let danger = document.getElementsByClassName("dangerBtn");
+
+for (let i = 0; i < tabsPane.length; i++) {
+    tabsPane[i].addEventListener("click", function() {
+        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+        tabsPane[i].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[i].classList.add("active");
+
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
+    });
+
+
+}
+
+//Tester
+function showGradingTab() {
+    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+        tabsPane[0].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
+
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
+}
+
+function showTaskTab() {
+    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+        tabsPane[1].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
+
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
+}
+
+function showGradingTab() {
+    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+        tabsPane[3].classList.add("active");
+        tabBody.getElementsByClassName("active")[0].classList.remove("active");
+        tabBody.getElementsByClassName("tab-content")[3].classList.add("active");
+
+        tabIndicator.style.left = `calc(calc(100% / 4) * ${3})`;
+}
 </script>
 
 </body>

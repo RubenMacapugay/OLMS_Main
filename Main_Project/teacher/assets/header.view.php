@@ -30,6 +30,12 @@
     <?php require_once('../../includes/query.inc.php') ?>
     <?php require_once('../../includes/teacher.function.inc.php') ?>
     <?php # require_once('../../includes/teacherfunction.inc.php') ?>
+    <?php 
+    // set gradingRow variable
+    require '../../includes/teacherDropdown.inc.php';
+    $gradings = loadModuleSection();
+    // echo $_SESSION['subjectId'];
+    ?>
 
 
     <div class="container-fluid" id="header">

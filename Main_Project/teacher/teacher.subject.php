@@ -42,7 +42,6 @@ $resultStudentsSubjectSection = getSubjectStudents($conn);
 $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
 
 //display Task List
-
 $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 ?>  
@@ -114,11 +113,11 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 </div>
 
 <!-- updating grading section content -->
-<div class="modal fade" id="updateTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
+<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="updateModuleSection" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Task Content</h1>
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Section content</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
@@ -150,11 +149,11 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 <!-- End of Modal -->
 
 <!-- update task details -->
-<div class="modal fade" id="updateModuleSection" tabindex="-1" aria-labelledby="createModuleSection" aria-hidden="true">
+<div class="modal fade" id="updateTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Module Section</h1>
+                <h1 class="modal-title fs-5" id="updateModuleSection">Update Task</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -164,7 +163,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                         <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
                         <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
                         <div class="form-group">
-                            <label>Section name</label>
+                            <label>Task name</label>
                             <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
                         </div>
                         <div class="form-group">
@@ -187,11 +186,11 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 
 <!--Body content --> 
 <div class="container-fluid " id="content">
-
     <div class="row overflow-hidden"> 
-
+        
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
+            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateTask">Click me</button>
             <?php include('assets/sidebar.view.php') ?>
         </div>
 
