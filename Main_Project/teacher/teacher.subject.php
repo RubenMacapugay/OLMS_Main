@@ -53,7 +53,8 @@ $selectTeacherTasksFourthGrading = "SELECT * FROM task_list_tbl WHERE (fk_gradin
 $resultTasksFourthGrading =  $conn->query($selectTeacherTasksFourthGrading) or die($mysqli->error);
 
 // Display all subject's students by section
-$selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id WHERE subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
+// $selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id WHERE subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
+$selectStudentsSubjectSection = "SELECT student_tbl.student_name FROM student_tbl";
 $resultStudentsSubjectSection =  $conn->query($selectStudentsSubjectSection) or die($mysqli->error);
 
 //display the subject name
