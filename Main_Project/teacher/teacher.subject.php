@@ -117,7 +117,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Section content</h1>
+                <h1 class="modal-title fs-5" id="updateModuleSectionTitle">Update Section content</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
@@ -149,32 +149,96 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 <!-- End of Modal -->
 
 <!-- update task details -->
-<div class="modal fade" id="updateTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
+<div class="modal fade" id="updateModalTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Task</h1>
+                <h1 class="modal-title fs-5" id="updateTaskTitle">Update Task</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="container-fluid">
                 <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
-                        <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
-                        <div class="form-group">
-                            <label>Task name</label>
-                            <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
+                        <div class="row task-details">
+                            <div class="form-group">
+                                <!-- get the task details --> 
+                                <!-- Task Id -->
+                                <input type="hidden" id="updateTaskId" name="updateTaskId">
+                                <input type="hidden" id="inputSubType" name="inputSubType">
+                                <!-- Task Name -->
+                                <div class="mb-3">
+                                    <label for="inputTaskDescription" class="form-label mb-0">Task
+                                        Name</label>
+                                    <input type="name" class="form-control" name="taskname"
+                                        id="inputTaskDescription" aria-describedby="taskname"
+                                        placeholder="sample: 01 Quiz 01">
+                                </div>
+
+                                <!-- Duration -->
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="inputDates">Due date</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="date" class="form-control" name="datedeadline"
+                                            id="inputEndDate">
+                                    </div>
+                                </div>
+
+                                <!-- Attempts and Time -->
+                                <div class="row">
+                                    <!-- Time -->
+                                    <div class="col-6 mb-3">
+                                        <label for="inputTime">Due time</label>
+                                        <input type="time" class="form-control" name="timelimit" id="inputTime">
+                                    </div>
+                                    
+                                    <!-- Max Attempts -->
+                                    <div class="col-6">
+                                        <label for="inputMaxScore">Max attemps</label>
+                                        <input type="number" class="form-control" name="maxattempts"
+                                            id="inputMaxAttempts">
+                                    </div>
+                                </div>
+
+                                <!-- Max score and allow late submission -->
+                                <div class="row mb-3">
+                                    <!-- max score -->
+                                    <div class="col-6 mb-3 " id="inputMaxScoreDiv">
+                                        <label for="inputMaxScore">Max score</label>
+                                        <input type="number" class="form-control" name="maxscore"
+                                            id="inputMaxScore">
+                                    </div>
+                                    
+                                    <!-- allow late submission -->
+                                    <div class="col-6">
+                                        <label>Allow late submission</label>
+                                        <div class="mt-1">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="submissionchoice" type="radio"
+                                                    id="radioYes" checked value="Yes">
+                                                <label class="form-check-label" for="radioYes">
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="submissionchoice" type="radio"
+                                                    id="radioNo" value="No">
+                                                <label class="form-check-label" for="radioNo">
+                                                    no
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Section description</label>
-                            <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
-                        </div>
-                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
+                        <button type="submit" name="updateModalTaskWithQuestion" class="btn btn-primary" id="updateModalTaskWithQuestion">Update</button>
+                        <button type="submit" name="updateModalEssay" class="btn btn-primary" id="updateModalEssay">Update</button>
                     </div>
                 </form>
             </div>
@@ -182,6 +246,33 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         </div>
     </div>
 </div>
+
+<!-- delete task modal -->
+<div class="modal fade" id="deleteModalTask" tabindex="-1" aria-labelledby="deleteModalTask" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="container-fluid">
+                <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body text-center">
+                        <h1 class="modal-title fs-5" id="updateTaskTitle">Do you want to delete the task?</h1>
+                        <input type="text" class="deleteTaskId" name="inputDeleteTaskId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="deleteModalTaskBtn" class="btn btn-danger" id="deleteModalTaskBtn">Delete</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <!-- End of Modal -->
 
 <!--Body content --> 
@@ -190,7 +281,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
-            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateTask">Click me</button>
+            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateModalTask">Click me</button>
             <?php include('assets/sidebar.view.php') ?>
         </div>
 
@@ -255,8 +346,36 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
                             }
+                            if($_SESSION['msg'] == "taskDeleted"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been deleted!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "taskDeletedFailed"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been deleted!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "taskupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been Updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                if($_GET['tab'] == "taskTab"){
+                                    echo "<script> window.onload = function() {
+                                        showTaskTab();
+                                    }; </script>";
+                                }
+                            }
+
                             unset($_SESSION['msg']);
                         }
+
+                        // if(isset($_GET['taskId'])){
+                        //     echo $_GET['taskId'].' dumbass';
+                        // }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -817,19 +936,45 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                                 $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
                                             ?>
                                             <?php while($row = $resultList->fetch_assoc()): ?>
+                                                <?php 
+                                                    $tableRowTaskId = $row['task_list_id'];
+                                                    $tableRowTaskName = $row['task_name'];
+                                                    $tableRowSubType = $row['sub_type'];
+                                                    $tableRowDueDate = $row['date_deadline'];
+                                                    $tableRowDueTime = $row['time_limit'];
+                                                    $tableRowMaxAttempts = $row['max_attempts'];
+                                                    $tableRowQuestionItem = $row['question_item'];
+                                                    $tableRowMaxScore = $row['max_score'];
+                                                    $tableRowAllowLate = $row['submission_choice'];
+                                                ?>
                                                 <tr>
-                                                    <td><a href=""><?php echo $row['task_name']?></a></td>
+                                                    
                                                     <td>
-                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                            type="button"></i>
-                                                        <i class="fa-solid fa-trash text-danger me-2"
-                                                            type="button"></i>
+                                                        <?php echo '<a href="teacher.editTask.php?taskId='.$tableRowTaskId.'">'.$tableRowTaskName.'</a>';?>
+                                                    </td>
+                                                    <td>
+                                                        <div>
+                                                            <!-- Task details -->
+                                                            <span class="d-none" id="taskId_DeleteEdit"><?php echo $tableRowTaskId;?></span>
+
+                                                            <span class="d-none" id="tableTaskName"><?php echo $tableRowTaskName;?></span>
+                                                            <span class="d-none" id="tableSubType"><?php echo $tableRowSubType;?></span>
+                                                            <span class="d-none" id="tableDueDate"><?php echo $tableRowDueDate;?></span>
+                                                            <span class="d-none" id="tableDueTime"><?php echo $tableRowDueTime;?></span>
+                                                            <span class="d-none" id="tableMaxAttempts"><?php echo $tableRowMaxAttempts;?></span>
+                                                            <span class="d-none" id="tableQuestionItem"><?php echo $tableRowQuestionItem;?></span>
+                                                            <span class="d-none" id="tableMaxScore"><?php echo $tableRowMaxScore;?></span>
+                                                            <span class="d-none" id="tableAllowLate"><?php echo $tableRowAllowLate;?></span>
+
+                                                            <i class="fa-regular fa-pen-to-square text-primary  updateTableTaskBtn me-2"></i>
+                                                            <i class="fa-solid fa-trash text-danger me-2 deleteTableTaskBtn" ></i>
+                                                        </div>
                                                     </td>
                                                     <td><?php echo $row['date_created']?></td>
                                                     <td><?php echo $row['date_deadline']?></td>
                                                     <td>
                                                         <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                            <input type="hidden" type="hidden" name="taskId" value="<?php echo $row['task_list_id'];?>"> 
+                                                            <input type="hidden" type="hidden" name="taskId" value="<?php echo $tableRowTaskId;?>"> 
                                                             <?php 
                                                                 $isGivenTask = $row['given'];
                                                                 if($isGivenTask == "Yes"){
@@ -994,6 +1139,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 <!-- Script Links Bootstrap/Jquery -->
 <?php include('assets/scriptlink.view.php')?>
 
+<!-- Collapse grading and module sections -->
 <script>
 
     //Module collapse
@@ -1055,7 +1201,9 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 
 </script>
 
+<!-- Modal openners -->
 <script type="text/javascript">
+
     // script for updating  module_section
     $(document).ready(function (){
         $(document).on('click', '.editGradingModuleSection', function(){
@@ -1071,8 +1219,93 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
             $('.updateModuleSectinDesc').val(moduleTaskDesc);
         });
     });
+
+    // script for update task - updateModalTask
+    $(document).ready(function (){
+        $(document).on('click', '.updateTableTaskBtn', function(){
+            var taskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
+            var taskSubType = $(this).closest('div').find('#tableSubType').text();
+            var taskName = $(this).closest('div').find('#tableTaskName').text();
+            var taskEndDate = $(this).closest('div').find('#tableDueDate').text();
+            var taskEndTime = $(this).closest('div').find('#tableDueTime').text();
+            var taskMaxAttempts = $(this).closest('div').find('#tableMaxAttempts').text();
+            var taskMaxScore = $(this).closest('div').find('#tableMaxScore').text();
+            
+            // for radio button
+            var taskAllowLate = $(this).closest('div').find('#tableAllowLate').text();
+            
+            // load update modal
+            $('#updateModalTask').modal('show'); 
+            // Displaying data to fields
+            $('#updateTaskId').val(taskId);
+            $('#inputSubType').val(taskSubType);
+            $('#inputTaskDescription').val(taskName);
+            $('#inputEndDate').val(taskEndDate);
+            $('#inputTime').val(taskEndTime);
+            $('#inputMaxAttempts').val(taskMaxAttempts);
+            $('#inputMaxScore').val(taskMaxScore);
+
+            if(taskAllowLate == "Yes"){
+                $('#radioYes').prop('checked',true);
+            } else  if(taskAllowLate == "No"){
+                $('#radioNo').prop('checked',true);
+            }
+
+            $('#updateModalTaskWithQuestion').hide();
+            $('#updateModalEssay').hide();
+
+            $('#inputMaxScoreDiv').hide();
+
+
+
+            // Update buttons visibility 
+            switch(taskSubType) {
+                case "0":
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "1":
+                    // code block
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "2":
+                    // code block
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "3":
+                    // code block
+                    $('#inputMaxScoreDiv').show();
+                    $('#questionItemsDiv').hide();
+                    $('#updateModalEssay').show();
+                    break;
+                default:
+                    alert("Not found");
+                }
+        });
+    });
+
+    // script for deleting task - deleteTableTaskBtn
+    $(document).ready(function (){
+        $(document).on('click', '.deleteTableTaskBtn', function(){
+            var moduleGGTaskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
+            
+            // Opening the Modal
+            $('#deleteModalTask').modal('show');
+            // Displaying data to fields
+            $('.deleteTaskId').val(moduleGGTaskId);
+            
+        });
+    });
+
+    document.getElementId('inputMaxScore').addEventListener('change', function (e) {
+        if(this.value < 0){
+        this.value = 0;
+        } else {
+        this.value = Math.round(+this.value * 100)/100;
+        }
+    });
 </script>
 
+<!-- Grading -->
 <script type="text/javascript">
     $(document).ready(function (){
         $(document).on('click', '#btnFirstGrading', function(){

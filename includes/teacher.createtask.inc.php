@@ -8,7 +8,7 @@ include_once 'teacher.function.inc.php';
     if(isset($_POST["createEssay"])){
         $subjectId = $_POST["subjectid"];
         $grading = $_POST["grading"];
-        $moduleSection = $_POST["moduleSection"];
+        $moduleSection = $_POST["moduleSection2"];
         $taskname = $_POST["taskname"];
         $taskcontent = $_POST["taskcontent"];
         $tasktype = $_POST["tasktype"];
@@ -26,7 +26,8 @@ include_once 'teacher.function.inc.php';
             $_SESSION['msg'] = "emptyinput";
             header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=emptyinput&&currentSubject=$subjectId");
             exit();
-        }  
+        }
+
 
         # check if task is taken
         if(tasknameExist($conn, $taskname, $subjectId) !== false){
@@ -46,7 +47,7 @@ include_once 'teacher.function.inc.php';
     // creating Multiple Choice
     if(isset($_POST["createQuestionTask"])){
         $grading = $_POST["grading"];
-        $moduleSection = $_POST["moduleSection"];
+        $moduleSection = $_POST["moduleSection2"];
         $taskname = $_POST["taskname"];
         $questionitems = $_POST["questionitems"];
         $tasktype = $_POST["tasktype"];
@@ -101,7 +102,7 @@ include_once 'teacher.function.inc.php';
     // creating identification
     if(isset($_POST["createIdentificationTask"])){
         $grading = $_POST["grading"];
-        $moduleSection = $_POST["moduleSection"];
+        $moduleSection = $_POST["moduleSection2"];
         $taskname = $_POST["taskname"];
         $questionitems = $_POST["questionitems"]; 
         $tasktype = $_POST["tasktype"];
@@ -152,62 +153,9 @@ include_once 'teacher.function.inc.php';
         exit();
     }
 
-    // to drop
-    // if(isset($_POST["createEnumeration"])){
-    //     $grading = $_POST["grading"];
-    //     $taskname = $_POST["taskname"];
-    //     $questionitems = $_POST["questionitems"]; 
-    //     $tasktype = $_POST["tasktype"];
-    //     $subtype = $_POST["subtype"];
-    //     $datecreated = $_POST["datecreated"];
-    //     $datedeadline = $_POST["datedeadline"];
-    //     $time = $_POST["timelimit"];
-    //     $maxscore = $_POST["maxscore"]; 
-    //     //$maxattempts = $_POST["maxattempts"];
-    //     $allowlate = $_POST["submissionchoice"]; 
-
-    //     $subjectId = $_POST["subjectid"];
-    //     $_SESSION["subjectId"] = $_POST["subjectid"];
-    //     if(isset($_SESSION["subjectId"])){
-    //         $subjectId = $_SESSION["subjectId"];
-    //     }else{
-    //         $subjectId = $_POST["subjectid"];
-    //     }
-
-    //     # Error handlers
-    //     if(emptyInputTask($grading, $taskname) !== false){ # comeback
-    //         # , $taskcontent, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate
-    //         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=emptyinput&&currentSubject=$subjectId");
-    //         exit();
-    //     }
-
-    //     # check if task is taken
-    //     if(tasknameExist($conn, $taskname, $subjectId) !== false){
-    //         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=tasknametaken&&currentSubject=$subjectId");
-    //         exit();
-    //     }
-
-    //     # create the task
-    //     createTask($conn, $grading, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate);
-        
-    //     # getting task_list details
-    //     $taskExists = tasknameExist($conn, $taskname, $subjectId);
-    //     $_SESSION["question_items"] = $questionitems; // ito
-    //     $_SESSION["task_name"] = $taskExists["task_name"];
-    //     $_SESSION["task_id"] = $taskExists["task_list_id"];
-    //     $_SESSION["questionCounter"] = 1;
-    //     $taskid = $taskExists["task_list_id"];
-
-    //     # redrecting to creating enumeration
-    //     header ("location: ../Main_Project/teacher/assets/header.view.php");
-    //     header ("location: ../Main_Project/teacher/teacher.createenumeration.php");
-    //     exit();
-    // }
-
-
     if(isset($_POST["createTrueOrFalse"])){
         $grading = $_POST["grading"];
-        $moduleSection = $_POST["moduleSection"];
+        $moduleSection = $_POST["moduleSection2"];
         $taskname = $_POST["taskname"];
         $questionitems = $_POST["questionitems"];
         $tasktype = $_POST["tasktype"];
@@ -307,6 +255,61 @@ include_once 'teacher.function.inc.php';
         header ("location: ../Main_Project/teacher/teacher.createtask.php?currentSubject=$subjectId");
         exit();
     }
+
+     #region
+    // to drop
+    // if(isset($_POST["createEnumeration"])){
+    //     $grading = $_POST["grading"];
+    //     $taskname = $_POST["taskname"];
+    //     $questionitems = $_POST["questionitems"]; 
+    //     $tasktype = $_POST["tasktype"];
+    //     $subtype = $_POST["subtype"];
+    //     $datecreated = $_POST["datecreated"];
+    //     $datedeadline = $_POST["datedeadline"];
+    //     $time = $_POST["timelimit"];
+    //     $maxscore = $_POST["maxscore"]; 
+    //     //$maxattempts = $_POST["maxattempts"];
+    //     $allowlate = $_POST["submissionchoice"]; 
+
+    //     $subjectId = $_POST["subjectid"];
+    //     $_SESSION["subjectId"] = $_POST["subjectid"];
+    //     if(isset($_SESSION["subjectId"])){
+    //         $subjectId = $_SESSION["subjectId"];
+    //     }else{
+    //         $subjectId = $_POST["subjectid"];
+    //     }
+
+    //     # Error handlers
+    //     if(emptyInputTask($grading, $taskname) !== false){ # comeback
+    //         # , $taskcontent, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate
+    //         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=emptyinput&&currentSubject=$subjectId");
+    //         exit();
+    //     }
+
+    //     # check if task is taken
+    //     if(tasknameExist($conn, $taskname, $subjectId) !== false){
+    //         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=tasknametaken&&currentSubject=$subjectId");
+    //         exit();
+    //     }
+
+    //     # create the task
+    //     createTask($conn, $grading, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate);
+        
+    //     # getting task_list details
+    //     $taskExists = tasknameExist($conn, $taskname, $subjectId);
+    //     $_SESSION["question_items"] = $questionitems; // ito
+    //     $_SESSION["task_name"] = $taskExists["task_name"];
+    //     $_SESSION["task_id"] = $taskExists["task_list_id"];
+    //     $_SESSION["questionCounter"] = 1;
+    //     $taskid = $taskExists["task_list_id"];
+
+    //     # redrecting to creating enumeration
+    //     header ("location: ../Main_Project/teacher/assets/header.view.php");
+    //     header ("location: ../Main_Project/teacher/teacher.createenumeration.php");
+    //     exit();
+    // }
+    #endregion
+
 # -----CREATE TASK BUTTONS-----end #
 
 # --- Essay --- #
@@ -774,6 +777,8 @@ include_once 'teacher.function.inc.php';
         $taskId = $_POST['taskId'];
         $isGiven = $_POST['isGivenTaskTab'];
 
+        // valiate if empty fields
+
         //update task given on task_list_tbl
         updateTaskGiven($conn, $isGiven, $taskId);
 
@@ -830,7 +835,131 @@ include_once 'teacher.function.inc.php';
         exit();
 
     }
+
+    if(isset($_POST['updateModalTaskWithQuestion'])){
+        echo 'update multiple choice';
+        $taskId = $_POST['updateTaskId'];
+        $subType = $_POST['inputSubType'];
+
+        $taskname = $_POST['taskname'];
+        $datedeadline = $_POST['datedeadline'];
+        $timelimit = $_POST['timelimit'];
+        $maxattempts = $_POST['maxattempts'];
+        $submissionchoice = $_POST['submissionchoice'];
+
+        // check if the task name exist
+        updateTaskMultipleChoice($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice);
+
+        // set session message that update success
+        $_SESSION['msg'] = "taskupdated";
+        // set session message that update failed
+
+        // header location to teacher.subject.php
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.subject.php?tab=taskTab");
+        exit();
+        
+    }
+
+    if(isset($_POST['updateModalIdentification'])){
+        echo 'update multiple choice';
+        $taskId = $_POST['updateTaskId'];
+        $subType = $_POST['inputSubType'];
+
+        $taskname = $_POST['taskname'];
+        $datedeadline = $_POST['datedeadline'];
+        $timelimit = $_POST['timelimit'];
+        $maxattempts = $_POST['maxattempts'];
+        $submissionchoice = $_POST['submissionchoice'];
+
+        // check if the task name exist
+        updateTaskMultipleChoice($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice);
+
+        // set session message that update success
+        $_SESSION['msg'] = "taskupdated";
+        // set session message that update failed
+
+        // header location to teacher.subject.php
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.subject.php?tab=taskTab");
+        exit();
+        
+    }
+
+    if(isset($_POST['updateModalTrueOrFalse'])){
+        echo 'update multiple choice';
+        $taskId = $_POST['updateTaskId'];
+        $subType = $_POST['inputSubType'];
+
+        $taskname = $_POST['taskname'];
+        $datedeadline = $_POST['datedeadline'];
+        $timelimit = $_POST['timelimit'];
+        $maxattempts = $_POST['maxattempts'];
+        $submissionchoice = $_POST['submissionchoice'];
+
+        // check if the task name exist
+        updateTaskMultipleChoice($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice);
+
+        // set session message that update success
+        $_SESSION['msg'] = "taskupdated";
+        // set session message that update failed
+
+        // header location to teacher.subject.php
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.subject.php?tab=taskTab");
+        exit();
+        
+    }
+
+    if(isset($_POST['updateModalEssay'])){
+        echo 'update multiple choice';
+        $taskId = $_POST['updateTaskId'];
+        $subType = $_POST['inputSubType'];
+
+        $taskname = $_POST['taskname'];
+        $datedeadline = $_POST['datedeadline'];
+        $timelimit = $_POST['timelimit'];
+        $maxattempts = $_POST['maxattempts'];
+        $maxscore = $_POST['maxscore'];
+        $submissionchoice = $_POST['submissionchoice'];
+
+        // check if the task name exist
+        updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice);
+
+        // set session message that update success
+        $_SESSION['msg'] = "taskupdated";
+        // set session message that update failed
+
+        // header location to teacher.subject.php
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.subject.php?tab=taskTab");
+        exit();
+        
+    }
 # --- Updates ---end #
 
 # --- Delete ---
+if(isset($_POST['deleteModalTaskBtn'])){
+    $taskId = $_POST["inputDeleteTaskId"];
+    // echo $taskId;
+    // echo 'inside the delete';
+    //delete query
+    // sql to delete a record
+    $sql = "DELETE FROM task_list_tbl WHERE task_list_id = $taskId";
+
+    if ($conn->query($sql) === TRUE) {
+        echo "Record deleted successfully";
+        $_SESSION['msg'] = "taskDeleted";
+    } else {
+        echo "Error deleting record: " . $conn->error;  
+        $_SESSION['msg'] = "taskDeletedFailed";
+    }
+
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.subject.php");
+    exit();
+
+    $conn->close();
+
+}
 # --- Delete --- end #
