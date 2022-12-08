@@ -77,7 +77,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                 <h1 class="modal-title fs-5" id="uploadModalLabel">Upload Files</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="teacher.code.php" method="POST" enctype="multipart/form-data">
+            <form action="../../includes/teacher.upload.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
                     <div class="form-group">
@@ -99,8 +99,101 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" name="btnUpload" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- edit module -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit File</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <?php
+            if (isset($_POST['edit_data_btn'])) {
+            
+                $id = $_POST['file_edit_id'];
+
+                $query = "SELECT * FROM module_tbl WHERE module_id ='$id'";
+                $query_run = mysqli_query($conn, $query);
+
+                foreach ($query_run as $row) {
+            ?>
+            <form action="../../includes/teacher.upload.php" method="POST" enctype="multipart/form-data">
+
+             <input type="hidden" name="file_edit_id" value="<?php echo $row['module_id']?>">
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>File Name</label>
+                        <input type="text" name="file_edit_name" class="form-control" placeholder="Subject Name" value="<?php echo $row['module_name']?>" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Upload File</label>
+                        <input type="file" name="file_upload" id="fileInput" class="form-control" value="<?php echo $row['module_file']?>" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="update_btn" class="btn btn-primary">Update</button>
+                </div>
+            </form>
+            <?php
+                }
+            }
+
+            ?>
+        </div>
+    </div>
+</div>
+
+<!-- Delete -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="uploadModalLabel">Upload Files</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="teacher.upload.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" name="btnUpload" class="btn btn-primary">Yes</button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<!-- edit task -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Task</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="#" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="update_btn" class="btn btn-primary">Update</button>
                 </div>
             </form>
 
@@ -250,6 +343,17 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                         }
                         unset($_SESSION['msg']);
                     }
+
+                    if (isset($_SESSION['success']) && $_SESSION['success'] != '') {
+                        echo '<div class="alert alert-success alert-dismissible fade show" role="alert">'.
+                        $_SESSION['success'].'</div>';
+                        unset($_SESSION['success']);
+                    }
+        
+                    if (isset($_SESSION['status']) && $_SESSION['status'] != '') {
+                        echo '<h2 class = "bg-danger text-white p-2">' . $_SESSION['status'] . '</h2>';
+                        unset($_SESSION['status']);
+                    }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -354,8 +458,8 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                                         <a class="section-link" href="student.module.php">01 Module 1</a>
                                                                     </td>
                                                                     <td>
-                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
-                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button" data-bs-toggle="modal" data-bs-target="#editModal"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2" type="button" name = "delete_data_btn" data-bs-toggle="modal" data-bs-target="#deleteModal"></i>                                                                     
                                                                     </td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
@@ -370,7 +474,7 @@ $resultTaskList2 =  $conn->query($selectTaskListStudentsSection) or die($mysqli-
                                                                     <tr class="module-task ">
                                                                         <td><a href="#"><?php echo $rowGrading['task_name']; ?></a></td>
                                                                         <td>
-                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
+                                                                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
                                                                             <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
                                                                         </td>
                                                                         <td class="">-</td>

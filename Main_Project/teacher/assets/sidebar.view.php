@@ -8,14 +8,14 @@
 ?>
 
  <!-- upload module -->
- <div class="modal fade" id="uploadModal" tabindex="-1" aria-labelledby="uploadModalLabel" aria-hidden="true">
+ <div class="modal fade" id="uploadManyModal" tabindex="-1" aria-labelledby="uploadManyModalLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">
                  <div class="modal-content">
                          <div class="modal-header">
                                  <h1 class="modal-title fs-5" id="uploadModalLabel">Upload Files</h1>
                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                          </div>
-                         <form action="teacher.code.php" method="POST" enctype="multipart/form-data">
+                         <form action="#" method="POST" enctype="multipart/form-data">
 
                                  <div class="modal-body">
                                          <div class="form-group">
@@ -119,7 +119,7 @@
                                          <i class="fa-solid fa-book side-logo"></i>
                                          <span class="link_name">Subjects</span></a>
                          </li>
-                         <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadModal">
+                         <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadManyModal">
                                          <i class="fa-solid fa-file-upload side-logo"></i>
                                          <span class="link_name">Upload File</span></a>
                          </li>
