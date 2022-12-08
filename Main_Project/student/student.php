@@ -4,7 +4,9 @@
     //Getting results from subject_tbl
     
     $studentId = $_SESSION['student_id'];
-    $selectStudentSubjects = "SELECT * FROM subject_list_tbl where fk_student_id = $studentId";
+    
+    // $selectStudentSubjects = "SELECT * FROM subject_list_tbl where fk_student_id = $studentId";
+    $selectStudentSubjects = "SELECT * FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id)INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id)INNER JOIN teacher_tbl ON teacher_tbl.teacher_id = subject_list_tbl.fk_teacher_id) WHERE student_subjects_tbl.fk_student_id = $studentId";
     $resultSubject =  $conn->query($selectStudentSubjects) or die ($mysqli->error);
 ?>
 
@@ -72,12 +74,12 @@
 
                                     <h3 class="card-title"><?php echo $row['subject_list_name']; ?></h3>
                                     
-                                    <p class="card-text">BSIT 4.1B</p>
-                                    <p class="card-text ">Prof. Domeng Zu Gat</p>
+                                    <p class="card-text"><?php echo $row['grade_level_name'].' - '.$row['section_name']; ?></p>
+                                    <p class="card-text "><?php echo $row['teacher_name']; ?></p>
                                     <div class="text-center my-3">
                                         <!-- Send the subject id to specific subject page **student.subject.php -->
                                         <form action="student.setSessionSubject.php" method="POST">
-                                            <input type="hidden" name="subject_list_id" value="<?php echo $row['subject_list_id']; ?>">
+                                            <input type="hidden" name="subject_list_id" value="<?php echo $row['fk_subject_list_id']; ?>">
                                             <button type="submit" name="submitSubjectId" class="btn startBtn">Start</button>
                                         </form>
                                         <!-- <a href="student.subjects.php" class="btn startBtn">Start</a> -->

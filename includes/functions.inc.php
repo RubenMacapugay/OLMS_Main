@@ -34,14 +34,12 @@ function uidExist($conn, $sql, $username) {
 # Login
 //log in validation
 function emptyInputLogin($username, $pwd){
-    $result;
     if(empty($username) || empty($pwd)){
-        $result = true;
+        return true;
     }
     else{
-        $result = false;
+        return false;
     }
-    return $result;
 }
  
 //login account
