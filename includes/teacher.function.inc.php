@@ -61,8 +61,6 @@ require_once ('query.inc.php');
         return $result;
     }
 
-   
-
     # check question input fields if empty
     function emptyInputQuestion($questioner, $answerselect, $choiceA, $choiceB, $choiceC, $choiceD){
         if(empty($questioner) || empty($answerselect) || empty($choiceA) || empty($choiceB) || empty($choiceC) || empty($choiceD)){
@@ -459,6 +457,16 @@ require_once ('query.inc.php');
     function updateModuleSection($conn, $moduleSectionId, $moduleSectionName, $moduleSectionDesc){
         $sql  = "UPDATE `module_section_tbl` SET `module_section_name`='$moduleSectionName',`module_section_desc`='$moduleSectionDesc' WHERE module_section_id = {$moduleSectionId}";
         mysqli_query($conn, $sql);
+    }
+
+    function updateTaskMultipleChoice($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice){
+        $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `submission_choice` = '$submissionchoice' WHERE task_list_id = {$taskId}";
+        mysqli_query($conn, $updateTaskGiven);
+    }
+
+    function updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice){
+        $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `max_score` =  '$maxscore', `submission_choice` = '$submissionchoice' WHERE task_list_id = {$taskId}";
+        mysqli_query($conn, $updateTaskGiven);
     }
 # --- Update Functions --- end #
 

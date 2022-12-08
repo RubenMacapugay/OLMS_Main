@@ -17,13 +17,12 @@
                     ?>
                     <div class="form-group">
                         <label>Grading</label>
-                        <select class="form-control" id="modalGrading" name="gradingModal">
-                            <option selected="" disabled="">Select grading</option>
+                        <select class="form-control" id="modalGrading" name="gradingModal" required="required">
+                            <option value="" selected="" disabled="">Select grading</option>
                             <?php 
                                 foreach ($gradings as $grading) {
                                     echo "<option id='".$grading['grading_id']."' value='".$grading['grading_id']."'>".$grading['grading_name']."</option>";
                                 }
-
                             ?>
                         </select>
                     </div>
@@ -193,8 +192,6 @@
                                             </select>
                                         </div>
                                     </div>
-
-                                    
 
                                     <!-- Task Content for Essay -->
                                     <div class="mb-3 ps-0" id="taskcontentDiv">
@@ -475,6 +472,8 @@ function showGradingTab() {
 
         tabIndicator.style.left = `calc(calc(100% / 4) * ${3})`;
 }
+
+
 </script>
 
 </body>
