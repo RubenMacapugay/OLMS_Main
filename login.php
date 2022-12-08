@@ -8,14 +8,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 
     <!-- Custom fonts for this template-->
-    <link href="admin_project/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link href="admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
     <!-- Custom styles for this template-->
-    <link href="admin_project/admin/css/sb-admin-2.min.css" rel="stylesheet">
-    <link rel="icon" type="image/x-icon" href="./admin_project/admin/img/HFA-Logo.png">
-    <script src="admin_project/admin/vendor/jquery-1.9.1.min.js"></script>
-    <link href="admin_project/admin/vendor/jGrowl/jquery.jgrowl.css" rel="stylesheet" media="screen" />
+    <link href="admin/css/sb-admin-2.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="admin/img/HFA-Logo.png">
+    <script src="admin/vendor/jquery-1.9.1.min.js"></script>
+    <link href="admin/vendor/jGrowl/jquery.jgrowl.css" rel="stylesheet" media="screen" />
 
 </head>
 
