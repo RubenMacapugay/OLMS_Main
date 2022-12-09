@@ -204,7 +204,7 @@
                                     <div class="mb-3 w-50" id="questionItemsDiv">
                                         <label for="">Question items</label>
                                         <input type="number" class="form-control" name="questionitems"
-                                            placeholder="0"></input>
+                                            placeholder="0" min="0"></input>
                                     </div>
                                 </div>
 
@@ -238,14 +238,14 @@
                                         <!-- Attempts -->
                                         <div class="col-6 mb-3">
                                             <label for="inputTime">Time</label>
-                                            <input type="time" class="form-control" name="timelimit" id="inputTime">
+                                            <input type="time" class="form-control" name="timelimit" id="inputTime" >
                                         </div>
                                         
                                         <!-- Time -->
                                         <div class="col-6">
                                             <label for="inputMaxScore">Max attemps</label>
                                             <input type="number" class="form-control" name="maxattempts"
-                                                id="inputMaxScore">
+                                                id="inputMaxScore" placeholder="0" min="0">
                                         </div>
                                     </div>
 
@@ -255,7 +255,7 @@
                                         <div class="col-6 mb-3 " id="inputMaxScoreDiv">
                                             <label for="inputMaxScore">Max score</label>
                                             <input type="number" class="form-control" name="maxscore"
-                                                id="inputMaxScore">
+                                                id="inputMaxScore" placeholder="0" min="0">
                                         </div>
                                         <!-- allow late submission -->
                                         <div class="col-6">

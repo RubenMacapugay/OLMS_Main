@@ -194,9 +194,9 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                     
                                     <!-- Max Attempts -->
                                     <div class="col-6">
-                                        <label for="inputMaxScore">Max attemps</label>
+                                        <label for="inputMaxAttempt">Max attemps</label>
                                         <input type="number" class="form-control" name="maxattempts"
-                                            id="inputMaxAttempts">
+                                            id="inputMaxAttempts"  min="0">
                                     </div>
                                 </div>
 
@@ -205,8 +205,8 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                     <!-- max score -->
                                     <div class="col-6 mb-3 " id="inputMaxScoreDiv">
                                         <label for="inputMaxScore">Max score</label>
-                                        <input type="number" class="form-control" name="maxscore"
-                                            id="inputMaxScore">
+                                        <input type="number" class="form-control"  name="maxscore"
+                                            id="inputMaxScore" min="0">
                                     </div>
                                     
                                     <!-- allow late submission -->
@@ -1296,13 +1296,6 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         });
     });
 
-    document.getElementId('inputMaxScore').addEventListener('change', function (e) {
-        if(this.value < 0){
-        this.value = 0;
-        } else {
-        this.value = Math.round(+this.value * 100)/100;
-        }
-    });
 </script>
 
 <!-- Grading -->
