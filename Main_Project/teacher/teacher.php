@@ -18,7 +18,7 @@
     <div class="row overflow-hidden">
 
         <!-- Left Side Nav -->
-        <div class="col-md-2 " id="sideNav">
+        <div class="col-md-2" id="sideNav">
             <?php include('assets../sidebar.view.php') ?>
         </div>
 
