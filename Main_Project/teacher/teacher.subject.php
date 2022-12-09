@@ -38,13 +38,14 @@ $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
 // Display all subject's students by section
 $resultStudentsSubjectSection = getSubjectStudents($conn);
 
+// Display all subject's students by section progress
+$resultStudentProgress = getSubjectStudentsProgress($conn);
 
 //display the subject name
 // $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
 
 //display Task List
 $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
-$resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 ?>  
 
 <!-- Modal -->
@@ -1113,7 +1114,17 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                             </thead>
                                             <tbody>
                                                 <!-- resultStudentsSubjectSection -->
-                                                <tr>
+                                                <?php while ($rowResult = $resultStudentProgress->fetch_assoc()) : ?>
+                                                    <tr>
+                                                        <td><?php echo $rowResult['student_name'];?></td>
+                                                        <td><?php echo $rowResult['Task_Completed'];?></td>
+                                                        <td><?php echo $rowResult['Task_Completed'];?></td>
+                                                        <td><?php echo $rowResult['student_date_enrolled'];?></td>
+
+                                                    </tr>
+                                                <?php endwhile; ?>
+                                                
+                                                <!-- <tr>
                                                     <td>
                                                         <a href="student_subject.progress.php">Student 1</a>
                                                     </td>
@@ -1152,7 +1163,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                                     <td scope="col" class="text-center"></td>
                                                     <td scope="col" class="text-center">84.0</td>
                                                     <td scope="col" class="text-center">Aug 23 2022</td>
-                                                </tr>
+                                                </tr> -->
                                             </tbody>
                                         </table>
                                     </div>
@@ -1192,7 +1203,9 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                             <tbody>
                                                 <!-- resultStudentsSubjectSection -->
                                                 <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
-
+                                                    <?php 
+                                                        $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
+                                                    ?>
                                                     <tr>
                                                         <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
                                                         

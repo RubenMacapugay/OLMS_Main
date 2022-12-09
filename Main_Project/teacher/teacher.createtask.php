@@ -62,6 +62,7 @@
             <div class="container-fluid ">
                 <div class="custom-border mt-4">
 
+                    <!--  Session Messages -->
                     <?php 
                         // if(isset($_SESSION['msg'])){
                         //     echo 'Session message: '.$_SESSION['msg'];
@@ -201,7 +202,7 @@
                                     </div>
 
                                     <!-- Question Items -->
-                                    <div class="mb-3 w-50" id="questionItemsDiv">
+                                    <div class="mb-3" id="questionItemsDiv">
                                         <label for="">Question items</label>
                                         <input type="number" class="form-control" name="questionitems"
                                             placeholder="0" min="0"></input>
@@ -221,12 +222,12 @@
 
                                     <!-- Duration -->
                                     <div class="mb-3">
-                                        <label class="form-check-label" for="inputDates">Duration</label>
+                                        <label class="form-check-label" for="inputDates">Date Due</label>
                                         <div class="d-flex align-items-center">
                                             <!-- Start Duration -->
-                                            <input type="date" class="form-control" name="datecreated"
+                                            <!-- <input type="date" class="form-control" name="datecreated"
                                                 id="inputStartDate">
-                                            <span class="mx-2">to</span>
+                                            <span class="mx-2">to</span> -->
                                             <!-- End Duration -->
                                             <input type="date" class="form-control" name="datedeadline"
                                                 id="inputEndDate">
@@ -237,7 +238,7 @@
                                     <div class="row">
                                         <!-- Attempts -->
                                         <div class="col-6 mb-3">
-                                            <label for="inputTime">Time</label>
+                                            <label for="inputTime">Time Due</label>
                                             <input type="time" class="form-control" name="timelimit" id="inputTime" >
                                         </div>
                                         

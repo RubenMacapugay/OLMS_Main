@@ -2,6 +2,10 @@
 require_once ('query.inc.php'); 
 # teacher.createtask..php 
 
+date_default_timezone_set('Asia/Manila');
+$date_Today = date("Y-m-d");
+
+// echo $date_Today;
 
 # --- isEmpty Functions --- #
     function emptyEssayTask($grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
@@ -253,21 +257,21 @@ require_once ('query.inc.php');
 
 
 # --- Create Functions --- #
-    function createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate){
+    function createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate){
         
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_created`, `time_limit`, `max_attempts`, `submission_choice`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time_created', '$time', '$maxattempts', '$allowlate')";
         
         mysqli_query($conn, $sqlInsertTask);
 
         echo 'success';
     }
 
-    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
+    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate){
 
         // I need to capture the subject ID
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `task_content`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$taskcontent', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `task_content`, `fk_task_type`, `sub_type`, `date_created`, `time_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$taskcontent', '$tasktype', '$subtype', '$datecreated', '$time_created', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
         
         mysqli_query($conn, $sqlInsertTask);
         
@@ -501,6 +505,11 @@ function getSubjectStudents($conn){
 
 }
 
+function getSubjectStudentsProgress($conn){
+    $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled FROM (student_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id) GROUP BY student_tbl.student_id";
+    $result =  $conn->query($sql) or die ($mysqli->error);
+    return $result;
+}
 function checkTaskCountPerGrading($conn, $subjectListId, $grading){
     $queryTaskCount = "SELECT * FROM task_list_tbl where fk_subject_list_id = $subjectListId and fk_grading_id = $grading";
     if($total_task = mysqli_num_rows(mysqli_query($conn,$queryTaskCount))){

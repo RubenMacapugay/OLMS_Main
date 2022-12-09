@@ -35,10 +35,16 @@
     require '../../includes/teacherDropdown.inc.php';
     $gradings = loadModuleSection();
     // echo $_SESSION['subjectId'];
+
+    // setting default date
+    date_default_timezone_set('Asia/Manila');
+    $date_Today = date("Y-m-d");
+
     ?>
 
 
     <div class="container-fluid" id="header">
+        
         <div class="row">
             <nav class="navbar navbar-expand-md navbar-top">
                 <div class="container-fluid">
@@ -49,7 +55,6 @@
                         aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                     </button>
-
                     <!-- Right -->
                     <div class="collapse navbar-collapse" id="navbarTop">
                         <ul class="navbar-nav ms-auto me-0">

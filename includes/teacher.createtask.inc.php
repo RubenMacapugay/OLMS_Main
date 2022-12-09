@@ -3,6 +3,10 @@
 include_once 'dbh.inc.php';
 include_once 'teacher.function.inc.php';
 
+date_default_timezone_set('Asia/Manila');
+$date_Today = date("Y-m-d");
+$current_time = date("h:i A");
+echo $date_Today.' '.$current_time;
 
 # -----CREATE TASK BUTTONS----- #
     if(isset($_POST["createEssay"])){
@@ -13,8 +17,11 @@ include_once 'teacher.function.inc.php';
         $taskcontent = $_POST["taskcontent"];
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        $datecreated = $_POST["datecreated"];
+        // $datecreated = $_POST["datecreated"];
+        $datecreated = $date_Today;
         $datedeadline = $_POST["datedeadline"];
+        //set time created
+        $time_created = $current_time;
         $time = $_POST["timelimit"];
         $maxscore = $_POST["maxscore"]; 
         $maxattempts = $_POST["maxattempts"];
@@ -37,7 +44,7 @@ include_once 'teacher.function.inc.php';
         }
         
         # create the task
-        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate);
+        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate);
         $_SESSION['msg'] = "taskcompleted";
         header ("location: ../Main_Project/teacher/assets/header.view.php");
         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskessaycreated&&currentSubject=$subjectId");
@@ -52,8 +59,11 @@ include_once 'teacher.function.inc.php';
         $questionitems = $_POST["questionitems"];
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        $datecreated = $_POST["datecreated"];
+        // $datecreated = $_POST["datecreated"];
+        $datecreated = $date_Today;
         $datedeadline = $_POST["datedeadline"];
+        // time created
+        $time_created = $current_time;
         $time = $_POST["timelimit"];
         $maxattempts = $_POST["maxattempts"];
         $allowlate = $_POST["submissionchoice"]; 
@@ -82,7 +92,7 @@ include_once 'teacher.function.inc.php';
         }
 
         # create the task - add max score
-        createTask($conn, $subjectId, $grading, $moduleSection,  $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection,  $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -107,8 +117,11 @@ include_once 'teacher.function.inc.php';
         $questionitems = $_POST["questionitems"]; 
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        $datecreated = $_POST["datecreated"];
+        // $datecreated = $_POST["datecreated"];
+        $datecreated = $date_Today;
         $datedeadline = $_POST["datedeadline"];
+        // time created
+        $time_created = $current_time;
         $time = $_POST["timelimit"];
         // $maxscore = $_POST["maxscore"]; THERES NO MAX SCORE
         $maxattempts = $_POST["maxattempts"];
@@ -137,7 +150,7 @@ include_once 'teacher.function.inc.php';
         }
 
         # create the task
-        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -157,11 +170,14 @@ include_once 'teacher.function.inc.php';
         $grading = $_POST["grading"];
         $moduleSection = $_POST["moduleSection2"];
         $taskname = $_POST["taskname"];
-        $questionitems = $_POST["questionitems"];
+        $questionitems = $_POST["questionitems"]; 
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        $datecreated = $_POST["datecreated"];
+        // $datecreated = $_POST["datecreated"];
+        $datecreated = $date_Today;
         $datedeadline = $_POST["datedeadline"];
+        // time created
+        $time_created = $current_time;
         $time = $_POST["timelimit"];
         $maxattempts = $_POST["maxattempts"];
         $allowlate = $_POST["submissionchoice"]; 
@@ -189,7 +205,7 @@ include_once 'teacher.function.inc.php';
         }
 
         # create the task
-        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -256,7 +272,7 @@ include_once 'teacher.function.inc.php';
         exit();
     }
 
-     #region
+    #region
     // to drop
     // if(isset($_POST["createEnumeration"])){
     //     $grading = $_POST["grading"];

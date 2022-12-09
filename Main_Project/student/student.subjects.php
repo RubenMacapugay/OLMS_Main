@@ -15,7 +15,7 @@ $_SESSION['score'] = 0;
     //Getting the list of task in specific subject of student on subject_list_tbl
     $subjectId = $_SESSION['subjectId'];
     $studentId = $_SESSION['student_id'];
-    date_default_timezone_set('Asia/Manila');
+
 
     $date_now = date("Y-m-d h:i"); 
     $date_Today = date("Y-m-d"); 
