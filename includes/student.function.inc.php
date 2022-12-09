@@ -239,7 +239,7 @@ function getCorrectAnswerIdentification($conn, $questionId){
 }
 
 function getSubjectData($conn, $studentId, $subjectId){
-    $selectStudentSubjects = "SELECT section_tbl.section_name, subject_tbl.subject_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId";
+    $selectStudentSubjects = "SELECT section_tbl.section_name, subject_tbl.subject_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId and subject_tbl.subject_id = $subjectId";
     $correctAnswer = mysqli_query($conn, $selectStudentSubjects);
     return $result = mysqli_fetch_assoc($correctAnswer); 
 }
