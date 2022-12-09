@@ -76,7 +76,7 @@ $_SESSION['score'] = 0;
     }
 
     # display the subject data
-    $resultStudentSubject = getSubjectData($conn, $studentId);
+    $resultStudentSubject = getSubjectData($conn, $studentId, $subjectId);
 
     # getTask count per grading ---
     $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
