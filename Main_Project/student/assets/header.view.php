@@ -27,6 +27,9 @@
 <?php 
 require_once('../../includes/query.inc.php');
 require_once('../../includes/student.function.inc.php');
+
+// setting default date
+date_default_timezone_set('Asia/Manila');
 ?>
 
 <div class="container-fluid" id="header">

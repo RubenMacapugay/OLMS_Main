@@ -15,7 +15,7 @@ $_SESSION['score'] = 0;
     //Getting the list of task in specific subject of student on subject_list_tbl
     $subjectId = $_SESSION['subjectId'];
     $studentId = $_SESSION['student_id'];
-    date_default_timezone_set('Asia/Manila');
+
 
     $date_now = date("Y-m-d h:i"); 
     $date_Today = date("Y-m-d"); 
@@ -76,7 +76,7 @@ $_SESSION['score'] = 0;
     }
 
     # display the subject data
-    $resultStudentSubject = getSubjectData($conn, $studentId);
+    $resultStudentSubject = getSubjectData($conn, $studentId, $subjectId);
 
     # getTask count per grading ---
     $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
