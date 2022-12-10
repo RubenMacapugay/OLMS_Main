@@ -17,7 +17,29 @@ $taskResult = taskExists($conn, $taskId);
 ?>  
 
 <!-- Modal -->
+<div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="#" method="POST" enctype="multipart/form-data">
 
+                <div class="modal-body">
+                    
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="update_btn" class="btn btn-primary">Update</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
 <!-- End of Modal -->
 
 <!--Body content --> 
@@ -37,6 +59,7 @@ $taskResult = taskExists($conn, $taskId);
                 <div class="container-fluid custom-border">
                     <div>
                         <h2><?php echo $taskResult['task_name'];?></h2>
+                        
                         <button class="btn btn-primary my-2" id="new_question"><i class="fa fa-plus"></i> Add Question</button>
                     </div>
                     <div>
@@ -56,8 +79,28 @@ $taskResult = taskExists($conn, $taskId);
                                                     <div class="d-flex d-flex justify-content-between">
                                                         <p><?php echo $row['question_name'] ?></p>
                                                         <div>
-                                                            <button class="btn edit_question p-0" data-id="<?php echo $row['question_id']?>" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>
-                                                            <button class="btn remove_question p-0" data-id="<?php echo $row['question_id']?>" type="button"><i class="fa-solid fa-trash text-danger"></i></button>
+                                                            <span class="d-none"><?php echo $row['question_id'];?></span>
+                                                            <?php 
+                                                                $taskType = $taskResult['sub_type'];
+                                                                if ($taskType == "0"){
+                                                                    // echo "Multiple choice";
+                                                                    echo '<button class="btn edit_question_multipleChoice p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                                } else if($taskType == "1"){
+                                                                    // echo "Identification";
+                                                                    echo '<button class="btn edit_question_identification p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                                } else if($taskType == "2"){
+                                                                    // echo "True or false";
+                                                                    echo '<button class="btn edit_question_trueOrFalse p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                                } else if($taskType == "3"){
+                                                                    // echo "Essay";
+                                                                    echo '<button class="btn edit_question_essay p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                                }
+                                                                echo "<br>";
+                                                            ?>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -81,72 +124,12 @@ $taskResult = taskExists($conn, $taskId);
 <!-- Script Links Bootstrap/Jquery -->
 <?php include('assets/scriptlink.view.php')?>
 
-<script>
-
-    //Module collapse
-    let hideContent = document.querySelectorAll("#teacherSubjectContent .content-collapse");
-    let customHideTable = document.querySelectorAll(".section-table-content");
-
-    for (let i = 0; i < hideContent.length; i++) {
-        hideContent[i].addEventListener("click", function() {
-            customHideTable[i].classList.toggle("custom-hide");
-        });
-    }
-
-
-
-    //Change task type (modal - create_tas_modals.php)
-    var lookup = {
-        '1': ['No subtask'],
-        '2': ['Multiple Choice', 'Identification', 'Enumiration', 'Essay'],
-        '3': ['Multiple Choice', 'Identification', 'Enumiration'],
-        '4': ['Multiple Choice', 'Identification', 'Enumiration'],
-    };
-
-    // When an option is changed, search the above for matching choices
-    $('#options').on('change', function() {
-        // Set selected option as variable
-        var selectValue = $(this).val();
-
-        // Empty the target field
-        $('#choices').empty();
-
-        // For each chocie in the selected option
-        for (i = 0; i < lookup[selectValue].length; i++) {
-            // Output choice in the target field
-            $('#choices').append("<option value='" + lookup[selectValue][i] + "'>" + lookup[selectValue][i] +
-                "</option>");
-        }
-    });
-
-    // Change update and create button for modalCreateUpdateGradingSection
-    $('#btnFirstGrading').on('click', function(e){
-        createDisplay();
-    });
-
-    $('#modalCreateUpdateGradingSection').on('click', function(e){
-        updateDisplay();
-    });
-
-    //  create button
-    function createDisplay(){
-        $('#modalUpdateGradingSection').hide();
-        $('#modalCreateGradingSection').show();
-    }
-
-    // update button
-    function updateDisplay(){
-        $('#modalCreateGradingSection').hide();
-        $('#modalUpdateGradingSection').show();
-    }
-
-</script>
 
 <script type="text/javascript">
 
-    // script for updating  module_section
+    // script for updating question details - multiple choice
     $(document).ready(function (){
-        $(document).on('click', '.editGradingModuleSection', function(){
+        $(document).on('click', '.edit_question_multipleChoice', function(){
             var moduleTaskGradingId = $(this).closest('div').find('#moduleGradingId').text();
             var moduleTaskId = $(this).closest('div').find('#moduleTaskId').text();
             var moduleTaskName = $(this).closest('div').find('#moduleTaskName').text();
@@ -160,15 +143,6 @@ $taskResult = taskExists($conn, $taskId);
         });
     });
 
-    // script for update task - updateModalTask
-    $(document).ready(function (){
-        $(document).on('click', '.updateTableTaskBtn', function(){
-            var moduleGGTaskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
-            $('#updateModalTask').modal('show'); // load update modal
-            $('.updateTaskId').val(moduleGGTaskId);
-            $('#gg').val(moduleGGTaskId);
-        });
-    });
 
     // script for deleting task - deleteTableTaskBtn
     $(document).ready(function (){
@@ -181,30 +155,7 @@ $taskResult = taskExists($conn, $taskId);
     });
 </script>
 
-<script type="text/javascript">
-    $(document).ready(function (){
-        $(document).on('click', '#btnFirstGrading', function(){
-            var id = 1;
 
-            $('#moduleSectionGradingId').val(id);
-        });
-        $(document).on('click', '#btnSecondGrading', function(){
-            var id = 2;
-
-            $('#moduleSectionGradingId').val(id);
-        });
-        $(document).on('click', '#btnThirdGrading', function(){
-            var id = 3;
-
-            $('#moduleSectionGradingId').val(id);
-        });
-        $(document).on('click', '#btnFourthGrading', function(){
-            var id = 4;
-
-            $('#moduleSectionGradingId').val(id);
-        });
-    });
-</script>
 
 </body>
 
