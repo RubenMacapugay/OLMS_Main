@@ -219,6 +219,30 @@ $date_Today = date("Y-m-d");
             
     }
 
+    function getQuestionName($conn, $questionId){
+        $selectQuestionName = "SELECT * FROM question_tbl WHERE question_id = ?";
+
+        # prepare the statement
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $selectQuestionName)){
+            header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
+            exit();
+        }
+
+        # binding user input
+        mysqli_stmt_bind_param($stmt, "i", $questionId);
+        mysqli_stmt_execute($stmt);
+
+        # save the data to variable then return the data or false
+        $resultData = mysqli_stmt_get_result($stmt);
+        if ($row = mysqli_fetch_assoc($resultData)){
+            return $row;
+        } else{
+            $result = false;
+            return $result;
+        }
+    }
+
     function moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId){
         #query
         $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ? and fk_subject_list_id = ?;";
@@ -456,6 +480,11 @@ $date_Today = date("Y-m-d");
     function updateTaskGiven($conn, $isGiven,  $taskId){
         $updateTaskGiven  = "UPDATE `task_list_tbl` SET `given` =  '$isGiven' WHERE task_list_id = {$taskId}";
         mysqli_query($conn, $updateTaskGiven);
+    }
+
+    function updateTaskQuestionCount($conn, $taskId, $questionNumber){
+        $updateTaskQuestionCount  = "UPDATE `task_list_tbl` SET `question_item` =  '$questionNumber' WHERE task_list_id = {$taskId}";
+        mysqli_query($conn, $updateTaskQuestionCount);
     }
 
     function updateModuleSection($conn, $moduleSectionId, $moduleSectionName, $moduleSectionDesc){

@@ -17,6 +17,44 @@ ini_set('display_errors',1);
         <div class="col-md-8 ">
             <div class="mt-4">
                 <div class="custom-border">
+                    <!-- Session Messages -->
+                    <?php 
+                        if(isset($_SESSION['msg'])){
+                            
+                            if($_SESSION['msg'] == "questionupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner has been Updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "questionercreated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner has been Created!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "questionertaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Questioner has been taken!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "missingfeilds"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Missing feilds!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+                            unset($_SESSION['msg']);
+                        }
+                    ?>
 
                     <form method='POST' action='../../includes/teacher.createtask.inc.php' id="createQuestionForm">
                         <div class="row">
@@ -41,6 +79,8 @@ ini_set('display_errors',1);
                                     // }
                                     // echo 'Recent question counter: '.$_SESSION['questionCounter'];
                                 ?>
+
+                                
                             </div>
 
                             <div class="col-6">
