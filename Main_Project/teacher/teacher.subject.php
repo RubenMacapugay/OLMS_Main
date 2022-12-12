@@ -150,7 +150,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
     </div>
 </div>
 
-<!-- edit task -->
+<!-- edit task ** no use-->
 <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -354,7 +354,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                 <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body text-center">
                         <h1 class="modal-title fs-5" id="updateTaskTitle">Do you want to delete the task?</h1>
-                        <input type="text" class="deleteTaskId" name="inputDeleteTaskId">
+                        <input type="hidden" class="deleteTaskId" name="inputDeleteTaskId">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -464,12 +464,17 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     }; </script>";
                                 }
                             }
+                            
 
                             unset($_SESSION['msg']);
                         }
-                        // if(isset($_GET['taskId'])){
-                        //     echo $_GET['taskId'].' dumbass';
-                        // }
+                        if(isset($_GET['tab'])){
+                            if($_GET['tab'] == "taskTab"){
+                                echo "<script> window.onload = function() {
+                                    showTaskTab();
+                                }; </script>";
+                            }
+                        }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->

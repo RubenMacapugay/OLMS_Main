@@ -168,3 +168,25 @@ function fetchTrueOrFalse(){
     document.getElementById('updateBtn').style.display = "inline-block";
     document.getElementById('questionLabel').style.display = "inline-block";
 }
+
+// Function for Edition task in teacher.editTask.php
+function fetchQuestionEditTask(){
+    var id = document.getElementById("questionIdEditTask").value;
+    alert(id);
+    $.ajax({
+        url: "fetchQuestions.php",
+        method: "POST",
+        data: {
+            x: id
+        },
+        dataType: "JSON",
+        success: function (data) {
+            document.getElementById("questionIdEditTask").value = data.questionId;
+            alert(data.questionId);
+            document.getElementById("questionNameMultipleChoice").value = data.questionerName;
+
+            // set the value for queston counter
+            document.getElementById("updateQuestionLabel").innerHTML = data.questionerNumber; 
+        }
+    })
+}

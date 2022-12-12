@@ -355,6 +355,7 @@ echo $date_Today.' '.$current_time;
 
         # check empty feilds 
         if(emptyInputQuestion($questioner, $answerselect, $choiceA, $choiceB, $choiceC, $choiceD) !== false){
+            $_SESSION['msg'] = "missingfeilds";
             header ("location: ../Main_Project/teacher/teacher.createquestioner.php?error=emptyinput");
             exit();
         }
@@ -362,6 +363,7 @@ echo $date_Today.' '.$current_time;
         # Logic for next button -- comeback
         if($questionExists !== false){
             //$_SESSION['currentQuestion'] = $questionExists['question_id'];
+            $_SESSION['msg'] = "questionertaken";
             header ("location: ../Main_Project/teacher/teacher.createquestioner.php?error=questiontaken");
             exit();
         } 
@@ -385,6 +387,8 @@ echo $date_Today.' '.$current_time;
         createChoices($conn, $recentlyAdded['question_id'], $choiceC, $choiceCIsCorrect);
         createChoices($conn, $recentlyAdded['question_id'], $choiceD, $choiceDIsCorrect);
 
+        $_SESSION['msg'] = "questionercreated";
+
         ## redirect to creating question when limit reached
         if($questionerCounter >= $_SESSION["question_items"]){
             header ("location: ../Main_Project/teacher/teacher.taskproceed.php?msg=multiplechoice");
@@ -395,6 +399,62 @@ echo $date_Today.' '.$current_time;
         header ("location: ../Main_Project/teacher/teacher.createquestioner.php?msg=questioncreated");
         exit();
     }
+
+    if(isset($_POST["createQuestion_EditTask"])){
+        $questioner = $_POST['createQuestioner'];
+        $answerselect = $_POST['createAnswerselect'];
+        $questionNumber = $_POST['createEditTaskQuestionCount'];
+
+        $choiceA = $_POST['createChoiceA'];
+        $choiceB = $_POST['createChoiceB'];
+        $choiceC = $_POST['createChoiceC'];
+        $choiceD = $_POST['createChoiceD'];
+
+        $choiceAIsCorrect = $_POST['createChoiceIsCorrectA'];
+        $choiceBIsCorrect = $_POST['createChoiceIsCorrectB'];
+        $choiceCIsCorrect = $_POST['createChoiceIsCorrectC'];
+        $choiceDIsCorrect = $_POST['createChoiceIsCorrectD'];
+        
+        ## check if the question exist -- comeback
+        $taskListId =  $_POST["insertTaskId"];
+        $questionExists = questionerExist($conn, $taskListId, $questioner);
+
+        # Logic for next button -- comeback
+
+        if($questionExists !== false){
+            //$_SESSION['currentQuestion'] = $questionExists['question_id'];
+            $_SESSION['msg'] = "questionertaken";
+            header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskListId");
+            exit();
+        }
+
+        
+        ## create question if not exist-- comeback
+        createQuestion($conn, $taskListId, $questioner, $questionNumber);
+        
+        ## save the recentlyadded question
+        $recentlyAdded = questionerExist($conn, $taskListId, $questioner);
+
+        ## create answer
+        createAnswer($conn, $recentlyAdded['question_id'], $answerselect);
+        
+        ## create choices modifying
+        createChoices($conn, $recentlyAdded['question_id'], $choiceA, $choiceAIsCorrect);
+        createChoices($conn, $recentlyAdded['question_id'], $choiceB, $choiceBIsCorrect);
+        createChoices($conn, $recentlyAdded['question_id'], $choiceC, $choiceCIsCorrect);
+        createChoices($conn, $recentlyAdded['question_id'], $choiceD, $choiceDIsCorrect);
+
+        // update task question count
+        updateTaskQuestionCount($conn, $taskListId, $questionNumber);
+
+        $_SESSION['msg'] = "questionercreated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskListId");
+        exit();
+    }
+
+
 
     # Updating question
     if(isset($_POST["updateQuestion"])){
@@ -419,18 +479,47 @@ echo $date_Today.' '.$current_time;
         $choiceCIsCorrect = $_POST['choiceIsCorrectC'];
         $choiceDIsCorrect = $_POST['choiceIsCorrectD'];
 
+        $taskListId = $_SESSION["task_id"];
+        $questionExists = questionerExist($conn, $taskListId, $questioner);
+        $currentQuestion = getQuestionName($conn, $questionerId);
+
+      
+        
         if(emptyInputQuestion($questioner, $answerselect, $choiceA, $choiceB, $choiceC, $choiceD) !== false){
+            $_SESSION['msg'] = "missingfeilds";
             header ("location: ../Main_Project/teacher/teacher.createquestioner.php?error=emptyinput");
             exit();
         }
         
+        
         # update quesitoner details
+        if($currentQuestion['question_name'] == $questioner){
+            updateAnswerKey($conn, $answerId, $answerselect);
+            updateQuestion($conn, $questionerId, $questioner);
+            updateChoices($conn, $choiceAId, $choiceA, $choiceAIsCorrect);
+            updateChoices($conn, $choiceBId, $choiceB, $choiceBIsCorrect);
+            updateChoices($conn, $choiceCId, $choiceC, $choiceCIsCorrect);
+            updateChoices($conn, $choiceDId, $choiceD, $choiceDIsCorrect);
+            $_SESSION['msg'] = "questionupdated";
+
+            header ("location: ../Main_Project/teacher/assets/header.view.php");
+            header ("location: ../Main_Project/teacher/teacher.createquestioner.php?msg=questionupdated");
+            exit();
+        }
+        
+        if($questionExists !== false){
+            $_SESSION['msg'] = "questionertaken";
+            header ("location: ../Main_Project/teacher/teacher.createquestioner.php?taskId=$taskListId");
+            exit();
+        }
+        
         updateAnswerKey($conn, $answerId, $answerselect);
         updateQuestion($conn, $questionerId, $questioner);
         updateChoices($conn, $choiceAId, $choiceA, $choiceAIsCorrect);
         updateChoices($conn, $choiceBId, $choiceB, $choiceBIsCorrect);
         updateChoices($conn, $choiceCId, $choiceC, $choiceCIsCorrect);
         updateChoices($conn, $choiceDId, $choiceD, $choiceDIsCorrect);
+        $_SESSION['msg'] = "questionupdated";
 
         header ("location: ../Main_Project/teacher/assets/header.view.php");
         header ("location: ../Main_Project/teacher/teacher.createquestioner.php?msg=questionupdated");
@@ -466,6 +555,7 @@ echo $date_Today.' '.$current_time;
 
         # Check if feilds is empty
         if(emptyInputIdentification($identificationAnswer, $identificationQuestion) !== false){
+            $_SESSION['msg'] = "missingfeilds";
             header ("location: ../Main_Project/teacher/teacher.createidentification.php?error=emptyinput");
             exit();
         }
@@ -473,6 +563,7 @@ echo $date_Today.' '.$current_time;
         # check if identification question exists?
         $identificationExists = questionerExist($conn, $taskId, $identificationQuestion);
         if($identificationExists !== false){
+            $_SESSION['msg'] = "questionertaken";
             header ("location: ../Main_Project/teacher/teacher.createidentification.php?error=questiontaken");
             exit();
         }
@@ -487,6 +578,8 @@ echo $date_Today.' '.$current_time;
         $_SESSION['currentQuestion'] = $_SESSION['recentlyAdded'];
 
         createAnswer($conn, $recentlyAdded['question_id'], $identificationAnswer);
+
+        $_SESSION['msg'] = "questionercreated";
 
         # if the question count reach the target number of question, stop
         if($questionerCounter >= $_SESSION["question_items"]){
@@ -505,18 +598,40 @@ echo $date_Today.' '.$current_time;
     if(isset($_POST["updateIdentification"])){ 
         $question = $_POST["identificationInputQuestion"];
         $answer = $_POST["identificationInputAnswer"];
-        $questionID = $_POST["identificationInputQuestionId"];
+        $questionerId = $_POST["identificationInputQuestionId"];
         $answerID = $_POST["identificationInputId"];
         $_SESSION['updatingIdentification'];
         
+        $taskListId = $_SESSION["task_id"];
+        $questionExists = questionerExist($conn, $taskListId, $question);
+        $currentQuestion = getQuestionName($conn, $questionerId);
+
         # check inputs
         if(emptyInputIdentification($answer, $question) !== false){
+            $_SESSION['msg'] = "missingfeilds";
             header ("location: ../Main_Project/teacher/teacher.createidentification.php?error=emptyinput");
             exit();
         }
 
-        updateIdentificationQuestion($conn, $questionID, $question);
+        if($currentQuestion['question_name'] == $question){
+            updateIdentificationQuestion($conn, $questionerId, $question);
+            updateIdentificationAnswer($conn, $answerID, $answer);
+            $_SESSION['msg'] = "questionupdated";
+
+            header ("location: ../Main_Project/teacher/assets/header.view.php");
+            header ("location: ../Main_Project/teacher/teacher.createidentification.php?msg=questionupdated");
+            exit();
+        }
+        
+        if($questionExists !== false){
+            $_SESSION['msg'] = "questionertaken";
+            header ("location: ../Main_Project/teacher/teacher.createidentification.php?taskId=$taskListId");
+            exit();
+        }
+        
+        updateIdentificationQuestion($conn, $questionerId, $question);
         updateIdentificationAnswer($conn, $answerID, $answer);
+        $_SESSION['msg'] = "questionupdated";
 
         header ("location: ../Main_Project/teacher/assets/header.view.php");
         header ("location: ../Main_Project/teacher/teacher.createidentification.php?msg=updatesuccess");
@@ -556,6 +671,7 @@ echo $date_Today.' '.$current_time;
 
         # check fields if empty *****create function
         if(emptyInputTrueOrFalse($trueOrFalseQuestion, $trueOrFalseAnswer) !== false){
+            $_SESSION['msg'] = "missingfeilds";
             header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=emptyinput");
             exit();
         }
@@ -564,6 +680,7 @@ echo $date_Today.' '.$current_time;
         # check if trueOrfalse  question exists?
         $trueOrFalseExists = questionerExist($conn, $taskId, $trueOrFalseQuestion);
         if($trueOrFalseExists !== false){
+            $_SESSION['msg'] = "questionertaken";
             header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=questiontaken");
             exit();
         }
@@ -581,6 +698,8 @@ echo $date_Today.' '.$current_time;
 
         # save answer
         createAnswer($conn, $recentlyAdded['question_id'], $trueOrFalseAnswer);
+
+        $_SESSION['msg'] = "questionercreated";
 
         # if the question count reach the target number of question, stop
         if($questionerCounter >= $_SESSION["question_items"]){
@@ -625,11 +744,31 @@ echo $date_Today.' '.$current_time;
         }
         $answerID = $_POST["submissionChoiceId"];
 
+        $questionExists = questionerExist($conn, $taskId, $question);
+        $currentQuestion = getQuestionName($conn, $questionID);
+
         // $_SESSION['updatingIdentification'];
         
         # check inputs
         # check fields if empty *****create function
+        if($currentQuestion['question_name'] == $question){
+            updateQuestion($conn, $questionID, $question);
+            updateTrueOrFalseAnswer($conn, $_POST["submissionChoiceId"], $answer);
+            $_SESSION['msg'] = "questionupdated";
+            
+            header ("location: ../Main_Project/teacher/assets/header.view.php");
+            header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=updatesuccess&&test=$answer");
+            exit();
+        }
+
+        if($questionExists !== false){
+            $_SESSION['msg'] = "questionertaken";
+            header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php");
+            exit();
+        }
+
         if(emptyInputTrueOrFalse($question, $answer) !== false){
+            $_SESSION['msg'] = "questionertaken";
             header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=emptyinput");
             exit();
         }
@@ -637,9 +776,10 @@ echo $date_Today.' '.$current_time;
 
         updateQuestion($conn, $questionID, $question);
         updateTrueOrFalseAnswer($conn, $_POST["submissionChoiceId"], $answer);
+        $_SESSION['msg'] = "questionupdated";
         
         header ("location: ../Main_Project/teacher/assets/header.view.php");
-        header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=updatesuccess&&test=$answer");
+        header ("location: ../Main_Project/teacher/teacher.createTrueOrFalse.php?msg=updatesuccess");
         exit();
     }
 # --- TRUE OR FALSE --- end#
@@ -952,6 +1092,113 @@ echo $date_Today.' '.$current_time;
         exit();
         
     }
+
+#region    --- teacher.editTask.php
+if(isset($_POST["updateQuestion_EditTask"])){
+    $taskId = $_POST['updateTaskId'];
+    $questioner = $_POST['questionNameMultipleChoice'];
+    $answerselect = $_POST['answerselectMultipleChoice'];
+    $choiceA = $_POST['choiceA'];
+    $choiceB = $_POST['choiceB'];
+    $choiceC = $_POST['choiceC'];
+    $choiceD = $_POST['choiceD'];
+
+    # ID's 
+    $questionerId = $_POST['questionerMultipleChoiceId'];
+    $answerId = $_POST['updateAnswerId'];
+    $choiceAId = $_POST['updateChoiceAId'];
+    $choiceBId = $_POST['updateChoiceBId'];
+    $choiceCId = $_POST['updateChoiceCId'];
+    $choiceDId = $_POST['updateChoiceDId'];
+
+    #correct choice
+    $choiceAIsCorrect = $_POST['choiceIsCorrectA'];
+    $choiceBIsCorrect = $_POST['choiceIsCorrectB'];
+    $choiceCIsCorrect = $_POST['choiceIsCorrectC'];
+    $choiceDIsCorrect = $_POST['choiceIsCorrectD'];
+
+    $questionExists = questionerExist($conn, $taskId, $questioner);
+    $currentQuestion = getQuestionName($conn, $questionerId);
+    
+    # Logic for next button -- comeback
+    if($currentQuestion['question_name'] == $questioner){
+        # update quesitoner details
+        updateAnswerKey($conn, $answerId, $answerselect);
+        updateQuestion($conn, $questionerId, $questioner);
+        updateChoices($conn, $choiceAId, $choiceA, $choiceAIsCorrect);
+        updateChoices($conn, $choiceBId, $choiceB, $choiceBIsCorrect);
+        updateChoices($conn, $choiceCId, $choiceC, $choiceCIsCorrect);
+        updateChoices($conn, $choiceDId, $choiceD, $choiceDIsCorrect);
+
+        $_SESSION['msg'] = "taskupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+    # update quesitoner details
+    updateAnswerKey($conn, $answerId, $answerselect);
+    updateQuestion($conn, $questionerId, $questioner);
+    updateChoices($conn, $choiceAId, $choiceA, $choiceAIsCorrect);
+    updateChoices($conn, $choiceBId, $choiceB, $choiceBIsCorrect);
+    updateChoices($conn, $choiceCId, $choiceC, $choiceCIsCorrect);
+    updateChoices($conn, $choiceDId, $choiceD, $choiceDIsCorrect);
+
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId&&1");
+    exit();
+
+}
+
+
+if(isset($_POST['updateIdentification_EditTask'])){
+
+    $taskId = $_POST['updateTaskId'];
+    $questionerId = $_POST['identificationInputQuestionId'];
+    $questioner = $_POST['identificationInputQuestion'];
+    $answerId = $_POST['identificationInputId'];
+    $answer = $_POST['identificationInputAnswer'];
+
+    $questionExists = questionerExist($conn, $taskId, $questioner);
+    $currentQuestion = getQuestionName($conn, $questionerId);
+    
+    # Logic for next button -- comeback
+    if($currentQuestion['question_name'] == $questioner){
+        # update quesitoner details
+        updateIdentificationQuestion($conn, $questionerId, $question);
+        updateIdentificationAnswer($conn, $answerID, $answer);
+        $_SESSION['msg'] = "taskupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+    # update quesitoner details
+    updateIdentificationQuestion($conn, $questionerId, $questioner);
+    updateIdentificationAnswer($conn, $answerId, $answer);
+
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+    exit();
+}
+
+#endregion --- teacher.editTask.php end
 # --- Updates ---end #
 
 # --- Delete ---
@@ -976,6 +1223,25 @@ if(isset($_POST['deleteModalTaskBtn'])){
     exit();
 
     $conn->close();
+
+}
+
+if(isset($_POST['deleteQuestion_EditTask'])){
+    $taskId = $_POST['deleteTaskId'];
+    $questionId = $_POST['inputDeleteTaskId'];
+    $questionNumber = $_POST['deleteEditTaskQuestionCount'];
+
+    deleteQuestion($conn, $questionId);
+    
+    $_SESSION['msg'] = "questionerdeleted";
+
+    // update taski list question item
+    updateTaskQuestionCount($conn, $taskId, ($questionNumber - 1));
+
+
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+    exit();
 
 }
 # --- Delete --- end #

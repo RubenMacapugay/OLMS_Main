@@ -12,8 +12,6 @@ ini_set('display_errors',1);
         </div>
 
         <!-- Main Content -->
-
- 
         <div class="col-md-8 ">
             <div class="container-fluid create-question" id="content">
 
@@ -39,18 +37,41 @@ ini_set('display_errors',1);
                     </div>
                     <!-- Session Testers -->
                     <?php 
-                        // echo'Question count: '.$_SESSION["question_items"]; 
-                        // echo '<br>';
-                        // echo 'Task Name: '.$_SESSION["task_name"];
-                        // echo '<br>';
-                        // echo 'Task_list_ID: '.$_SESSION["task_id"];
-                        // echo '<br>';
-                        // if(isset($_SESSION['recentlyAdded'])){
-                        //     echo 'Recent question id: '.$_SESSION['recentlyAdded'];
-                        //     echo '<br>';
-                        // }
-                        // echo 'Recent question counter: '.$_SESSION['questionCounter'];
-                        // echo 'Subject ID: '.$_SESSION["subjectId"];
+                        if(isset($_SESSION['msg'])){
+                            
+                            if($_SESSION['msg'] == "questionupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner has been Updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "questionercreated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner has been Created!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "questionertaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Questioner has been taken!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "missingfeilds"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Missing feilds!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+                            unset($_SESSION['msg']);
+                        }
                     ?>
 
                     <!-- Questioner -->
@@ -136,8 +157,6 @@ ini_set('display_errors',1);
                 </div>
 
             </div>
-
-
         </div>
 
 
