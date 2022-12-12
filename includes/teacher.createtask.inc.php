@@ -1118,7 +1118,7 @@ if(isset($_POST["updateQuestion_EditTask"])){
     $choiceDIsCorrect = $_POST['choiceIsCorrectD'];
 
     $questionExists = questionerExist($conn, $taskId, $questioner);
-    $currentQuestion = getQuestionName($conn, $taskId);
+    $currentQuestion = getQuestionName($conn, $questionerId);
     
     # Logic for next button -- comeback
     if($currentQuestion['question_name'] == $questioner){
@@ -1133,7 +1133,7 @@ if(isset($_POST["updateQuestion_EditTask"])){
         $_SESSION['msg'] = "taskupdated";
 
         header ("location: ../Main_Project/teacher/assets/header.view.php");
-        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId&&1");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
         exit();
     }
 
@@ -1157,6 +1157,47 @@ if(isset($_POST["updateQuestion_EditTask"])){
     exit();
 
 }
+
+
+if(isset($_POST['updateIdentification_EditTask'])){
+
+    $taskId = $_POST['updateTaskId'];
+    $questionerId = $_POST['identificationInputQuestionId'];
+    $questioner = $_POST['identificationInputQuestion'];
+    $answerId = $_POST['identificationInputId'];
+    $answer = $_POST['identificationInputAnswer'];
+
+    $questionExists = questionerExist($conn, $taskId, $questioner);
+    $currentQuestion = getQuestionName($conn, $questionerId);
+    
+    # Logic for next button -- comeback
+    if($currentQuestion['question_name'] == $questioner){
+        # update quesitoner details
+        updateIdentificationQuestion($conn, $questionerId, $question);
+        updateIdentificationAnswer($conn, $answerID, $answer);
+        $_SESSION['msg'] = "taskupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+    # update quesitoner details
+    updateIdentificationQuestion($conn, $questionerId, $questioner);
+    updateIdentificationAnswer($conn, $answerId, $answer);
+
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+    exit();
+}
+
 #endregion --- teacher.editTask.php end
 # --- Updates ---end #
 
