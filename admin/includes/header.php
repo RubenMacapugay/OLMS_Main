@@ -20,6 +20,9 @@
     <link href="css/sb-admin-2.min.css" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="img/HFA-Logo.png">
 
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/72c32f013b.js" crossorigin="anonymous"></script>
+
 
 </head>
 
