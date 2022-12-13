@@ -25,15 +25,76 @@
        Management Accounts
      </div>
 
-      <!-- Nav Item - Account -->
-      <li class="nav-item active">
-       <a class="nav-link" href="teacher.head.php">
+     <!-- Nav Item - Account -->
+     <li class="nav-item">
+       <a class="nav-link pb-3" href="teacher.head.php">
          <i class="fas fa-fw fa-users"></i>
-         <span>Subject Head</span></a>
+         <span>Teacher's Account</span></a>
      </li>
 
+     <li class="nav-item">
+       <a class="nav-link pt-0" href="#">
+         <i class="fas fa-fw fa-tasks"></i>
+         <span>Assign Subject</span></a>
+     </li>
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
 
 
+    <!-- <li class="nav-item">
+       <a class="nav-link pb-1 pt-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Downloadable Materials</span></a>
+    </li> -->
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Enrolled Students</span></a>
+    </li>
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-book"></i>
+         <span>Subjects</span></a>
+    </li>
+
+    <!-- <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Sections</span></a>
+    </li> 
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Grades</span></a>
+    </li>
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Strand</span></a>
+    </li> -->
+    
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="calendar.php">
+         <i class="fas fa-fw fa-calendar"></i>
+         <span>Calendar</span></a>
+    </li>
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-info"></i>
+         <span>Announcements</span></a>
+    </li>
+
+    <li class="nav-item">
+       <a class="nav-link" href="#">
+         <i class="fas fa-fw fa-database"></i>
+         <span>Backup / Restore Database </span></a>
+    </li>
      <!-- Nav Item - Pages Collapse Menu -->
      <!-- <li class="nav-item">
        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -193,9 +254,9 @@
            <!-- Nav Item - Alerts -->
            <li class="nav-item dropdown no-arrow mx-1">
              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="fas fa-bell fa-fw"></i>
+               <!-- <i class="fas fa-bell fa-fw"></i> -->
                <!-- Counter - Alerts -->
-               <span class="badge badge-danger badge-counter">3+</span>
+               <!-- <span class="badge badge-danger badge-counter">3+</span> -->
              </a>
              <!-- Dropdown - Alerts -->
              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -242,9 +303,9 @@
            <!-- Nav Item - Messages -->
            <li class="nav-item dropdown no-arrow mx-1">
              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="fas fa-envelope fa-fw"></i>
+               <!-- <i class="fas fa-envelope fa-fw"></i> -->
                <!-- Counter - Messages -->
-               <span class="badge badge-danger badge-counter">7</span>
+               <!-- <span class="badge badge-danger badge-counter">7</span> -->
              </a>
              <!-- Dropdown - Messages -->
              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
@@ -295,19 +356,13 @@
              </div>
            </li>
 
-           <div class="topbar-divider d-none d-sm-block"></div>
+           <!-- <div class="topbar-divider d-none d-sm-block"></div> -->
 
            <!-- Nav Item - User Information -->
            <li class="nav-item dropdown no-arrow">
              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                Administrator
-                 <?php
-
-                  // echo $_SESSION['admin_username'];
-
-                  ?>
-
+                 Administrator
                </span>
                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
              </a>
@@ -362,10 +417,7 @@
                <form action="logout.php" method="POST">
 
                  <button type="submit" name="logout_btn" class="btn btn-primary">Logout</button>
-
                </form>
-
-
              </div>
            </div>
          </div>

@@ -89,14 +89,14 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
             </div>
 
             <?php
-            if (isset($_POST['edit_data_btn'])) {
+            // if (isset($_POST['edit_data_btn'])) {
             
-                $id = $_POST['file_edit_id'];
+            //     $id = $_POST['file_edit_id'];
 
-                $query = "SELECT * FROM module_tbl WHERE module_id ='$id'";
-                $query_run = mysqli_query($conn, $query);
+            //     $query = "SELECT * FROM module_tbl WHERE module_id ='$id'";
+            //     $query_run = mysqli_query($conn, $query);
 
-                foreach ($query_run as $row) {
+            //     foreach ($query_run as $row) {
             ?>
             <form action="../../includes/teacher.upload.php" method="POST" enctype="multipart/form-data">
 
@@ -118,8 +118,8 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                 </div>
             </form>
             <?php
-                }
-            }
+            //     }
+            // }
 
             ?>
         </div>
