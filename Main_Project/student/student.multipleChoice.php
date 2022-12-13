@@ -51,7 +51,7 @@ if(isset($_GET['taskId'])){
                     <form action="../../includes/student.process.php" method="POST">
                         <div class="form-group mb-3">
                             <h3 class="form-label fw-bold">Question <?php echo $_SESSION['questionCount']; ?> of <?php echo $total_questions; ?></h3>
-                            <h6 class="question fw-bold mx-4 mt-4"><?php echo $question['question_name']; ?> </h6>
+                            <h5 class="question fw-bold mx-4 mt-4"><?php echo $question['question_name']; ?> </h5>
                             <input type="hidden" name="questionId" value="<?php echo $quesionId; ?>">
                             <input type="hidden" name="task_id" value="<?php echo $taskId; ?>">
                         </div>
@@ -61,7 +61,7 @@ if(isset($_GET['taskId'])){
                                 <div class="form-check d-flex mt-2 ms-4">
                                     <div class="container">
                                         <input type="radio" name="choice" value="<?php echo $row['choices_id'];?>">
-                                        <?php echo $row['choices_name']; ?>
+                                        <p><?php echo $row['choices_name']; ?></p>
 
                                     </div>
                                     <br>

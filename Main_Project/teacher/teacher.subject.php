@@ -376,7 +376,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
         
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
-            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateModalTask">Click me</button>
+            <!-- <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateModalTask">Click me</button> -->
             <?php include('assets/sidebar.view.php') ?>
         </div>
 
@@ -1122,7 +1122,14 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                 <?php while ($rowResult = $resultStudentProgress->fetch_assoc()) : ?>
                                                     <tr>
                                                         <td><?php echo $rowResult['student_name'];?></td>
-                                                        <td><?php echo $rowResult['Task_Completed'];?></td>
+                                                        <td>
+                                                            <?php echo $rowResult['Task_Completed'];?>
+                                                            <div class="progress-bar me-3">
+                                                                <div class="circular-progress">
+                                                                    <div class="value-container"></div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
                                                         <td><?php echo $rowResult['Task_Completed'];?></td>
                                                         <td><?php echo $rowResult['student_date_enrolled'];?></td>
 
@@ -1246,6 +1253,50 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 
 <!-- Script Links Bootstrap/Jquery -->
 <?php include('assets/scriptlink.view.php')?>
+
+<!-- Progress bar -->
+<script>
+let totalModule = 10;
+let speed = 10;
+
+// List of progress bar --
+var progressList = document.querySelectorAll('.circular-progress');
+
+// Calculate the subject progress --
+let subjectProgressEndValue = progressEndValue(6, totalModule);
+
+// Loop through each progress bar
+for (i = 0; i < progressList.length; i++) {
+    progressList[i];
+    progressDisplay(progressList[i], subjectProgressEndValue);
+}
+
+function progressDisplay(progressIndicator, endValue) {
+    let progressValue = 0;
+    let progress = setInterval(() => {
+        progressValue++;
+        if (endValue == 0) {
+            progressValue = 0;
+        }
+
+        progressIndicator.style.background = `conic-gradient(
+        #FFD61E ${progressValue * 3.6}deg,
+        #fff ${progressValue * 3.6}deg
+    )`;
+        if (progressValue == endValue) {
+            clearInterval(progress);
+        }
+    }, speed);
+}
+
+function progressEndValue(count, total) {
+    let result = Math.round((count / total) * 100);
+    if (result == 0) {
+        return 100;
+    }
+    return result;
+}
+</script>
 
 <!-- Collapse grading and module sections -->
 <script>
