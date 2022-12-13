@@ -106,7 +106,13 @@ $date_Today = date("Y-m-d");
 # --- isEmpty Functions --- end #
 
 # --- Exists Functions --- #
-    function teacherSubjectExist($conn, $subjectId, $teacherId){
+function teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId){
+    $selectSubject = "SELECT * FROM (((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId and subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = $sectionId";
+    $row = mysqli_query($conn, $selectSubject);
+    return $result = mysqli_fetch_assoc($row); 
+}
+    function teacherSubjectExist($conn, $subjectId, $sectionId, $teacherId){
+        // $selectSubject = "SELECT * FROM (((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId and subject_tbl.subject_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
         $selectSubject = "SELECT * FROM subject_list_tbl where subject_list_id = ? and fk_teacher_id = ?";
 
         # start the preapred statement

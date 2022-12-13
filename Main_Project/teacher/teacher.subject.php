@@ -2,19 +2,22 @@
 include('assets/header.view.php');
 
 // if(isset($_SESSION['subjectId'])){
-//     echo 'Section: '.$_SESSION['section_id'];
+//     echo 'Section: '.$_SESSION['section_id']; 
 // }else{
 //     echo "failed";
 // }
 ?>
 
 <?php 
+$sectionId = $_SESSION['section_id'];
 $subjectId = $_SESSION['subjectId'];
 $teacherId = $_SESSION['teacher_id'];
 
 
+
+
 // get subject
-$currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
+$currentSubjectData = teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId);
 
 
 // getTask count per grading;
@@ -504,11 +507,11 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                             <div class="tab-body">
 
                                 <!-- Subject Modules Tab -->
-                                <div class="active tab-content p-2">
+                                <div class="active tab-content p-2" >
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h2><?php echo $currentSubjectData['subject_list_name']?></h2>
-                                            <p>Section</p>
+                                        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #1F78FC; color: white; font-weight: bold;">
+                                            <h2 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h2>
+                                            <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
                                             <!-- <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                                                 Atque
@@ -522,7 +525,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     <div class="section-module mt-2 card ">
 
                                         <!-- Adding module -->
-                                        <div class="card-header ">
+                                        <div class="card-header">
 
                                             <h3 class="section-title ">First Grading</h3>
                                             <br>
@@ -1256,46 +1259,46 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 
 <!-- Progress bar -->
 <script>
-let totalModule = 10;
-let speed = 10;
+    let totalModule = 10;
+    let speed = 10;
 
-// List of progress bar --
-var progressList = document.querySelectorAll('.circular-progress');
+    // List of progress bar --
+    var progressList = document.querySelectorAll('.circular-progress');
 
-// Calculate the subject progress --
-let subjectProgressEndValue = progressEndValue(6, totalModule);
+    // Calculate the subject progress --
+    let subjectProgressEndValue = progressEndValue(6, totalModule);
 
-// Loop through each progress bar
-for (i = 0; i < progressList.length; i++) {
-    progressList[i];
-    progressDisplay(progressList[i], subjectProgressEndValue);
-}
-
-function progressDisplay(progressIndicator, endValue) {
-    let progressValue = 0;
-    let progress = setInterval(() => {
-        progressValue++;
-        if (endValue == 0) {
-            progressValue = 0;
-        }
-
-        progressIndicator.style.background = `conic-gradient(
-        #FFD61E ${progressValue * 3.6}deg,
-        #fff ${progressValue * 3.6}deg
-    )`;
-        if (progressValue == endValue) {
-            clearInterval(progress);
-        }
-    }, speed);
-}
-
-function progressEndValue(count, total) {
-    let result = Math.round((count / total) * 100);
-    if (result == 0) {
-        return 100;
+    // Loop through each progress bar
+    for (i = 0; i < progressList.length; i++) {
+        progressList[i];
+        progressDisplay(progressList[i], subjectProgressEndValue);
     }
-    return result;
-}
+
+    function progressDisplay(progressIndicator, endValue) {
+        let progressValue = 0;
+        let progress = setInterval(() => {
+            progressValue++;
+            if (endValue == 0) {
+                progressValue = 0;
+            }
+
+            progressIndicator.style.background = `conic-gradient(
+            #FFD61E ${progressValue * 3.6}deg,
+            #fff ${progressValue * 3.6}deg
+        )`;
+            if (progressValue == endValue) {
+                clearInterval(progress);
+            }
+        }, speed);
+    }
+
+    function progressEndValue(count, total) {
+        let result = Math.round((count / total) * 100);
+        if (result == 0) {
+            return 100;
+        }
+        return result;
+    }
 </script>
 
 <!-- Collapse grading and module sections -->

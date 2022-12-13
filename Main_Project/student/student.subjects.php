@@ -10,6 +10,12 @@ include('assets../header.view.php');
 $_SESSION['score'] = 0;
 ?>
 
+<style>
+    .section-name{
+        
+    }
+</style>
+
 
 <?php 
     //Getting the list of task in specific subject of student on subject_list_tbl
@@ -169,10 +175,10 @@ $_SESSION['score'] = 0;
                                 <div class="active tab-content p-2">
                                     <div class="card">
 
-                                        <div class="card-header">
+                                        <div class="card-header section-name d-flex justify-content-between align-items-center" style="background-color: #1F78FC; color: white; font-weight: bold;">
                                             <!-- Change this -->
-                                            <h3><?php echo $resultStudentSubject['subject_name'];?></h3>
-                                            <p><?php echo $resultStudentSubject['grade_level_name'].' - '.$resultStudentSubject['section_name'];?></p>
+                                            <h2 class="fw-bold mb-0"><?php echo $resultStudentSubject['subject_name'];?></h2>
+                                            <p class="fw-bold mb-0"><?php echo $resultStudentSubject['grade_level_name'].' - '.$resultStudentSubject['section_name'];?></p>
                                         </div>
                                         
                                     </div>
@@ -180,7 +186,7 @@ $_SESSION['score'] = 0;
                                     <!-- First Grading -->
                                     <div class="section-module mt-2 card ">
                                         <div class="card-header ">
-                                            <h4 class="section-title">First Grading</h4>
+                                            <h3 class="section-title">First Grading</h3>
                                             <br>
                                             <div>
                                                 <ul class="nav justify-content-between align-items-center">
