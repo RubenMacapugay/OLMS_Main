@@ -40,6 +40,7 @@ if(!isset($taskId) || $taskResult == false){
                     <input type="hidden" name="updateTaskId" id="updateTaskId" value="<?php echo $_GET['taskId'];?>">
                     <input type="hidden" id="updateQuestionId" class="updateQuestion" name="questionerMultipleChoiceId">
                     <div class="form-group mb-3">
+                        <label for="quetioner" class="form-label" id="questionLabelMC" >Question <span class="questionCounter"></span></label>
                         <input type="text" name="questionNameMultipleChoice" id="questionNameMultipleChoice" class="form-control updateQuestionName"  required>
                     </div>
                     <div class="form-group mb-3">
@@ -123,7 +124,7 @@ if(!isset($taskId) || $taskResult == false){
                     <input type="hidden" name="updateTaskId" id="updateTaskId" value="<?php echo $_GET['taskId'];?>">
                     
                     <div class="form-group mb-3 ps-0" id="taskcontentDiv">
-                        <label for="">Question</label>
+                        <label for="quetioner" class="form-label" id="questionLabelMC" >Question <span class="questionCounter"></span></label>
                         <input class="form-control" type="hidden" name="identificationInputQuestionId"
                             id="identificationInputQuestionId" required>
                         <input class="form-control" type="text" name="identificationInputQuestion"
@@ -142,6 +143,57 @@ if(!isset($taskId) || $taskResult == false){
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     <button type="submit" name="updateIdentification_EditTask" class="btn btn-primary">Update</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit_question_trueOrFalse_Modal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit True or False</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    
+                    <input type="hidden" name="createTaskId" id="createTaskTrueOrFalse" value="<?php echo $_GET['taskId'];?>">
+                    <input type="hidden" name="createEditTaskQuestionCount" value="<?php echo $taskResult['question_item']+1;?>">
+                    <div class="form-group mb-3 ps-0" id="taskcontentDiv">
+                        <label for="">Question</label>
+                        <input type="hidden" class="form-control" id="inputTrueOrFalseQuestionerId"
+                                        name="trueOrFalseQuestionerId" aria-describedby="questionHidden">
+                        <input class="form-control" type="text" name="trueOrFalseInputQuestion"
+                            id="trueOrFalseInputQuestion" required>
+                    </div>
+
+                    <div class="ms-3 mt-1">
+                        <input type="text" name="submissionChoiceId" id="inputTrueOrFalseSubmissionChoiceId">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="submissionchoice" type="radio"
+                                id="radioTrue" value="True" required>
+                            <label class="form-check-label" for="radioYes">
+                                True
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="submissionchoice" type="radio"
+                                id="radioFalse" value="False" required>
+                            <label class="form-check-label" for="radioNo">
+                                False
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="updateTrueOrFalse_EditTask" class="btn btn-primary">Create</button>
                 </div>
 
             </form>
@@ -223,6 +275,96 @@ if(!isset($taskId) || $taskResult == false){
                         <button type="submit" name="createQuestion_EditTask" class="btn btn-primary ms-3"
                             id="nextBtn">Create</button>
                     </div>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="create_question_identification_Modal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Identification</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    
+                    <input type="hidden" name="createTaskId" id="createTaskIdIdentification" value="<?php echo $_GET['taskId'];?>">
+                    <input type="hidden" name="createEditTaskQuestionCount" value="<?php echo $taskResult['question_item']+1;?>">
+                    <div class="form-group mb-3 ps-0" id="taskcontentDiv">
+                    <label class="form-label" id="questionLabel">Question  <span id="updateQuestionLabel" name="updateQuestionLabel"><?php echo $taskResult['question_item']+1;?></span></label>
+                        <input class="form-control" type="hidden" name="identificationInputQuestionId"
+                            id="identificationInputQuestionId" required>
+                        <input class="form-control" type="text" name="identificationInputQuestion"
+                            id="identificationInputQuestion">
+                    </div>
+
+                    <div class="form-group mb-3 ps-0" id="taskcontentDiv">
+                        <label for="">Answer</label>
+                        <input class="form-control" type="hidden" name="identificationInputId"
+                            id="identificationInputId">
+                        <input class="form-control" type="text" name="identificationInputAnswer"
+                            id="identificationInputAnswer" required>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="createIdentfication_EditTask" class="btn btn-primary">Create</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="create_question_trueOrFalse_Modal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit True or False</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    
+                    <input type="hidden" name="createTaskId" id="createTaskIdIdentification" value="<?php echo $_GET['taskId'];?>">
+                    <input type="hidden" name="createEditTaskQuestionCount" value="<?php echo $taskResult['question_item']+1;?>">
+                    <div class="form-group mb-3 ps-0" id="taskcontentDiv">
+                        <label class="form-label" id="questionLabel">Question  <span id="updateQuestionLabel" name="updateQuestionLabel"><?php echo $taskResult['question_item']+1;?></span></label>
+                        <input class="form-control" type="text" name="trueOrFalseInputQuestion"
+                            id="identificationInputQuestion" required>
+                    </div>
+
+                    <div class="ms-3 mt-1">
+                        <input type="hidden" name="submissionChoiceId" id="submissionChoiceId">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="submissionchoice" type="radio"
+                                id="radioTrue" value="True" required>
+                            <label class="form-check-label" for="radioYes">
+                                True
+                            </label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" name="submissionchoice" type="radio"
+                                id="radioFalse" value="False" required>
+                            <label class="form-check-label" for="radioNo">
+                                False
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="createTrueOrFalse_EditTask" class="btn btn-primary">Create</button>
                 </div>
 
             </form>
@@ -313,8 +455,18 @@ if(!isset($taskId) || $taskResult == false){
                     <div>
                         <a href="teacher.subject.php?tab=taskTab">back</a>
                         <h2><?php echo $taskResult['task_name'];?></h2>
+                        <?php
+                            if($taskType == "0"){
+                                echo '<button class="btn btn-primary my-2 new_questionMultipleChoice" id="new_questionMultipleChoice"><i class="fa fa-plus"></i> Add Question</button>';
+                            } else if($taskType == "1"){
+                                echo '<button class="btn btn-primary my-2 new_questionIdentification" id="new_questionIdentification"><i class="fa fa-plus"></i> Add Question</button>';
+                            } else if($taskType == "2"){
+                                echo '<button class="btn btn-primary my-2 new_questionTrueOrFalse" id="new_questionTrueOrFalse"><i class="fa fa-plus"></i> Add Question</button>';
+                            } else if($taskType == "3"){
+                                echo '<button class="btn btn-primary my-2 new_questionEssay" id="new_questionEssay"><i class="fa fa-plus"></i> Add Question</button>';
+                            }
+                        ?>
                         
-                        <button class="btn btn-primary my-2 new_question" id="new_question"><i class="fa fa-plus"></i> Add Question</button>
                     </div>
                     <div>
                         <div class="card col-md-12 " style="float:left">
@@ -326,7 +478,9 @@ if(!isset($taskId) || $taskResult == false){
                                     <tbody>
                                     <?php
                                         $qry = $conn->query("SELECT * FROM question_tbl where fk_task_list_id = ".$_GET['taskId']);
+                                        $num = 0;
                                         while($row=$qry->fetch_array()){
+                                            $num++;
                                             ?>
                                             <tr>
                                                 <td>
@@ -335,6 +489,7 @@ if(!isset($taskId) || $taskResult == false){
                                                         <div>
                                                             <span class="d-none" id="questionIdEditTask"><?php echo $row['question_id'];?></span>
                                                             <span class="d-none" id="questionerEditTask"><?php echo $row['question_name'];?></span>
+                                                            <span class="" id="questionerNumberEditTask"><?php echo $num;?></span>
                                                             <?php 
                                                                 
                                                                 $questionId = $row['question_id'];
@@ -410,7 +565,23 @@ if(!isset($taskId) || $taskResult == false){
                                                                     echo '<button class="btn edit_question_identification p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 } else if($taskType == "2"){
+
                                                                     // echo "True or false";
+                                                                    $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
+                                                                    $answerResultTrueOrFalse = mysqli_query($conn, $answerSql);
+                                                                    while($answerRow = mysqli_fetch_array($answerResultTrueOrFalse)){
+                                                                        // fetching the record $row = same from database
+                                                                        $data['answerId'] = $answerRow['answer_id'];
+                                                                        $data['answerKey'] = $answerRow['answer_key'];
+                                                                    }
+
+                                                                    // Save the answer here
+                                                                    ?> 
+                                                                    <!-- answer key -->
+                                                                    <span class="d-none answerId" id="trueOrFalseAnswerId"><?php echo $data['answerId']; ?></span>
+                                                                    <span class="d-none answerKey" id="trueOrFalseAnswerKey"><?php echo $data['answerKey']; ?></span>
+                                                                    <?php 
+
                                                                     echo '<button class="btn edit_question_trueOrFalse p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 } else if($taskType == "3"){
@@ -451,7 +622,8 @@ if(!isset($taskId) || $taskResult == false){
         $(document).on('click', '.edit_question_multipleChoice', function(){
             var questionId = $(this).closest('div').find('#questionIdEditTask').text();
             var questioner = $(this).closest('div').find('#questionerEditTask').text();
-
+            var questionCounter = $(this).closest('div').find('#questionerNumberEditTask').text();
+            
             // getting the choices names and id
             var choiceAId = $(this).closest('div').find('#choiceAId').text();
             var choiceBId = $(this).closest('div').find('#choiceBId').text();
@@ -474,6 +646,7 @@ if(!isset($taskId) || $taskResult == false){
             // setting value for question
             $('.updateQuestion').val(questionId);
             $('.updateQuestionName').val(questioner);
+            $('.questionCounter').text(questionCounter);
 
             // setting value for choices
             $('#updateChoiceAId').val(choiceAId);
@@ -502,7 +675,8 @@ if(!isset($taskId) || $taskResult == false){
             // Get the question and id
             var questionId = $(this).closest('div').find('#questionIdEditTask').text();
             var questioner = $(this).closest('div').find('#questionerEditTask').text();
-
+            var questionCounter = $(this).closest('div').find('#questionerNumberEditTask').text();
+            // alert (questionCounter);
             // Get the correct answer and id
             var answerId = $(this).closest('div').find('#identificatoinAnswerId').text();
             var answerKey = $(this).closest('div').find('#identificatoinAnswerKey').text();
@@ -511,6 +685,9 @@ if(!isset($taskId) || $taskResult == false){
 
             // populate the question and aswer on the modal
             // setting value for question
+            
+            $('.questionCounter').text(questionCounter);
+            $('.updateQuestionName').val(questioner);
             $('#identificationInputQuestionId').val(questionId);
             $('#identificationInputQuestion').val(questioner);
 
@@ -521,11 +698,52 @@ if(!isset($taskId) || $taskResult == false){
         });
     });
 
-
-    //createQuestion_EditTask 
     $(document).ready(function (){
-        $(document).on('click', '.new_question', function(){
+        $(document).on('click', '.edit_question_trueOrFalse', function(){
+            // Get the question and id
+            var questionId = $(this).closest('div').find('#questionIdEditTask').text();
+            var questioner = $(this).closest('div').find('#questionerEditTask').text();
+            // Get the correct answer and id
+            var answerId = $(this).closest('div').find('#trueOrFalseAnswerId').text();
+            var answerKey = $(this).closest('div').find('#trueOrFalseAnswerKey').text();
+
+            
+
+            $('#edit_question_trueOrFalse_Modal').modal('show'); // load delete modal
+
+            // populate the question and aswer on the modal
+            // setting value for question
+            $('#inputTrueOrFalseQuestionerId').val(questionId);
+            $('#trueOrFalseInputQuestion').val(questioner);
+
+            // setting value for question
+            $('#inputTrueOrFalseSubmissionChoiceId').val(answerId);
+            if(answerKey == "True"){
+                $('#radioTrue').prop('checked',true);
+            } else  if(answerKey == "False"){
+                $('#radioFalse').prop('checked',true);
+            }
+
+        });
+    });
+
+
+    // Create Question
+    $(document).ready(function (){
+        $(document).on('click', '.new_questionMultipleChoice', function(){
             $('#create_question_multipleChoice_Modal').modal('show'); // load delete modal
+        });
+    });
+
+    $(document).ready(function (){
+        $(document).on('click', '.new_questionIdentification', function(){
+            $('#create_question_identification_Modal').modal('show'); // load delete modal
+        });
+    });
+
+    $(document).ready(function (){
+        $(document).on('click', '.new_questionTrueOrFalse', function(){
+            $('#create_question_trueOrFalse_Modal').modal('show'); // load delete modal
         });
     });
 

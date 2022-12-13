@@ -452,6 +452,7 @@ $date_Today = date("Y-m-d");
     }
 
     function updateTrueOrFalseAnswer($conn, $answerID, $answer){
+        echo $answerID;
         if($answer == "True"){
             $updateQuestion  = "UPDATE answer_tbl SET answer_key = 'True'  WHERE answer_id = $answerID";
             mysqli_query($conn, $updateQuestion);

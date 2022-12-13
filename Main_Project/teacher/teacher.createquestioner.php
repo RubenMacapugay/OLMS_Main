@@ -17,7 +17,7 @@ ini_set('display_errors',1);
 
                 <div class="custom-border mt-4">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0" id="mema">Create Task Title</h5>
+                        <h5 class="mb-0" id="mema">Multiple Choice</h5>
                         <div class="d-flex w-50 align-items-center questioner-cont">
                             <label for="questionList" class="question-label">Question List: </label>
                             <select class="form-select" name="questionList" id="questionList" aria-label="select answer"

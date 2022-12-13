@@ -400,62 +400,6 @@ echo $date_Today.' '.$current_time;
         exit();
     }
 
-    if(isset($_POST["createQuestion_EditTask"])){
-        $questioner = $_POST['createQuestioner'];
-        $answerselect = $_POST['createAnswerselect'];
-        $questionNumber = $_POST['createEditTaskQuestionCount'];
-
-        $choiceA = $_POST['createChoiceA'];
-        $choiceB = $_POST['createChoiceB'];
-        $choiceC = $_POST['createChoiceC'];
-        $choiceD = $_POST['createChoiceD'];
-
-        $choiceAIsCorrect = $_POST['createChoiceIsCorrectA'];
-        $choiceBIsCorrect = $_POST['createChoiceIsCorrectB'];
-        $choiceCIsCorrect = $_POST['createChoiceIsCorrectC'];
-        $choiceDIsCorrect = $_POST['createChoiceIsCorrectD'];
-        
-        ## check if the question exist -- comeback
-        $taskListId =  $_POST["insertTaskId"];
-        $questionExists = questionerExist($conn, $taskListId, $questioner);
-
-        # Logic for next button -- comeback
-
-        if($questionExists !== false){
-            //$_SESSION['currentQuestion'] = $questionExists['question_id'];
-            $_SESSION['msg'] = "questionertaken";
-            header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskListId");
-            exit();
-        }
-
-        
-        ## create question if not exist-- comeback
-        createQuestion($conn, $taskListId, $questioner, $questionNumber);
-        
-        ## save the recentlyadded question
-        $recentlyAdded = questionerExist($conn, $taskListId, $questioner);
-
-        ## create answer
-        createAnswer($conn, $recentlyAdded['question_id'], $answerselect);
-        
-        ## create choices modifying
-        createChoices($conn, $recentlyAdded['question_id'], $choiceA, $choiceAIsCorrect);
-        createChoices($conn, $recentlyAdded['question_id'], $choiceB, $choiceBIsCorrect);
-        createChoices($conn, $recentlyAdded['question_id'], $choiceC, $choiceCIsCorrect);
-        createChoices($conn, $recentlyAdded['question_id'], $choiceD, $choiceDIsCorrect);
-
-        // update task question count
-        updateTaskQuestionCount($conn, $taskListId, $questionNumber);
-
-        $_SESSION['msg'] = "questionercreated";
-
-        header ("location: ../Main_Project/teacher/assets/header.view.php");
-        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskListId");
-        exit();
-    }
-
-
-
     # Updating question
     if(isset($_POST["updateQuestion"])){
         $questioner = $_POST['questioner'];
@@ -656,6 +600,9 @@ echo $date_Today.' '.$current_time;
         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=identificationcreationcancelled&&currentSubject=$currentSubject");
         exit();
     }
+
+   
+    
 # --- Identification --- end#
 
 # --- TRUE OR FALSE --- #
@@ -1094,6 +1041,60 @@ echo $date_Today.' '.$current_time;
     }
 
 #region    --- teacher.editTask.php
+if(isset($_POST["createQuestion_EditTask"])){
+    $questioner = $_POST['createQuestioner'];
+    $answerselect = $_POST['createAnswerselect'];
+    $questionNumber = $_POST['createEditTaskQuestionCount'];
+
+    $choiceA = $_POST['createChoiceA'];
+    $choiceB = $_POST['createChoiceB'];
+    $choiceC = $_POST['createChoiceC'];
+    $choiceD = $_POST['createChoiceD'];
+
+    $choiceAIsCorrect = $_POST['createChoiceIsCorrectA'];
+    $choiceBIsCorrect = $_POST['createChoiceIsCorrectB'];
+    $choiceCIsCorrect = $_POST['createChoiceIsCorrectC'];
+    $choiceDIsCorrect = $_POST['createChoiceIsCorrectD'];
+    
+    ## check if the question exist -- comeback
+    $taskListId =  $_POST["insertTaskId"];
+    $questionExists = questionerExist($conn, $taskListId, $questioner);
+
+    # Logic for next button -- comeback
+
+    if($questionExists !== false){
+        //$_SESSION['currentQuestion'] = $questionExists['question_id'];
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskListId");
+        exit();
+    }
+
+    
+    ## create question if not exist-- comeback
+    createQuestion($conn, $taskListId, $questioner, $questionNumber);
+    
+    ## save the recentlyadded question
+    $recentlyAdded = questionerExist($conn, $taskListId, $questioner);
+
+    ## create answer
+    createAnswer($conn, $recentlyAdded['question_id'], $answerselect);
+    
+    ## create choices modifying
+    createChoices($conn, $recentlyAdded['question_id'], $choiceA, $choiceAIsCorrect);
+    createChoices($conn, $recentlyAdded['question_id'], $choiceB, $choiceBIsCorrect);
+    createChoices($conn, $recentlyAdded['question_id'], $choiceC, $choiceCIsCorrect);
+    createChoices($conn, $recentlyAdded['question_id'], $choiceD, $choiceDIsCorrect);
+
+    // update task question count
+    updateTaskQuestionCount($conn, $taskListId, $questionNumber);
+
+    $_SESSION['msg'] = "questionercreated";
+
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskListId");
+    exit();
+}
+
 if(isset($_POST["updateQuestion_EditTask"])){
     $taskId = $_POST['updateTaskId'];
     $questioner = $_POST['questionNameMultipleChoice'];
@@ -1158,9 +1159,44 @@ if(isset($_POST["updateQuestion_EditTask"])){
 
 }
 
+if(isset($_POST["createIdentfication_EditTask"])){
+    $taskListId =  $_POST["createTaskId"];
+    $questioner = $_POST['identificationInputQuestion'];
+    $answerkey = $_POST['identificationInputAnswer'];
+    $questionNumber = $_POST['createEditTaskQuestionCount'];
+
+    ## check if the question exist -- comeback
+    $questionExists = questionerExist($conn, $taskListId, $questioner);
+
+    # Logic for next button -- comeback
+
+    if($questionExists !== false){
+        //$_SESSION['currentQuestion'] = $questionExists['question_id'];
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskListId");
+        exit();
+    }
+    
+    ## create question if not exist-- comeback
+    createQuestion($conn, $taskListId, $questioner, $questionNumber);
+    
+    ## save the recentlyadded question
+    $recentlyAdded = questionerExist($conn, $taskListId, $questioner);
+
+    ## create answer
+    createAnswer($conn, $recentlyAdded['question_id'], $answerkey);
+    
+    // update task question count
+    updateTaskQuestionCount($conn, $taskListId, $questionNumber);
+
+    $_SESSION['msg'] = "questionercreated";
+
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskListId");
+    exit();
+}
 
 if(isset($_POST['updateIdentification_EditTask'])){
-
     $taskId = $_POST['updateTaskId'];
     $questionerId = $_POST['identificationInputQuestionId'];
     $questioner = $_POST['identificationInputQuestion'];
@@ -1173,8 +1209,8 @@ if(isset($_POST['updateIdentification_EditTask'])){
     # Logic for next button -- comeback
     if($currentQuestion['question_name'] == $questioner){
         # update quesitoner details
-        updateIdentificationQuestion($conn, $questionerId, $question);
-        updateIdentificationAnswer($conn, $answerID, $answer);
+        updateIdentificationQuestion($conn, $questionerId, $questioner);
+        updateIdentificationAnswer($conn, $answerId, $answer);
         $_SESSION['msg'] = "taskupdated";
 
         header ("location: ../Main_Project/teacher/assets/header.view.php");
@@ -1198,6 +1234,88 @@ if(isset($_POST['updateIdentification_EditTask'])){
     exit();
 }
 
+if(isset($_POST['createTrueOrFalse_EditTask'])){
+    if(isset($_POST['submissionchoice'])){
+            $trueOrFalseAnswer = $_POST['submissionchoice'];
+    } else{
+        $trueOrFalseAnswer = "";
+    }
+
+    $taskId = $_POST["createTaskId"];  
+    $trueOrFalseQuestion = $_POST["trueOrFalseInputQuestion"];
+    $questionNumber = $_POST['createEditTaskQuestionCount'];
+
+    # check if trueOrfalse  question exists?
+    $questionExists = questionerExist($conn, $taskId, $trueOrFalseQuestion);
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskId");
+        exit();
+    }
+
+    # sava the data to database then save answer
+    createQuestion($conn, $taskId, $trueOrFalseQuestion ,$questionNumber);
+
+    ## save the recentlyadded question id to session
+    $recentlyAdded = questionerExist($conn, $taskId, $trueOrFalseQuestion);
+    
+    # save answer
+    createAnswer($conn, $recentlyAdded['question_id'], $trueOrFalseAnswer);
+
+    $_SESSION['msg'] = "questionercreated";
+    updateTaskQuestionCount($conn, $taskId, $questionNumber);
+
+
+    # head to next question if question count hasn't reach the target
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+    exit();
+}
+
+if(isset($_POST['updateTrueOrFalse_EditTask'])){
+    $taskId = $_POST["createTaskId"];
+    $questionID = $_POST["trueOrFalseQuestionerId"];
+    $question = $_POST["trueOrFalseInputQuestion"];
+    
+    $answerID = $_POST["submissionChoiceId"];
+    if(isset($_POST['submissionchoice'])){
+        $answer = $_POST['submissionchoice'];
+    } else{
+        $answer = "";
+    }
+
+    $questionExists = questionerExist($conn, $taskId, $question);
+    $currentQuestion = getQuestionName($conn, $questionID);
+
+    // $_SESSION['updatingIdentification'];
+    
+    # check inputs
+    # check fields if empty *****create function
+    if($currentQuestion['question_name'] == $question){
+        updateQuestion($conn, $questionID, $question);
+        updateTrueOrFalseAnswer($conn, $answerID, $answer);
+        $_SESSION['msg'] = "taskupdated";
+        
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questionupdated&&taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questiontaken&&taskId=$taskId");
+        exit();
+    }
+
+    updateQuestion($conn, $questionID, $question);
+    updateTrueOrFalseAnswer($conn, $_POST["submissionChoiceId"], $answer);
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questionupdated&&taskId=$taskId");
+    exit();
+}
 #endregion --- teacher.editTask.php end
 # --- Updates ---end #
 

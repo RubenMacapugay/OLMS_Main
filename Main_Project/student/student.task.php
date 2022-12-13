@@ -67,7 +67,7 @@ $_SESSION['questionCounter'] = 1;
                     ?>
 
                     <?php // Display Enumeration
-                    if($subType == 2){
+                    if($subType == 10){
                     ?>
                         <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.enumeration.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
@@ -77,7 +77,7 @@ $_SESSION['questionCounter'] = 1;
                     ?>
 
                     <?php // Display True or false
-                    if($subType == 3){
+                    if($subType == 2){
                     ?>
                         <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.trueorfalse.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
@@ -87,7 +87,7 @@ $_SESSION['questionCounter'] = 1;
                     ?>
 
                     <?php // Display Essay
-                    if($subType == 4){
+                    if($subType == 3){
                     ?>
                         <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.essay.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
