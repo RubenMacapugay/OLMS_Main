@@ -96,7 +96,7 @@ include('includes/navbar.php');
                 </button>
             </div>
             <form action="code.php" method="post">
-                <input type="hidden" name="delete_teacher_id" id="delete_teacher_id" value="<?php echo $row['teacher_id'] ?>">
+                <input type="hidden" name="delete_teacher_id" id="delete_teacher_id" class="delete_teacher_id" value="<?php echo $row['teacher_id'] ?>">
                 <div class="modal-body">
                     <p>Are you sure you want to delete this?</p>
                 </div>
@@ -118,14 +118,14 @@ include('includes/navbar.php');
             <div class="d-flex">
                 <div class="p-2 flex-grow-1">
                     <div class="mt-3 font-weight-bold text-primary">
-                        Teacher's Account
+                        Assign Subjects
                     </div>
                 </div>
-                <div class="p-2">
+                <!-- <div class="p-2">
                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addadminprofile">
                         Add Teacher's Account
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="card-body">
@@ -153,8 +153,8 @@ include('includes/navbar.php');
                         <tr>
                             <!--<th>ID</th>-->
                             <th>Teacher's name</th>
-                            <th>User ID</th>
-                            <th>Password</th>
+                            <th>Subject Handled</th>
+                            <th>Section Handled</th>
                             <!-- <th>User Type</th> -->
                             <th>Action</th>
                             <!-- <th>DELETE</th> -->
@@ -171,27 +171,19 @@ include('includes/navbar.php');
                                     <td><?php echo $row['teacher_number']; ?></td>
                                     <td><?php echo $row['teacher_password']; ?></td>
                                     <td>
-                                        <div class="d-flex">
+                                        <div class="d-flex align-items-start">
+                                            <!-- Edit Teacher's Account -->
                                             <span class="d-none" id="teacherId"><?php echo $row['teacher_id']; ?></span>
                                             <span class="d-none" id="teacherName"><?php echo $row['teacher_name']; ?></span>
                                             <span class="d-none" id="teacherNum"><?php echo $row['teacher_number']; ?></span>
                                             <span class="d-none" id="teacherPass"><?php echo $row['teacher_password']; ?></span>
 
                                             <i class="fa-regular fa-pen-to-square text-primary editTeacherModal me-2" type="button"></i>
-                                        </div>
 
-                                        <div class="d-flex">
+                                            <!-- Delete Teacher's account -->
                                             <span class="d-none" id="deleteTeacherId"><?php echo $row['teacher_id']; ?></span>
-
                                             <i class="fa-solid fa-trash text-danger me-2 deleteTeacherModal" type="button"></i>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <!-- <i class="fa-solid fa-trash text-danger me-2" type="button" name="delete_data_btn" data-toggle="modal" data-target="#confirmDeleteModal"></i> -->
-                                        <form action="code.php" method="POST">
-                                            <!-- <input type="hidden" name="delete_teacher_id" value="<?php echo $row['teacher_id'] ?>"> -->
-                                            <!-- <button type="submit" name="delete_teacher_btn" class="btn btn-danger">DELETE</button> -->
-                                        </form>
                                     </td>
                                 </tr>
                         <?php

@@ -2,21 +2,25 @@
 include('assets/header.view.php');
 
 // if(isset($_SESSION['subjectId'])){
-//     echo 'Section: '.$_SESSION['section_id'];
+//     echo 'Section: '.$_SESSION['section_id']; 
 // }else{
 //     echo "failed";
 // }
 ?>
 
 <?php 
+$sectionId = $_SESSION['section_id'];
 $subjectId = $_SESSION['subjectId'];
 $teacherId = $_SESSION['teacher_id'];
 
 
+
+
 // get subject
-$currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
+$currentSubjectData = teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId);
 
-
+// get the total task
+$totalTaskCount = checkTotalTaskCount($conn, $subjectId);
 // getTask count per grading;
 $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
 $secondGradingTask = checkTaskCountPerGrading($conn, $subjectId, 2);
@@ -38,13 +42,14 @@ $resultModuleSectionFourthGrading = getModuleSection($conn, $subjectId, 4);
 // Display all subject's students by section
 $resultStudentsSubjectSection = getSubjectStudents($conn);
 
+// Display all subject's students by section progress
+$resultStudentProgress = getSubjectStudentsProgress($conn, $sectionId, $subjectId);
 
 //display the subject name
-$selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
+// $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
 
 //display Task List
 $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
-$resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 ?>  
 
 <!-- Modal -->
@@ -149,7 +154,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
     </div>
 </div>
 
-<!-- edit task -->
+<!-- edit task ** no use-->
 <div class="modal fade" id="editTaskModal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -211,7 +216,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Section content</h1>
+                <h1 class="modal-title fs-5" id="updateModuleSectionTitle">Update Section content</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             
@@ -243,32 +248,96 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 <!-- End of Modal -->
 
 <!-- update task details -->
-<div class="modal fade" id="updateTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
+<div class="modal fade" id="updateModalTask" tabindex="-1" aria-labelledby="updateTask" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="updateModuleSection">Update Task</h1>
+                <h1 class="modal-title fs-5" id="updateTaskTitle">Update Task</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="container-fluid">
                 <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
                     <div class="modal-body">
-                        <input type="hidden" name="updateModuleSectionGradingId" id="updateModuleSectionGradingId" class="form-control updateModuleSectionGradingId" placeholder="Module Section name" required>
-                        <input type="hidden" name="updateModuleSectionId" id="updateModuleSectionId" class="form-control updateModuleSectionId" placeholder="Module Section name" required>
-                        <div class="form-group">
-                            <label>Task name</label>
-                            <input type="text" name="updateModuleSectionName" id="updateModuleSectionName" class="form-control updateModuleSectionName" placeholder="Module Section name" required>
+                        <div class="row task-details">
+                            <div class="form-group">
+                                <!-- get the task details --> 
+                                <!-- Task Id -->
+                                <input type="hidden" id="updateTaskId" name="updateTaskId">
+                                <input type="hidden" id="inputSubType" name="inputSubType">
+                                <!-- Task Name -->
+                                <div class="mb-3">
+                                    <label for="inputTaskDescription" class="form-label mb-0">Task
+                                        Name</label>
+                                    <input type="name" class="form-control" name="taskname"
+                                        id="inputTaskDescription" aria-describedby="taskname"
+                                        placeholder="sample: 01 Quiz 01">
+                                </div>
+
+                                <!-- Duration -->
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="inputDates">Due date</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="date" class="form-control" name="datedeadline"
+                                            id="inputEndDate">
+                                    </div>
+                                </div>
+
+                                <!-- Attempts and Time -->
+                                <div class="row">
+                                    <!-- Time -->
+                                    <div class="col-6 mb-3">
+                                        <label for="inputTime">Due time</label>
+                                        <input type="time" class="form-control" name="timelimit" id="inputTime">
+                                    </div>
+                                    
+                                    <!-- Max Attempts -->
+                                    <div class="col-6">
+                                        <label for="inputMaxAttempt">Max attemps</label>
+                                        <input type="number" class="form-control" name="maxattempts"
+                                            id="inputMaxAttempts"  min="0">
+                                    </div>
+                                </div>
+
+                                <!-- Max score and allow late submission -->
+                                <div class="row mb-3">
+                                    <!-- max score -->
+                                    <div class="col-6 mb-3 " id="inputMaxScoreDiv">
+                                        <label for="inputMaxScore">Max score</label>
+                                        <input type="number" class="form-control"  name="maxscore"
+                                            id="inputMaxScore" min="0">
+                                    </div>
+                                    
+                                    <!-- allow late submission -->
+                                    <div class="col-6">
+                                        <label>Allow late submission</label>
+                                        <div class="mt-1">
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="submissionchoice" type="radio"
+                                                    id="radioYes" checked value="Yes">
+                                                <label class="form-check-label" for="radioYes">
+                                                    Yes
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" name="submissionchoice" type="radio"
+                                                    id="radioNo" value="No">
+                                                <label class="form-check-label" for="radioNo">
+                                                    no
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label>Section description</label>
-                            <input type="text" name="updateModuleSectionDesc" id="updateModuleSectinDesc" class="form-control updateModuleSectinDesc" placeholder="Description" required>
-                        </div>
-                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" name="updateModuleSection" class="btn btn-primary" id="modalUpdateGradingSection">Update</button>
+                        <button type="submit" name="updateModalTaskWithQuestion" class="btn btn-primary" id="updateModalTaskWithQuestion">Update</button>
+                        <button type="submit" name="updateModalEssay" class="btn btn-primary" id="updateModalEssay">Update</button>
                     </div>
                 </form>
             </div>
@@ -276,6 +345,33 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         </div>
     </div>
 </div>
+
+<!-- delete task modal -->
+<div class="modal fade" id="deleteModalTask" tabindex="-1" aria-labelledby="deleteModalTask" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="container-fluid">
+                <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+                    <div class="modal-body text-center">
+                        <h1 class="modal-title fs-5" id="updateTaskTitle">Do you want to delete the task?</h1>
+                        <input type="hidden" class="deleteTaskId" name="inputDeleteTaskId">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" name="deleteModalTaskBtn" class="btn btn-danger" id="deleteModalTaskBtn">Delete</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
 <!-- End of Modal -->
 
 <!--Body content --> 
@@ -284,7 +380,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
-            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateTask">Click me</button>
+            <!-- <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateModalTask">Click me</button> -->
             <?php include('assets/sidebar.view.php') ?>
         </div>
 
@@ -297,6 +393,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                     
                     <!-- validation message -->
                     <?php 
+
                         if(isset($_SESSION["taskGiven"])){
                             if($_SESSION["taskGiven"] == "taskGiven"){
                                 if($_SESSION['taskGivenStatus'] == "Yes"){
@@ -349,9 +446,51 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
                             }
+                            if($_SESSION['msg'] == "taskDeleted"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been deleted!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "taskDeletedFailed"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been deleted!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            if($_SESSION['msg'] == "taskupdated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Task has been Updated!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                if($_GET['tab'] == "taskTab"){
+                                    echo "<script> window.onload = function() {
+                                        showTaskTab();
+                                    }; </script>";
+                                }
+                            }
+                            
+
                             unset($_SESSION['msg']);
                         }
-
+                        if(isset($_GET['tab'])){
+                            if($_GET['tab'] == "taskTab"){
+                                echo "<script> window.onload = function() {
+                                    showTaskTab();
+                                }; </script>";
+                            }
+                            if($_GET['tab'] == "gradeBook"){
+                                echo "<script> window.onload = function() {
+                                    showGradingTab();
+                                }; </script>";
+                            }
+                            if($_GET['tab'] == "moduleTab"){
+                                
+                                echo "<script> window.onload = function() {
+                                    showModuleTab();
+                                }; </script>";
+                            }
+                        }
                     ?>
 
                     <!-- Subject Header (tabpane header) -->
@@ -381,11 +520,11 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                             <div class="tab-body">
 
                                 <!-- Subject Modules Tab -->
-                                <div class="active tab-content p-2">
+                                <div class="active tab-content p-2" >
                                     <div class="card">
-                                        <div class="card-header">
-                                            <h2><?php echo $currentSubjectData['subject_list_name']?></h2>
-                                            <p>Section</p>
+                                        <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #1F78FC; color: white; font-weight: bold;">
+                                            <h2 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h2>
+                                            <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
                                             <!-- <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
                                                 Atque
@@ -399,7 +538,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                     <div class="section-module mt-2 card ">
 
                                         <!-- Adding module -->
-                                        <div class="card-header ">
+                                        <div class="card-header">
 
                                             <h3 class="section-title ">First Grading</h3>
                                             <br>
@@ -471,9 +610,13 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 
                                                                     <!-- Displaying Task Per Module_section_tbl -->
 
-                                                                    <?php while($rowGrading = $resultTasksFirstGrading->fetch_assoc()): ?>
+                                                                    <?php while($rowGrading = $resultTasksFirstGrading->fetch_assoc()): 
+                                                                        $tableRowTaskId = $rowGrading['task_list_id'];
+                                                                        $tableRowTaskName = $rowGrading['task_name'];
+                                                                        ?>
                                                                         <tr class="module-task ">
-                                                                            <td><a href="#"><?php echo $rowGrading['task_name'];?></a></td>
+                                                                            
+                                                                            <td><?php echo '<a href="teacher.editTask.php?taskId='.$tableRowTaskId.'&&tab=fromModule">'.$tableRowTaskName.'</a>';?></td>
                                                                             <td>
                                                                                 <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button" data-bs-toggle="modal" data-bs-target="#editTaskModal"></i>
                                                                                 <i class="fa-solid fa-trash text-danger me-2"
@@ -859,9 +1002,9 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                 </div>
 
                                 <!-- Subject Task -->
-                                <div class="tab-content">
+                                <div class="tab-content ">
                                     <div class="container-fluid">
-                                        <div class="row">
+                                        <div class="row mt-3">
                                             <div class="col-8 d-flex justify-content-start align-items-center">
                                                 <div class="dropdown">
                                                     <!-- Send subject id on url -->
@@ -874,7 +1017,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 
                                             </div>
 
-                                            <div class="col-4 d-flex">
+                                            <!-- <div class="col-4 d-flex">
                                                 <div class="module-actions d-flex justify-content-end align-items-center p-2">
                                                  
                                                     <select class="form-select w-100"
@@ -886,59 +1029,96 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                                         <option value="4">Major Examination</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
                                         </div>
                                     </div>
-
-                                    <table class="table table-hover ms-1 ">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Task List</th>
-                                                <th scope="col" class="text-center">Action</th>
-                                                <th scope="col" class="text-center">Start</th>
-                                                <th scope="col" class="text-center">Due</th>
-                                                <th scope="col" class="text-center">Status</th>
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php 
-                                                //Getting results from subject_tbl
-                                                $subjectId = $_SESSION['subjectId'];
-                                                $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
-                                                $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
-                                            ?>
-                                            <?php while($row = $resultList->fetch_assoc()): ?>
-                                                <tr>
-                                                    <td><a href=""><?php echo $row['task_name']?></a></td>
-                                                    <td>
-                                                        <i class="fa-regular fa-pen-to-square text-primary  me-2"
-                                                            type="button"></i>
-                                                        <i class="fa-solid fa-trash text-danger me-2"
-                                                            type="button"></i>
-                                                    </td>
-                                                    <td><?php echo $row['date_created']?></td>
-                                                    <td><?php echo $row['date_deadline']?></td>
-                                                    <td>
-                                                        <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                            <input type="hidden" type="hidden" name="taskId" value="<?php echo $row['task_list_id'];?>"> 
-                                                            <?php 
-                                                                $isGivenTask = $row['given'];
-                                                                if($isGivenTask == "Yes"){
-                                                                    echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
-                                                                    echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
-                                                                    
-                                                                } else if($isGivenTask == "" || $isGivenTask == "No"){
-                                                                    echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
-                                                                    echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
-                                                                }
-                                                            ?>
-                                                        </form>
-                                                    </td>
-                                                </tr>
-                                            <?php endwhile; ?>
-                                        </tbody>
-                                    </table>
+                                    <div class="custom-border m-2">
+                                        <h4>Task List</h4>
+                                        <div class="card m-2">
+                                            <table class="table table-hover ms-1 ">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Task Names</th>
+                                                        <th scope="col" class="text-center">Action</th>
+                                                        <th scope="col" class="text-center">Start</th>
+                                                        <th scope="col" class="text-center">Due</th>
+                                                        <th scope="col" class="text-center">Status</th>
+        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php 
+                                                        //Getting results from subject_tbl
+                                                        $subjectId = $_SESSION['subjectId'];
+                                                        $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
+                                                        $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
+                                                    ?>
+                                                    <?php while($row = $resultList->fetch_assoc()): ?>
+                                                        <?php 
+                                                            $tableRowTaskId = $row['task_list_id'];
+                                                            $tableRowTaskName = $row['task_name'];
+                                                            $tableRowSubType = $row['sub_type'];
+                                                            $tableRowDueDate = $row['date_deadline'];
+                                                            $tableRowDueTime = $row['time_limit'];
+                                                            $tableRowMaxAttempts = $row['max_attempts'];
+                                                            $tableRowQuestionItem = $row['question_item'];
+                                                            $tableRowMaxScore = $row['max_score'];
+                                                            $tableRowAllowLate = $row['submission_choice'];
+        
+                                                            $startedDate = strtotime($row['date_created']);
+                                                            $formatedDateCreated = date('F, j Y', $startedDate);
+        
+                                                            $endDate = strtotime($row['date_deadline']);
+                                                            $formatedDateDue = date('F, j Y', $endDate);
+                                                        ?>
+                                                        <tr>
+                                                            
+                                                            <td>
+                                                                <?php echo '<a href="teacher.editTask.php?taskId='.$tableRowTaskId.'">'.$tableRowTaskName.'</a>';?>
+                                                            </td>
+                                                            <td>
+                                                                <div>
+                                                                    <!-- Task details -->
+                                                                    <span class="d-none" id="taskId_DeleteEdit"><?php echo $tableRowTaskId;?></span>
+        
+                                                                    <span class="d-none" id="tableTaskName"><?php echo $tableRowTaskName;?></span>
+                                                                    <span class="d-none" id="tableSubType"><?php echo $tableRowSubType;?></span>
+                                                                    <span class="d-none" id="tableDueDate"><?php echo $tableRowDueDate;?></span>
+                                                                    <span class="d-none" id="tableDueTime"><?php echo $tableRowDueTime;?></span>
+                                                                    <span class="d-none" id="tableMaxAttempts"><?php echo $tableRowMaxAttempts;?></span>
+                                                                    <span class="d-none" id="tableQuestionItem"><?php echo $tableRowQuestionItem;?></span>
+                                                                    <span class="d-none" id="tableMaxScore"><?php echo $tableRowMaxScore;?></span>
+                                                                    <span class="d-none" id="tableAllowLate"><?php echo $tableRowAllowLate;?></span>
+        
+                                                                    <i class="fa-regular fa-pen-to-square text-primary  updateTableTaskBtn me-2"></i>
+                                                                    <i class="fa-solid fa-trash text-danger me-2 deleteTableTaskBtn" ></i>
+                                                                </div>
+                                                            </td>
+                                                            <td><?php echo $formatedDateCreated?></td>
+                                                            <td><?php echo $formatedDateDue ?></td>
+                                                            <td>
+                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $tableRowTaskId;?>"> 
+                                                                    <?php 
+                                                                        $isGivenTask = $row['given'];
+                                                                        if($isGivenTask == "Yes"){
+                                                                            echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
+                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
+                                                                            
+                                                                        } else if($isGivenTask == "" || $isGivenTask == "No"){
+                                                                            echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
+                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
+                                                                        }
+                                                                    ?>
+                                                                </form>
+                                                            </td>
+                                                        </tr>
+                                                    <?php endwhile; ?>
+                                                </tbody>
+                                            </table>
+    
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Students List -->
@@ -946,8 +1126,8 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                     <!-- Sort -->
                                     <div class="container-fluid d-flex justify-content-between align-items-center py-2">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <h4 class="mb-0">Section</h4>
-                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
+                                            <h3 class="mb-0 me-2 "><?php echo $currentSubjectData['subject_list_name']?></h3>
+                                            <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
                                         </div>
                                         <!-- <select class="form-select w-25" aria-label="Default select example">
                                             <option selected>All</option>
@@ -958,111 +1138,111 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                             <option value="5">Exam</option>
                                         </select> -->
                                     </div>
-                                    <div class="student-table ms-1">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" class="">Task List</th>
-                                                    <th scope="col" class="text-center">Progress</th>
-                                                    <th scope="col" class="text-center">Task Completed</th>
-                                                    <th scope="col" class="text-center">Enrolled</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- resultStudentsSubjectSection -->
-                                                <tr>
-                                                    <td>
-                                                        <a href="student_subject.progress.php">Student 1</a>
-                                                    </td>
-                                                    <td scope="col" class="text-center"></td>
-                                                    <td scope="col" class="text-center">87.0</td>
-                                                    <td scope="col" class="text-center">Aug 20 2022</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <a href="student_subject.progress.php">Student 2</a>
-                                                    </td>
-                                                    <td scope="col" class="text-center"></td>
-                                                    <td scope="col" class="text-center">80.0</td>
-                                                    <td scope="col" class="text-center">Aug 13 2022</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <a href="student_subject.progress.php">Student 3</a>
-                                                    </td>
-                                                    <td scope="col" class="text-center"></td>
-                                                    <td scope="col" class="text-center">89.0</td>
-                                                    <td scope="col" class="text-center">Aug 25 2022</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <a href="student_subject.progress.php">Student 4</a>
-                                                    </td>
-                                                    <td scope="col" class="text-center"></td>
-                                                    <td scope="col" class="text-center">90.0</td>
-                                                    <td scope="col" class="text-center">Sept 01 2022</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <a href="student_subject.progress.php">Student 5</a>
-                                                    </td>
-                                                    <td scope="col" class="text-center"></td>
-                                                    <td scope="col" class="text-center">84.0</td>
-                                                    <td scope="col" class="text-center">Aug 23 2022</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="student-table custom-border m-2" id="subject-students-progress">
+                                        <h4>Progress</h4>
+                                        <div class="card">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" class="">Student List</th>
+                                                        <!-- <th scope="col" class="text-center">Progress</th> -->
+                                                        <th scope="col" class="text-center">Task Completed</th>
+                                                        <th scope="col" class="text-center">Enrolled</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- resultStudentsSubjectSection -->
+                                                    <?php while ($rowResult = $resultStudentProgress->fetch_assoc()) : 
+                                                        $startedDateEnrolled = strtotime($rowResult['student_date_enrolled']);
+                                                        $formatedDateEnrolled = date('F, j Y', $startedDateEnrolled);
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo $rowResult['student_name'];?></td>
+                                                            <!-- <td> -->
+                                                                <?php //echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?>
+                                                                <!-- <div class="d-flex justify-content-center">
+                                                                    <div class="progress-bar d-inline subjectStudentProgress">
+                                                                        <div class="circular-progress">
+                                                                            <div class="value-container"></div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div> -->
+                                                                
+                                                            <!-- </td> -->
+                                                            <td><?php echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?></td>
+                                                            
+    
+                                                            <td><?php echo $formatedDateEnrolled?></td>
+    
+                                                        </tr>
+                                                    <?php endwhile; ?>
+                                                    
+                                                    
+                                                </tbody>
+                                            </table>
+
+                                        </div>
                                     </div>
 
 
                                 </div>
 
-                                <!-- Subject Students Grades-->
+                                <!-- Subject Students Gradebook-->
                                 <div class="tab-content " id="subjectStudentList">
                                     <!-- Sort -->
                                     <div class="container-fluid d-flex justify-content-between align-items-center py-2">
                                         <div class="d-flex justify-content-center align-items-center">
-                                            <h4 class="mb-0">Section</h4>
-                                            <p class="text-muted ms-2 mb-0">Aralin Panlipunan</p>
+                                            <h3 class="mb-0 me-2 "><?php echo $currentSubjectData['subject_list_name']?></h3>
+                                            <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
                                         </div>
-                                        <select class="form-select w-25" aria-label="Default select example">
+                                        <!-- <select class="form-select w-25" aria-label="Default select example">
                                             <option selected>All</option>
                                             <option value="1">Assignment</option>
                                             <option value="2">Activity</option>
                                             <option value="3">Project</option>
                                             <option value="4">Quiz</option>
                                             <option value="5">Exam</option>
-                                        </select>
+                                        </select> -->
                                     </div>
-                                    <div class="student-table ms-1">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" class="">Task List</th>
-
-                                                    <!-- Display Task List -->
-                                                    <?php while ($rowTaskList = $resultTaskList->fetch_assoc()) : ?>
-                                                        <th scope="col" class="text-center"><?php echo $rowTaskList['task_name']; ?></th>
-                                                    <?php endwhile; ?>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <!-- resultStudentsSubjectSection -->
-                                                <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
-
-                                                    <tr>
-                                                        <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
-                                                        
-                                                        <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : ?>
-                                                            
-                                                            <td scope="col" class="text-center">test</td>
+                                    <div class="student-table custom-border m-2">
+                                        <h4>Student's scores</h4>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <table class="table table-hover">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" class="">Student List</th>
+        
+                                                            <!-- Display Task List -->
+                                                            <?php while ($rowTaskList = $resultTaskList->fetch_assoc()) : ?>
+                                                                <th scope="col"  class="text-center task-names">
+                                                                    <p><?php echo $rowTaskList['task_name']; ?></p>
+                                                                </th>
+                                                            <?php endwhile; ?>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <!-- resultStudentsSubjectSection -->
+                                                        <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
+                                                            <?php 
+                                                                $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
+                                                            ?>
+                                                            <tr>
+                                                                <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
+                                                                
+                                                                <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : ?>
+                                                                    
+                                                                    <td scope="col" class="text-center">test</td>
+                                                                <?php endwhile; ?>
+                                                            </tr>
+        
                                                         <?php endwhile; ?>
-                                                    </tr>
+        
+                                                    </tbody>
+                                                </table>
 
-                                                <?php endwhile; ?>
-
-                                            </tbody>
-                                        </table>
+                                            </div>
+                                        </div>
                                     </div>
 
 
@@ -1086,6 +1266,59 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 <!-- Script Links Bootstrap/Jquery -->
 <?php include('assets/scriptlink.view.php')?>
 
+<!-- Progress bar -->
+<script>
+    let totalModule = 10;
+    let speed = 10;
+
+    // List of progress bar --
+    var progressList = document.querySelectorAll('.circular-progress');
+
+    // Calculate the subject progress --
+    let subjectProgressEndValue = progressEndValue(10, totalModule);
+
+    // Loop through each progress bar
+   
+
+    $(".subjectStudentProgress").each(function(){
+        for (i = 0; i < progressList.length; i++) {
+            progressList[i];
+            progressDisplay(progressList[i], subjectProgressEndValue);
+        }
+    });
+
+    function progressDisplay(progressIndicator, endValue) {
+        let progressValue = 0;
+        let progress = setInterval(() => {
+            progressValue++;
+            if (endValue == 0) {
+                progressValue = 0;
+            }
+
+            progressIndicator.style.background = `conic-gradient(
+            #FFD61E ${progressValue * 3.6}deg,
+            #fff ${progressValue * 3.6}deg
+        )`;
+            if (progressValue == endValue) {
+                clearInterval(progress);
+                progressIndicator.style.background = `conic-gradient(
+            #1ABD13 ${progressValue * 3.6}deg,
+            #fff ${progressValue * 3.6}deg
+        )`;
+            }
+        }, speed);
+    }
+
+    function progressEndValue(count, total) {
+        let result = Math.round((count / total) * 100);
+        if (result == 0) {
+            return 100;
+        }
+        return result;
+    }
+</script>
+
+<!-- Collapse grading and module sections -->
 <script>
 
     //Module collapse
@@ -1098,7 +1331,7 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
         });
     }
 
-
+   
 
     //Change task type (modal - create_tas_modals.php)
     var lookup = {
@@ -1147,7 +1380,9 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
 
 </script>
 
+<!-- Modal openners -->
 <script type="text/javascript">
+
     // script for updating  module_section
     $(document).ready(function (){
         $(document).on('click', '.editGradingModuleSection', function(){
@@ -1163,8 +1398,86 @@ $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
             $('.updateModuleSectinDesc').val(moduleTaskDesc);
         });
     });
+
+    // script for update task - updateModalTask
+    $(document).ready(function (){
+        $(document).on('click', '.updateTableTaskBtn', function(){
+            var taskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
+            var taskSubType = $(this).closest('div').find('#tableSubType').text();
+            var taskName = $(this).closest('div').find('#tableTaskName').text();
+            var taskEndDate = $(this).closest('div').find('#tableDueDate').text();
+            var taskEndTime = $(this).closest('div').find('#tableDueTime').text();
+            var taskMaxAttempts = $(this).closest('div').find('#tableMaxAttempts').text();
+            var taskMaxScore = $(this).closest('div').find('#tableMaxScore').text();
+            
+            // for radio button
+            var taskAllowLate = $(this).closest('div').find('#tableAllowLate').text();
+            
+            // load update modal
+            $('#updateModalTask').modal('show'); 
+            // Displaying data to fields
+            $('#updateTaskId').val(taskId);
+            $('#inputSubType').val(taskSubType);
+            $('#inputTaskDescription').val(taskName);
+            $('#inputEndDate').val(taskEndDate);
+            $('#inputTime').val(taskEndTime);
+            $('#inputMaxAttempts').val(taskMaxAttempts);
+            $('#inputMaxScore').val(taskMaxScore);
+
+            if(taskAllowLate == "Yes"){
+                $('#radioYes').prop('checked',true);
+            } else  if(taskAllowLate == "No"){
+                $('#radioNo').prop('checked',true);
+            }
+
+            $('#updateModalTaskWithQuestion').hide();
+            $('#updateModalEssay').hide();
+
+            $('#inputMaxScoreDiv').hide();
+
+
+
+            // Update buttons visibility 
+            switch(taskSubType) {
+                case "0":
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "1":
+                    // code block
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "2":
+                    // code block
+                    $('#updateModalTaskWithQuestion').show();
+                    break;
+                case "3":
+                    // code block
+                    $('#inputMaxScoreDiv').show();
+                    $('#questionItemsDiv').hide();
+                    $('#updateModalEssay').show();
+                    break;
+                default:
+                    alert("Not found");
+                }
+        });
+    });
+
+    // script for deleting task - deleteTableTaskBtn
+    $(document).ready(function (){
+        $(document).on('click', '.deleteTableTaskBtn', function(){
+            var moduleGGTaskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
+            
+            // Opening the Modal
+            $('#deleteModalTask').modal('show');
+            // Displaying data to fields
+            $('.deleteTaskId').val(moduleGGTaskId);
+            
+        });
+    });
+
 </script>
 
+<!-- Grading -->
 <script type="text/javascript">
     $(document).ready(function (){
         $(document).on('click', '#btnFirstGrading', function(){

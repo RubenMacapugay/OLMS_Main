@@ -4,7 +4,6 @@
      <!-- Sidebar - Brand -->
      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin-dashboard.php">
        <img src="./img/HFA-Logo.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
-       <div class="sidebar-brand-text mx-3">OLMS</div>
      </a>
 
      <!-- Divider -->
@@ -27,40 +26,40 @@
 
      <!-- Nav Item - Account -->
      <li class="nav-item">
-       <a class="nav-link pb-3" href="teacher.head.php">
+       <a class="nav-link pb-3" href="teacher.account.php">
          <i class="fas fa-fw fa-users"></i>
          <span>Teacher's Account</span></a>
      </li>
 
      <li class="nav-item">
-       <a class="nav-link pt-0" href="#">
+       <a class="nav-link pt-0" href="teacher.assign.php">
          <i class="fas fa-fw fa-tasks"></i>
          <span>Assign Subject</span></a>
      </li>
 
-    <!-- Divider -->
-    <hr class="sidebar-divider">
+     <!-- Divider -->
+     <hr class="sidebar-divider">
 
 
-    <!-- <li class="nav-item">
+     <!-- <li class="nav-item">
        <a class="nav-link pb-1 pt-1" href="#">
          <i class="fas fa-fw fa-users"></i>
          <span>Downloadable Materials</span></a>
     </li> -->
 
-    <li class="nav-item">
-       <a class="nav-link pb-1" href="#">
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="student_list.php">
          <i class="fas fa-fw fa-users"></i>
          <span>Enrolled Students</span></a>
-    </li>
+     </li>
 
-    <li class="nav-item">
-       <a class="nav-link pb-1" href="#">
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="subject_list.php">
          <i class="fas fa-fw fa-book"></i>
          <span>Subjects</span></a>
-    </li>
+     </li>
 
-    <!-- <li class="nav-item">
+     <!-- <li class="nav-item">
        <a class="nav-link pb-1" href="#">
          <i class="fas fa-fw fa-users"></i>
          <span>Sections</span></a>
@@ -77,24 +76,24 @@
          <i class="fas fa-fw fa-users"></i>
          <span>Strand</span></a>
     </li> -->
-    
-    <li class="nav-item">
+
+     <li class="nav-item">
        <a class="nav-link pb-1" href="calendar.php">
          <i class="fas fa-fw fa-calendar"></i>
          <span>Calendar</span></a>
-    </li>
+     </li>
 
-    <li class="nav-item">
+     <li class="nav-item">
        <a class="nav-link pb-1" href="#">
          <i class="fas fa-fw fa-info"></i>
          <span>Announcements</span></a>
-    </li>
+     </li>
 
-    <li class="nav-item">
+     <li class="nav-item">
        <a class="nav-link" href="#">
          <i class="fas fa-fw fa-database"></i>
          <span>Backup / Restore Database </span></a>
-    </li>
+     </li>
      <!-- Nav Item - Pages Collapse Menu -->
      <!-- <li class="nav-item">
        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -215,17 +214,8 @@
            <i class="fa fa-bars"></i>
          </button>
 
-         <!-- Topbar Search -->
-         <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form> -->
+         <!-- Topbar Name -->
+         <h1 class="h5 ms-3 mb-0 text-gray-1000">Oblates Learning Management System | Admin Page</h1>
 
 
          <!-- Topbar Navbar -->

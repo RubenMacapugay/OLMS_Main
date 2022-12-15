@@ -125,7 +125,7 @@ if(isset($_POST['regbtn_teacher']))
     {
         $_SESSION['status'] = "ID already Taken. Please Try Another one.";
         $_SESSION['status_code'] = "error";
-        header('Location: teacher.head.php');  
+        header('Location: teacher.account.php');  
     }
     else
     {
@@ -139,20 +139,20 @@ if(isset($_POST['regbtn_teacher']))
                 // echo "Saved";
                 $_SESSION['status'] = "Teacher Account Added";
                 $_SESSION['status_code'] = "success";
-                header('Location: teacher.head.php');
+                header('Location: teacher.account.php');
             }
             else 
             {
                 $_SESSION['status'] = "Teacher Account Not Added";
                 $_SESSION['status_code'] = "error";
-                header('Location: teacher.head.php');  
+                header('Location: teacher.account.php');  
             }
         }
         else 
         {
             $_SESSION['status'] = "Password and Confirm Password Does Not Match";
             $_SESSION['status_code'] = "warning";
-            header('Location: teacher.head.php');  
+            header('Location: teacher.account.php');  
         }
     }
 }
@@ -182,12 +182,12 @@ if(isset($_POST['edtbtn_teacher']))
     if($query_run)
     {
         $_SESSION['success'] = "Your Data is Updated";
-        header('Location: teacher.head.php');
+        header('Location: teacher.account.php');
     }
     else
     {
         $_SESSION['status'] = "Your Data is Not updated";
-        header('Location: teacher.head.php');
+        header('Location: teacher.account.php');
     }
 }
 
@@ -202,15 +202,39 @@ if(isset($_POST['delete_teacher_btn']))
     if($delete_query_run)
     {
         $_SESSION['success'] = "Your Data is Deleted";
-        header('Location: teacher.head.php');
+        header('Location: teacher.account.php');
     }
     else
     {
         $_SESSION['status'] = "Your Data is not Deleted";
-        header('Location: teacher.head.php');
+        header('Location: teacher.account.php');
     }
 }
 
+
+// ----------------------------------------------------------------------------------------------------------------------------
+// Student Profile
+// Update Student Accounts
+if(isset($_POST['edtbtn_student']))
+{
+    $id_student = $_POST['edit_student_id'];
+    $edt_id_student = $_POST['edit_id_student'];
+    $edt_pw_student = $_POST['edit_pw_student'];
+
+    $query = "UPDATE student_tbl SET student_number = '$edt_id_student', student_password = '$edt_pw_student' WHERE student_id = '$id_student' ";
+    $query_run = mysqli_query($connection, $query);
+
+    if($query_run)
+    {
+        $_SESSION['success'] = "Your Data is Updated";
+        header('Location: student_list.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your Data is Not updated";
+        header('Location: student_list.php');
+    }
+}
 
 // -----------------------------------------------------------------------------------------------------------------------------
 //Admin Login

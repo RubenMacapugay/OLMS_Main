@@ -99,11 +99,11 @@ $taskName = getCurrentTask($conn, $taskId);
 					}
 				}
 
-				if($taskResult['sub_type'] == 2){
+				if($taskResult['sub_type'] == 10){
 					echo 'Enumiration';
 				}
 
-				if($taskResult['sub_type'] == 3){
+				if($taskResult['sub_type'] == 2){
 					//echo 'True or False';
 					# get the data from submission_answer_tbl
 					$submittedAnswers = getSubmittedAnswerRow($conn, $taskId, $studentId, $maxAttempt);
@@ -132,7 +132,7 @@ $taskName = getCurrentTask($conn, $taskId);
 					}
 				}
 
-				if($taskResult['sub_type'] == 4){
+				if($taskResult['sub_type'] == 3){
 					echo 'Essay';
 				}
 

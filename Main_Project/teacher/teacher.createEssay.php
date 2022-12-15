@@ -2,6 +2,11 @@
 include('assets/header.view.php');
 ini_set('display_errors',1);
 ?>
+
+<!-- create modal for adding Essay -->
+
+<!-- modal end -->
+
 <!--Body content -->
 <div class="container-fluid " id="content">
     <div class="row overflow-hidden">
@@ -56,13 +61,12 @@ ini_set('display_errors',1);
                         }
                     ?>
 
-                    <form method='POST' action='../../includes/teacher.createtask.inc.php' id="createQuestionForm">
+                    <form method='POST' action='../../includes/teacher.createtask.inc.php' id="createEssayForm">
                         <div class="row">
 
                             <div class="col-6">
-                                <h5>Create Identification Question.</h5>
+                                <h2>Create Essay</h2>
                                 <!-- Session Testers -->
-                                <p>Current question: <?php echo $_SESSION['questionCounter'] ?></p>
                                 <?php 
                                     // echo'Question identification count: ' . $_SESSION["question_items"];
                                     // echo '<br>';
@@ -83,52 +87,28 @@ ini_set('display_errors',1);
                                 
                             </div>
 
-                            <div class="col-6">
-
-                                <div class="form-group mb-3">
-                                    <select class="form-select" name="identificationSelect" aria-label="select answer"
-                                        id="identificationSelect" onchange="fetchIdentification()">
-                                        <option value="1">Select question</option>
-                                        <?php 
-                                            $id = $_SESSION["task_id"];
-                                            $sqli = "SELECT * FROM question_tbl where fk_task_list_id = {$id}";
-                                            $result = mysqli_query($conn, $sqli);
-                                            while($row = mysqli_fetch_array($result)) {
-                                                $question = $row['question_id'];
-                                                echo '<option value="'.$question.'">' .$row['question_name']. '</option>';
-                                            } 
-                            
-                                        ?>
-
-                                    </select>
+                            <div class="col-12">
+                                
+                                <div class="card mb-3">
+                                    <div>
+                                        <h3 class="m-3">Instruction or Question</h3>
+                                        <div class="mx-3">
+                                            <textarea class="form-control" name="" id="" rows="5"></textarea>
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="m-3">
+                                        <h3>Attach file</h3>
+                                        <input style="width: 270px;" type="file" name="file_upload" id="fileInput" class="form-control" > 
+                                    </div>
                                 </div>
-
-                            </div>
-                            <div class="col-12"> 
-
-                                <div class="form-group mb-3 ps-0" id="taskcontentDiv">
-                                    <label for="">Identification question: </label>
-                                    <input class="form-control" type="hidden" name="identificationInputQuestionId"
-                                        id="identificationInputQuestionId" >
-                                    <input class="form-control" type="text" name="identificationInputQuestion"
-                                        id="identificationInputQuestion">
-                                </div>
-
-                                <div class="form-group mb-3 ps-0" id="taskcontentDiv">
-                                    <label for="">Identification answer: </label>
-                                    <input class="form-control" type="hidden" name="identificationInputId"
-                                        id="identificationInputId">
-                                    <input class="form-control" type="text" name="identificationInputAnswer"
-                                        id="identificationInputAnswer">
-                                </div>
-
-
+                               
                             </div>
 
                             <div class="col-12 text-center">
                                 <button class="btn btn-secondary" name="cancelIdentification">cancel</button>
                                 <button type="submit" class="btn btn-primary ms-3"
-                                    name="nextIdentification" id="nextBtn">next</button>
+                                    name="nextIdentification" id="nextBtn">Create</button>
                                 <button type="submit" name="updateIdentification" class="btn btn-primary ms-3"
                                     id="updateBtn">update</button>
                             </div>
