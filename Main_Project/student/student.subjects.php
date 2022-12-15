@@ -104,8 +104,6 @@ $_SESSION['score'] = 0;
     $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
 
     # display the module section in first grading --- end
-
-    
     
     # Display task per subjects ----
         # SELECT * FROM ((task_list_tbl INNER JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id) INNER JOIN task_tbl ON task_list_tbl.fk_task_type = task_tbl.task_id) WHERE submission_tbl.fk_student_id = $studentId
@@ -147,6 +145,16 @@ $_SESSION['score'] = 0;
             <div class="row mx-0">
 
                 <div class="container-fluid">
+
+                    <?php
+                        if(isset($_GET['tab'])){
+                            if($_GET['tab'] == "taskTab"){
+                                echo "<script> window.onload = function() {
+                                    showTaskTab();
+                                }; </script>";
+                            }
+                        }
+                    ?>
                     <!-- Tab Header ROW -->
                     <div class="row">
                         <div class="col-8">
@@ -757,130 +765,143 @@ $_SESSION['score'] = 0;
                                     <div class="container-fluid">
                                         <div class="row">
                                             <div class="d-flex">
-                                                <div
+                                                <!-- <div
                                                     class="module-actions d-flex justify-content-end align-items-center p-2">
                                                     <select class="form-select w-25"
                                                         aria-label="Default select example">
 
-                                                        <!-- Task names for dropdown -->
+                                                        Task names for dropdown
                                                         <option value="0">All</option>
                                                         <?php 
-                                                        $taskSqli = "SELECT * FROM task_tbl";
-                                                        $taskTypeResult = mysqli_query($conn, $taskSqli);
-                                                        while($row = mysqli_fetch_array($taskTypeResult)) {
-                                                            $task = $row['task_id'];
-                                                            echo '<option value="'.$task.'">' .$row['task_main_name']. '</option>';
-                                                        } 
+                                                        // $taskSqli = "SELECT * FROM task_tbl";
+                                                        // $taskTypeResult = mysqli_query($conn, $taskSqli);
+                                                        // while($row = mysqli_fetch_array($taskTypeResult)) {
+                                                        //     $task = $row['task_id'];
+                                                        //     echo '<option value="'.$task.'">' .$row['task_main_name']. '</option>';
+                                                        // } 
                                                     ?>
                                                     </select>
                                                     
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="custom-border m-2">
+                                        <h4>My Task's</h4>
+                                        <div class="card">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Task List</th>
+                                                        <th scope="col" class="text-center">Type</th>
+                                                        <th scope="col" class="text-center">Start</th>
+                                                        <th scope="col" class="text-center">Due</th>
+                                                        <th scope="col" class="text-center">Score</th>
+                                                        <!-- <th scope="col" class="text-center">Status</th> -->
+        
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+        
+                                                    <!-- Looping through all the available task -->
+                                                    <?php while($row = $resultTasks->fetch_assoc()): 
+                                                        $startedDateCreated = strtotime($row['date_created']);
+                                                        $formatedDatecreated = date('F, j Y', $startedDateCreated);
 
-
-                                    <table class="table">
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Task List</th>
-                                                <th scope="col" class="text-center">Type</th>
-                                                <th scope="col" class="text-center">Start</th>
-                                                <th scope="col" class="text-center">Due</th>
-                                                <th scope="col" class="text-center">Score</th>
-                                                <!-- <th scope="col" class="text-center">Status</th> -->
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                            <!-- Looping through all the available task -->
-                                            <?php while($row = $resultTasks->fetch_assoc()): ?>
-                                                <?php
-                                                    // saving the task id
-                                                    $taskId = $row['task_list_id'];
-
-                                                    // save the variables
-                                                    $date_now = date("Y-m-d"); // this format is string comparable
-                                                    $startDate = $row['date_created'];
-                                                    $endDate = $row['date_deadline'];
-
-                                                    // task attempts count
-                                                    $taskMaxAttempt = $row['max_attempts'];
-
-                                                    // getting the student attempt and score
-                                                    $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
-                                                    $scoreResult;
-                                                    if($maxAttempt[0] == null){
-                                                        $scoreResult = "-";
-                                                    }
-                                                    else{
-                                                        $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
-                                                        $scoreResult = $studentAnswer['score'];
-                                                    }
-
-                                                    // time limit for task
-                                                    $taskTime = $row["time_limit"];
-                                                    $newTaskFormat = date('h:i A', strtotime($taskTime));
-                                                ?>
-
-                                                <?php if(($row['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){
-                                                        if($date_Today == $endDate) {
-                                                            #region
-                                                            # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                            # echo 'last day na'.$date_Today. ' to ' .$endDate ;
-                                                            #endregion
-                                                            if(time() >= strtotime($newTaskTimeFormat)){
-                                                                # echo 'Time na';
-                                                                $isGiven = "No";
-                                                                //# updateTaskGiven($conn, $isGiven, $taskId);
-                                                            }else{
-                                                                # echo 'Mamaya pa';
+                                                        $startedDateDue = strtotime($row['date_deadline']);
+                                                        $formatedDateDue = date('F, j Y', $startedDateDue);
+                                                        ?>
+                                                        <?php
+                                                            // saving the task id
+                                                            $taskId = $row['task_list_id'];
+        
+                                                            // save the variables
+                                                            $date_now = date("Y-m-d"); // this format is string comparable
+                                                            $startDate = $row['date_created'];
+                                                            $endDate = $row['date_deadline'];
+        
+                                                            // task attempts count
+                                                            $taskMaxAttempt = $row['max_attempts'];
+        
+                                                            // getting the student attempt and score
+                                                            $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
+                                                            $scoreResult;
+                                                            if($maxAttempt[0] == null){
+                                                                $scoreResult = "-";
                                                             }
-                                                        } else if($date_Today > $endDate){
-                                                        #region
-                                                        # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
-                                                        # echo 'deadline na'.$date_now. ' to ' .$endDate ;
-                                                        #endregion
-                                                        $isGiven = "No";
-
-                                                        // remove
-                                                        
-
-                                                        //# updateTaskGiven($conn, $isGiven, $taskId);
-                                                    }  
-
-                                                # * debugging purpose
-                                                    //    echo "Deadline.";
-                                                    //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
-                                                    //    echo $rowFourthGrading['task_list_id'];
-                                                # * debugging purpose
-
-                                                // create an update here that trigger the ungive
+                                                            else{
+                                                                $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
+                                                                $scoreResult = $studentAnswer['score'];
+                                                            }
+        
+                                                            // time limit for task
+                                                            $taskTime = $row["time_limit"];
+                                                            $newTaskFormat = date('h:i A', strtotime($taskTime));
+                                                        ?>
+        
+                                                        <?php if(($row['given'] == "Yes") && ($taskMaxAttempt > $maxAttempt[0])){
+                                                                if($date_Today == $endDate) {
+                                                                    #region
+                                                                    # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                                    # echo 'last day na'.$date_Today. ' to ' .$endDate ;
+                                                                    #endregion
+                                                                    if(time() >= strtotime($newTaskTimeFormat)){
+                                                                        # echo 'Time na';
+                                                                        $isGiven = "No";
+                                                                        //# updateTaskGiven($conn, $isGiven, $taskId);
+                                                                    }else{
+                                                                        # echo 'Mamaya pa';
+                                                                    }
+                                                                } else if($date_Today > $endDate){
+                                                                #region
+                                                                # echo $rowFirstGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat;
+                                                                # echo 'deadline na'.$date_now. ' to ' .$endDate ;
+                                                                #endregion
+                                                                $isGiven = "No";
+        
+                                                                // remove
                                                                 
-                                                ?>
-                                                <tr>
-                                                    <td>
-                                                        <form action="../../includes/student.process.php" method="POST">
-                                                            <input type="hidden" name="task_id"
-                                                                value="<?php echo $row['task_list_id']; ?>">
-                                                            <input type="hidden" name="task_type"
-                                                                value="<?php echo $row['fk_task_type']; ?>">
-                                                            <button type="submit" class="list-group-item list-group-item-action text-primary text-decoration-underline"
-                                                                name="submitTaskDetails"><?php echo $row['task_name']?></button>
-                                                        </form>
-                                                    </td>
-                                                    <td>-</td>
-                                                    <td class=""><?php echo $startDate;?></td>
-                                                    <td class=""><?php echo $endDate.' ',$newTaskTimeFormat;?></td>
-                                                    <td class=""><?php echo $scoreResult;?></td>
-                                                    <!-- <td>-</td> -->
-                                                </tr>
-                                                <?php } ?>
-                                            <?php endwhile; ?>
-                                            
-                                        </tbody>
-                                    </table>
+        
+                                                                //# updateTaskGiven($conn, $isGiven, $taskId);
+                                                            }  
+        
+                                                        # * debugging purpose
+                                                            //    echo "Deadline.";
+                                                            //    echo $rowFourthGrading['task_name'].'---'.date("h:i A").' <= '.$newTaskFormat.'<br>';
+                                                            //    echo $rowFourthGrading['task_list_id'];
+                                                        # * debugging purpose
+        
+                                                        // create an update here that trigger the ungive
+                                                                        
+                                                        ?>
+                                                        <tr>
+                                                            <td>
+                                                                <form action="../../includes/student.process.php" method="POST">
+                                                                    <input type="hidden" name="task_id"
+                                                                        value="<?php echo $row['task_list_id']; ?>">
+                                                                    <input type="hidden" name="task_type"
+                                                                        value="<?php echo $row['fk_task_type']; ?>">
+                                                                    <button type="submit" class="list-group-item list-group-item-action text-primary text-decoration-underline"
+                                                                        name="submitTaskDetails"><?php echo $row['task_name']?></button>
+                                                                </form>
+                                                            </td>
+                                                            <td>-</td>
+                                                            <td class=""><?php echo $formatedDatecreated?></td>
+                                                            <td class="">
+                                                                <?php echo $formatedDateDue.'<br>'?>
+                                                                <?php echo $newTaskTimeFormat?>
+                                                            </td>
+                                                            <td class=""><?php echo $scoreResult;?></td>
+                                                            <!-- <td>-</td> -->
+                                                        </tr>
+                                                        <?php } ?>
+                                                    <?php endwhile; ?>
+                                                    
+                                                </tbody>
+                                            </table>
+    
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- Subject Progress -->
@@ -982,6 +1003,15 @@ $_SESSION['score'] = 0;
 
             tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
         });
+    }
+
+    function showTaskTab() {
+        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+            tabsPane[1].classList.add("active");
+            tabBody.getElementsByClassName("active")[0].classList.remove("active");
+            tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
+
+            tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
     }
 
     //Module collapse ----------

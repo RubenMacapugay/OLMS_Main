@@ -21,7 +21,7 @@ for (let i = 0; i < tabsPane.length; i++) {
 }
 
 //Tester
-function showGradingTab() {
+function showModuleTab() {
     tabHeader.getElementsByClassName("active")[0].classList.remove("active");
         tabsPane[0].classList.add("active");
         tabBody.getElementsByClassName("active")[0].classList.remove("active");
@@ -40,7 +40,7 @@ function showTaskTab() {
 }
 
 function showGradingTab() {
-    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
         tabsPane[3].classList.add("active");
         tabBody.getElementsByClassName("active")[0].classList.remove("active");
         tabBody.getElementsByClassName("tab-content")[3].classList.add("active");
