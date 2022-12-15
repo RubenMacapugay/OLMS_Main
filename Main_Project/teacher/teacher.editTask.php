@@ -173,7 +173,7 @@ if(!isset($taskId) || $taskResult == false){
                     </div>
 
                     <div class="ms-3 mt-1">
-                        <input type="text" name="submissionChoiceId" id="inputTrueOrFalseSubmissionChoiceId">
+                        <input type="hidden" name="submissionChoiceId" id="inputTrueOrFalseSubmissionChoiceId">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="submissionchoice" type="radio"
                                 id="radioTrue" value="True" required>
@@ -453,7 +453,16 @@ if(!isset($taskId) || $taskResult == false){
                 ?>
                 <div class="container-fluid custom-border">
                     <div>
-                        <a href="teacher.subject.php?tab=taskTab">back</a>
+                        <?php 
+                            if(isset($_GET['tab'])){
+                                if($_GET['tab'] == "fromModule"){
+                                    echo '<a href="teacher.subject.php?tab=moduleTab">back</a>';
+                                }
+                            }else{
+                                echo '<a href="teacher.subject.php?tab=taskTab">back</a>';
+                            }
+                        ?>
+                        
                         <h2><?php echo $taskResult['task_name'];?></h2>
                         <?php
                             if($taskType == "0"){
