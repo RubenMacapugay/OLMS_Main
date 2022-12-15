@@ -173,7 +173,7 @@ if(!isset($taskId) || $taskResult == false){
                     </div>
 
                     <div class="ms-3 mt-1">
-                        <input type="text" name="submissionChoiceId" id="inputTrueOrFalseSubmissionChoiceId">
+                        <input type="hidden" name="submissionChoiceId" id="inputTrueOrFalseSubmissionChoiceId">
                         <div class="form-check form-check-inline">
                             <input class="form-check-input" name="submissionchoice" type="radio"
                                 id="radioTrue" value="True" required>
@@ -453,7 +453,16 @@ if(!isset($taskId) || $taskResult == false){
                 ?>
                 <div class="container-fluid custom-border">
                     <div>
-                        <a href="teacher.subject.php?tab=taskTab">back</a>
+                        <?php 
+                            if(isset($_GET['tab'])){
+                                if($_GET['tab'] == "fromModule"){
+                                    echo '<a href="teacher.subject.php?tab=moduleTab">back</a>';
+                                }
+                            }else{
+                                echo '<a href="teacher.subject.php?tab=taskTab">back</a>';
+                            }
+                        ?>
+                        
                         <h2><?php echo $taskResult['task_name'];?></h2>
                         <?php
                             if($taskType == "0"){
@@ -489,7 +498,7 @@ if(!isset($taskId) || $taskResult == false){
                                                         <div>
                                                             <span class="d-none" id="questionIdEditTask"><?php echo $row['question_id'];?></span>
                                                             <span class="d-none" id="questionerEditTask"><?php echo $row['question_name'];?></span>
-                                                            <span class="" id="questionerNumberEditTask"><?php echo $num;?></span>
+                                                            <span class="d-none" id="questionerNumberEditTask"><?php echo $num;?></span>
                                                             <?php 
                                                                 
                                                                 $questionId = $row['question_id'];
@@ -542,7 +551,7 @@ if(!isset($taskId) || $taskResult == false){
                                                     
 
                                                                     // save on span and send to modal
-                                                                    echo '<button class="btn edit_question_multipleChoice p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn edit_question_multipleChoice p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 } else if($taskType == "1"){
                                                                     // echo "Identification";
@@ -562,7 +571,7 @@ if(!isset($taskId) || $taskResult == false){
                                                                     <span class="d-none answerKey" id="identificatoinAnswerKey"><?php echo $data['answerKey']; ?></span>
                                                                     <?php 
 
-                                                                    echo '<button class="btn edit_question_identification p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn edit_question_identification p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 } else if($taskType == "2"){
 
@@ -582,11 +591,11 @@ if(!isset($taskId) || $taskResult == false){
                                                                     <span class="d-none answerKey" id="trueOrFalseAnswerKey"><?php echo $data['answerKey']; ?></span>
                                                                     <?php 
 
-                                                                    echo '<button class="btn edit_question_trueOrFalse p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn edit_question_trueOrFalse p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 } else if($taskType == "3"){
                                                                     // echo "Essay";
-                                                                    echo '<button class="btn edit_question_essay p-0" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                                    echo '<button class="btn edit_question_essay p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                                     echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                                 }
                                                                 echo "<br>";

@@ -1,4 +1,10 @@
 <?php include('assets../header.view.php') ?>
+
+<style>
+    .question-choice{
+        font-size: 1.3rem;
+    }
+</style>
 <?php  
 if(isset($_GET['taskId'])){
     //Set the question number
@@ -61,8 +67,7 @@ if(isset($_GET['taskId'])){
                                 <div class="form-check d-flex mt-2 ms-4">
                                     <div class="container">
                                         <input type="radio" name="choice" value="<?php echo $row['choices_id'];?>">
-                                        <p><?php echo $row['choices_name']; ?></p>
-
+                                        <span class="question-choice"><?php echo $row['choices_name']; ?></span>
                                     </div>
                                     <br>
                                 </div>

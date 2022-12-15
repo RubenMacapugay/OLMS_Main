@@ -16,7 +16,7 @@
 <div class="container-fluid " id="content">
 
     <div class="row overflow-hidden">
-
+        
         <!-- Left Side Nav -->
         <div class="col-md-2" id="sideNav">
             <?php include('assets../sidebar.view.php') ?>
@@ -25,7 +25,7 @@
         <!-- Main Content -->
         <div class="col-md-8 py-4 main-content" id="mainContent">
             <div class="row mx-0">
-
+            
                 <!-- Announcement -->
 
                 <div class="custom-border">

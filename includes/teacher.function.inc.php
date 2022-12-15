@@ -106,177 +106,183 @@ $date_Today = date("Y-m-d");
 # --- isEmpty Functions --- end #
 
 # --- Exists Functions --- #
-    function teacherSubjectExist($conn, $subjectId, $teacherId){
-        $selectSubject = "SELECT * FROM subject_list_tbl where subject_list_id = ? and fk_teacher_id = ?";
+function teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId){
+    $selectSubject = "SELECT * FROM (((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId and subject_list_tbl.subject_list_id = $subjectId AND subject_list_tbl.fk_section_id = $sectionId";
+    $row = mysqli_query($conn, $selectSubject);
+    return $result = mysqli_fetch_assoc($row); 
+}
+function teacherSubjectExist($conn, $subjectId, $sectionId, $teacherId){
+    // $selectSubject = "SELECT * FROM (((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId and subject_tbl.subject_id = $subjectId AND subject_list_tbl.fk_section_id = 1";
+    $selectSubject = "SELECT * FROM subject_list_tbl where subject_list_id = ? and fk_teacher_id = ?";
 
-        # start the preapred statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectSubject)){
-            header ('location: ../Main_Project/teacher/teacher.subject.php?error=selectstmtfailed');
-            exit();
-        }
+    # start the preapred statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectSubject)){
+        header ('location: ../Main_Project/teacher/teacher.subject.php?error=selectstmtfailed');
+        exit();
+    }
+    
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "ii", $subjectId, $teacherId);
+    mysqli_stmt_execute($stmt);
+
+    # save result
+    $resultData = mysqli_stmt_get_result($stmt);
+
+    # check if theres returned data
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false; 
+        return false;
+    }
+
+    # close the statement
+    mysqli_stmt_close($stmt);
+}
+
+function tasknameExist($conn, $taskname, $subjectId){
+    #query
+    $selectTaskName = "SELECT * FROM task_list_tbl where task_name = ? and fk_subject_list_id = ?;";
+
+    # start the preapred statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectTaskName)){
+        header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
+        exit();
+    }
+    
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "si", $taskname, $subjectId);
+    mysqli_stmt_execute($stmt);
+
+    # save result
+    $resultData = mysqli_stmt_get_result($stmt);
+
+    # check if theres returned data
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false; 
+        return false;
+    }
+
+    # close the statement
+    mysqli_stmt_close($stmt);
+}
+
+function taskExists($conn, $taskId){
+    $selectTask = "SELECT * FROM task_list_tbl where task_list_id = ?;";
+
+    # start the preapred statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectTask)){
+        header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
+        exit();
+    }
+    
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "s", $taskId);
+    mysqli_stmt_execute($stmt);
+
+    # save result
+    $resultData = mysqli_stmt_get_result($stmt);
+
+    # check if theres returned data
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false; 
+        return false;
+    }
+
+    # close the statement
+    mysqli_stmt_close($stmt);
+}
+
+function questionerExist($conn, $taskListId, $questioner){
+    $selectQuestionName = "SELECT * FROM question_tbl WHERE fk_task_list_id = ? AND question_name = ?;";
+
+    # prepare the statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectQuestionName)){
+        header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
+        exit();
+    }
+
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "is", $taskListId, $questioner);
+    mysqli_stmt_execute($stmt);
+
+    # save the data to variable then return the data or false
+    $resultData = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false;
+        return $result;
+    }
         
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "ii", $subjectId, $teacherId);
-        mysqli_stmt_execute($stmt);
+}
 
-        # save result
-        $resultData = mysqli_stmt_get_result($stmt);
+function getQuestionName($conn, $questionId){
+    $selectQuestionName = "SELECT * FROM question_tbl WHERE question_id = ?";
 
-        # check if theres returned data
-        if($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            $result = false; 
-            return false;
-        }
-
-        # close the statement
-        mysqli_stmt_close($stmt);
+    # prepare the statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectQuestionName)){
+        header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
+        exit();
     }
 
-    function tasknameExist($conn, $taskname, $subjectId){
-        #query
-        $selectTaskName = "SELECT * FROM task_list_tbl where task_name = ? and fk_subject_list_id = ?;";
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "i", $questionId);
+    mysqli_stmt_execute($stmt);
 
-        # start the preapred statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectTaskName)){
-            header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
-            exit();
-        }
-        
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "si", $taskname, $subjectId);
-        mysqli_stmt_execute($stmt);
+    # save the data to variable then return the data or false
+    $resultData = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false;
+        return $result;
+    }
+}
 
-        # save result
-        $resultData = mysqli_stmt_get_result($stmt);
+function moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId){
+    #query
+    $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ? and fk_subject_list_id = ?;";
 
-        # check if theres returned data
-        if($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            $result = false; 
-            return false;
-        }
+    # start the preapred statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectModuleSectionName)){
+        header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
+        exit();
+    }
+    
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "sii", $moduleSectionName, $gradingId, $subjectId);
+    mysqli_stmt_execute($stmt);
 
-        # close the statement
-        mysqli_stmt_close($stmt);
+    # save result
+    $resultData = mysqli_stmt_get_result($stmt);
+
+    # check if theres returned data
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        return false;
     }
 
-    function taskExists($conn, $taskId){
-        $selectTask = "SELECT * FROM task_list_tbl where task_list_id = ?;";
+    # close the statement
+    mysqli_stmt_close($stmt);
+}
 
-        # start the preapred statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectTask)){
-            header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
-            exit();
-        }
-        
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "s", $taskId);
-        mysqli_stmt_execute($stmt);
-
-        # save result
-        $resultData = mysqli_stmt_get_result($stmt);
-
-        # check if theres returned data
-        if($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            $result = false; 
-            return false;
-        }
-
-        # close the statement
-        mysqli_stmt_close($stmt);
-    }
-
-    function questionerExist($conn, $taskListId, $questioner){
-        $selectQuestionName = "SELECT * FROM question_tbl WHERE fk_task_list_id = ? AND question_name = ?;";
-
-        # prepare the statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectQuestionName)){
-            header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
-            exit();
-        }
-
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "is", $taskListId, $questioner);
-        mysqli_stmt_execute($stmt);
-
-        # save the data to variable then return the data or false
-        $resultData = mysqli_stmt_get_result($stmt);
-        if ($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            $result = false;
-            return $result;
-        }
-            
-    }
-
-    function getQuestionName($conn, $questionId){
-        $selectQuestionName = "SELECT * FROM question_tbl WHERE question_id = ?";
-
-        # prepare the statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectQuestionName)){
-            header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
-            exit();
-        }
-
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "i", $questionId);
-        mysqli_stmt_execute($stmt);
-
-        # save the data to variable then return the data or false
-        $resultData = mysqli_stmt_get_result($stmt);
-        if ($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            $result = false;
-            return $result;
-        }
-    }
-
-    function moduleNameExist($conn, $moduleSectionName, $gradingId, $subjectId){
-        #query
-        $selectModuleSectionName = "SELECT * FROM module_section_tbl where module_section_name = ? and fk_grading_id  = ? and fk_subject_list_id = ?;";
-
-        # start the preapred statement
-        $stmt = mysqli_stmt_init($conn);
-        if(!mysqli_stmt_prepare($stmt, $selectModuleSectionName)){
-            header ('location: ../Main_Project/teacher/teacher.createtask.php?error=selectstmtfailed');
-            exit();
-        }
-        
-        # binding user input
-        mysqli_stmt_bind_param($stmt, "sii", $moduleSectionName, $gradingId, $subjectId);
-        mysqli_stmt_execute($stmt);
-
-        # save result
-        $resultData = mysqli_stmt_get_result($stmt);
-
-        # check if theres returned data
-        if($row = mysqli_fetch_assoc($resultData)){
-            return $row;
-        } else{
-            return false;
-        }
-
-        # close the statement
-        mysqli_stmt_close($stmt);
-    }
-
-    function getModuleName($conn, $id){
-        $sql = "SELECT * FROM module_section_tbl where module_section_id = '$id'";
-        $row = mysqli_query($conn, $sql);
-        return $result = mysqli_fetch_assoc($row); 
-    }
+function getModuleName($conn, $id){
+    $sql = "SELECT * FROM module_section_tbl where module_section_id = '$id'";
+    $row = mysqli_query($conn, $sql);
+    return $result = mysqli_fetch_assoc($row); 
+}
 # --- Exists Functions --- end #
 
 
@@ -517,11 +523,13 @@ function getModuleSection($conn, $subjectId, $gradingId){
     $resultModuleSection =  $conn->query($selectModuleSectionPerGrading) or die ($mysqli->error);
     return $resultModuleSection;
 }
+
 function getTasks($conn, $subjectId, $teacherId){
     $selectTaskListStudentsSection = "SELECT task_list_tbl.task_name, subject_list_tbl.fk_teacher_id FROM ((subject_list_tbl INNER JOIN task_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id)) WHERE subject_list_id = $subjectId and fk_teacher_id = $teacherId";
     $resultTaskList =  $conn->query($selectTaskListStudentsSection) or die ($mysqli->error);
     return $resultTaskList;
 }
+
 function getTasksPerGrading($conn, $subjectId, $gradingId){
     $selectTeacherTasksPerGrading = "SELECT * FROM task_list_tbl WHERE (fk_grading_id = $gradingId AND fk_subject_list_id = $subjectId)";
     $resultTasksPerGrading =  $conn->query($selectTeacherTasksPerGrading) or die ($mysqli->error);
@@ -535,11 +543,28 @@ function getSubjectStudents($conn){
 
 }
 
-function getSubjectStudentsProgress($conn){
-    $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled FROM (student_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id) GROUP BY student_tbl.student_id";
+function getSubjectStudentsProgress($conn, $sectionId, $subjectId){
+    // $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled FROM student_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id  GROUP BY student_tbl.student_id";
+    $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled 
+    FROM student_tbl 
+    LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id
+    LEFT JOIN student_subjects_tbl ON student_subjects_tbl.fk_student_id = student_tbl.student_id
+    WHERE student_tbl.fk_section_id = $sectionId 
+    AND student_subjects_tbl.fk_subject_list_id = $subjectId
+    GROUP BY student_tbl.student_id";
     $result =  $conn->query($sql) or die ($mysqli->error);
     return $result;
 }
+
+function checkTotalTaskCount($conn, $subjectId){
+    $queryTaskCount = "SELECT * FROM task_list_tbl where fk_subject_list_id = $subjectId";
+    if($total_task = mysqli_num_rows(mysqli_query($conn,$queryTaskCount))){
+        return $total_task;
+    } else {
+        return 0;
+    }
+}
+
 function checkTaskCountPerGrading($conn, $subjectListId, $grading){
     $queryTaskCount = "SELECT * FROM task_list_tbl where fk_subject_list_id = $subjectListId and fk_grading_id = $grading";
     if($total_task = mysqli_num_rows(mysqli_query($conn,$queryTaskCount))){

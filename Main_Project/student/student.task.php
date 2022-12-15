@@ -40,16 +40,15 @@ $_SESSION['questionCounter'] = 1;
         <div class="col-md-8 py-4 main-content" id="subjectMainContent">
             <div class="row mx-0">
                 <div class="custom-border">
-                    <a href="student.subjects.php" class="text-primary">Back</a>
+                    <a href="student.subjects.php?tab=taskTab" class="text-primary">Back</a>
 
                     
                     <!-- Change according to the type of grading -->
-                    <h3 class="text-center">First Grading - Quiz</h3>
+                    <h3 class="text-center"><?php echo $taskName; ?></h3>
 
                     <?php // Display Multiple Choice
                     if($subType == 0){
                     ?>
-                        <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.multipleChoice.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
 
                     <?php
@@ -59,7 +58,6 @@ $_SESSION['questionCounter'] = 1;
                     <?php // Display Identification
                     if($subType == 1){
                     ?>
-                        <p><?php echo $taskName; ?></p> 
                         <p><?php echo '<a href="student.identification.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
 
                     <?php
@@ -69,7 +67,6 @@ $_SESSION['questionCounter'] = 1;
                     <?php // Display Enumeration
                     if($subType == 10){
                     ?>
-                        <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.enumeration.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
 
                     <?php
@@ -79,7 +76,6 @@ $_SESSION['questionCounter'] = 1;
                     <?php // Display True or false
                     if($subType == 2){
                     ?>
-                        <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.trueorfalse.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
 
                     <?php
@@ -89,7 +85,6 @@ $_SESSION['questionCounter'] = 1;
                     <?php // Display Essay
                     if($subType == 3){
                     ?>
-                        <p><?php echo $taskName; ?></p>
                         <p><?php echo '<a href="student.essay.php?taskId='.$taskId.'&questionId='.$questionId.'" class="btn btn-success">Start</a>' ?></p>
 
                     <?php

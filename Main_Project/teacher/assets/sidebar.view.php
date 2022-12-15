@@ -127,10 +127,23 @@
                                          <i class="fa-solid fa-file-upload side-logo"></i>
                                          <span class="link_name">Upload File</span></a>
                          </li>
-                         <li class="nav-item"><a href="#" class="nav-link">
+
+                         <?php
+                         if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
+                            $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php#mainPageSubject"){
+                            ?> 
+                            
+                            <?php
+                         }else{
+                            ?> 
+                            <li class="nav-item"><a href="teacher.subject.php?tab=gradeBook" class="nav-link">
                                          <i class="fa-solid fa-table-list side-logo"></i>
                                          <span class="link_name">Grade Book</span></a>
                          </li>
+                            <?php
+                         }
+                         ?>
+                         
                          <!-- change me -->
                  </ul>
          </div>
