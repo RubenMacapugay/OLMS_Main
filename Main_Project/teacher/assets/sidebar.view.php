@@ -40,10 +40,22 @@
                                                  <label>Module Name</label>
                                                  <input type="text" name="file_name" class="form-control" placeholder="Subject Name" required>
                                          </div>
-                                         <div class="form-group">
-                                                 <label>Upload Files</label>
-                                                 <input type="file" name="file_upload" id="fileInput" class="form-control" required>
-                                         </div>
+                                         <?php
+                                            if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
+                                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php#mainPageSubject" ||
+                                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.calendar.php"){
+                                                ?> 
+
+                                                <?php
+                                            }else{
+                                                ?> 
+                                                <li class="nav-item"><a href="teacher.subject.php?tab=gradeBook" class="nav-link">
+                                                            <i class="fa-solid fa-table-list side-logo"></i>
+                                                            <span class="link_name">Grade Book</span></a>
+                                                </li>
+                                                <?php
+                                            }
+                                        ?>
                                  </div>
                                  <div class="modal-footer">
                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>

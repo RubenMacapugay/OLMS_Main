@@ -8,11 +8,11 @@ $date_Today = date("Y-m-d");
 // echo $date_Today;
 
 # --- isEmpty Functions --- #
-    function emptyEssayTask($grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
+    function emptyEssayTask($grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate){
         if(empty($grading) ||
             !is_numeric($moduleSection) ||
             empty($taskname) ||
-            empty($taskcontent) ||
+            // empty($taskcontent) ||
             !is_numeric($tasktype) ||
             !is_numeric($subtype) || 
             empty($datecreated) || 
@@ -97,8 +97,15 @@ $date_Today = date("Y-m-d");
         return $result;
     }
 
-    function validateDate($date, $format = 'm-d-Y')
-    {
+    function emptyEssayContent($questionContent){
+        if(empty($questionContent)){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    function validateDate($date, $format = 'm-d-Y'){
         $d = DateTime::createFromFormat($format, $date);
         // The Y ( 4 digits year ) returns TRUE for any integer with any number of digits so changing the comparison from == to === fixes the issue.
         return $d && $d->format($format) === $date;
@@ -225,6 +232,30 @@ function questionerExist($conn, $taskListId, $questioner){
         
 }
 
+function essayContentExist($conn, $taskListId, $questionContent){
+    $selectQuestionContent = "SELECT * FROM question_tbl WHERE fk_task_list_id = ? AND question_name = ?;";
+
+    # prepare the statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectQuestionContent)){
+        header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
+        exit();
+    }
+
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "is", $taskListId, $questionContent);
+    mysqli_stmt_execute($stmt);
+
+    # save the data to variable then return the data or false
+    $resultData = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false;
+        return $result;
+    }
+}
+
 function getQuestionName($conn, $questionId){
     $selectQuestionName = "SELECT * FROM question_tbl WHERE question_id = ?";
 
@@ -297,11 +328,11 @@ function getModuleName($conn, $id){
         echo 'success';
     }
 
-    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate){
+    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate){
 
         // I need to capture the subject ID
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `task_content`, `fk_task_type`, `sub_type`, `date_created`, `time_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$taskcontent', '$tasktype', '$subtype', '$datecreated', '$time_created', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `fk_task_type`, `sub_type`, `date_created`, `time_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$tasktype', '$subtype', '$datecreated', '$time_created', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
         
         mysqli_query($conn, $sqlInsertTask);
         
@@ -320,6 +351,21 @@ function getModuleName($conn, $id){
 
         # binding user input
         mysqli_stmt_bind_param($stmt, "iss", $taskListId, $questioner, $questionNumber);    
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+    }
+
+    function createEssayContent($conn, $taskListId, $questionContent){
+        $insertQuestion = "INSERT INTO `question_tbl`(`fk_task_list_id`, `question_name`) VALUES (?, ?);";
+        # start the prepared statement
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $insertQuestion)){
+            header ('location: ../Main_Project/teacher/teacher.createEssay.php?error=stmtfailed');
+            exit();
+        } 
+
+        # binding user input
+        mysqli_stmt_bind_param($stmt, "is", $taskListId, $questionContent);    
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
     }
