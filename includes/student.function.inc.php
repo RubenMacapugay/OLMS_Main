@@ -307,9 +307,21 @@ function isDeadline($date_Today, $endDate, $newTaskTimeFormat){
     }
 }
 
+function isNearDeadline($date_Today, $endDate, $newTaskTimeFormat){
+    if( (($date_Today == $endDate) && (time() <= strtotime($newTaskTimeFormat))) ||
+        ($date_Today < $endDate)){
+        # echo $rowFirstGrading['task_name'].'Time na<br>';
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function isGiven($value){
     if($value == "Yes"){
         return true;
+    }else if ($value == ""){
+        return false;
     }else{
         return false;
     }

@@ -1369,6 +1369,39 @@ if(isset($_POST['updateTrueOrFalse_EditTask'])){
     header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questionupdated&&taskId=$taskId");
     exit();
 }
+
+if(isset($_POST['updateEssay_EditTask'])){
+    $taskId = $_POST['updateTaskId'];
+    $questionerId = $_POST['essayQuestionerId'];
+    $questioner = $_POST['essayInputQuestion'];
+
+    $questionExists = questionerExist($conn, $taskId, $questioner);
+    $currentQuestion = getQuestionName($conn, $questionerId);
+    
+    # Logic for next button -- comeback
+    if($currentQuestion['question_name'] == $questioner){
+        # update quesitoner details
+        updateEssayQuestion($conn, $questionerId, $questioner);
+        $_SESSION['msg'] = "taskupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+    # update quesitoner details
+    updateEssayQuestion($conn, $questionerId, $questioner);
+
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+}
 #endregion --- teacher.editTask.php end
 # --- Updates ---end #
 
