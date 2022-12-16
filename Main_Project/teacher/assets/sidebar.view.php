@@ -18,32 +18,72 @@
                          <form action="#" method="POST" enctype="multipart/form-data">
 
                                  <div class="modal-body">
-                                         <div class="form-group">
-                                                 <label>Select Subject</label>
-                                                 <select class="form-select" aria-label="Default select example">
-                                                         <option selected>Select Subject...</option>
-                                                         <option value="1">One</option>
-                                                         <option value="2">Two</option>
-                                                         <option value="3">Three</option>
-                                                 </select>
-                                         </div>
-                                         <div class="form-group">
-                                         <label>Select Section</label>
-                                               <div class="d-flex">
-                                                <select class="form-select" id="moduleSection" name="moduleSection">
-                                                        <option selected="" disabled="">Select module section</option>
+                                        <div class="form-group mb-3">
+                                                <label>Grade level</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Select Subject...</option>
+                                                    <option value="1">Grade 1</option>
+                                                    <option value="2">Grade 2</option>
+                                                    <option value="3">Grade 3</option>
                                                 </select>
-                                                <button class="btn btn-primary ms-4 col-3" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFirstGrading" type="button">Add</button>
-                                               </div> 
-                                         </div>
-                                         <div class="form-group">
-                                                 <label>Module Name</label>
-                                                 <input type="text" name="file_name" class="form-control" placeholder="Subject Name" required>
-                                         </div>
-                                         <div class="form-group">
-                                                 <label>Upload Files</label>
-                                                 <input type="file" name="file_upload" id="fileInput" class="form-control" required>
-                                         </div>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                                <label>Subject</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>Select Subject...</option>
+                                                    <option value="1">English</option>
+                                                    <option value="2">AP</option>
+                                                    <option value="3">Math</option>
+                                                </select>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label>Subject Grading</label>
+                                            <div class="d-flex">
+                                            <select class="form-select" name="moduleSection">
+                                                    <option selected="" disabled="">First Grading</option>
+                                                    <option selected="" disabled="">Second Grading</option>
+                                                    <option selected="" disabled="">Third Grading</option>
+                                                    <option selected="" disabled="">Fourth Grading</option>
+                                            </select>
+                                            </div> 
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label>Lesson</label>
+                                            <div class="d-flex">
+                                            <select class="form-select" name="moduleSection">
+                                                    <option selected="" disabled="">Select module section</option>
+                                            </select>
+                                            </div> 
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                                <label>Module Name</label>
+                                                <input type="text" name="file_name" class="form-control" placeholder="Subject Name" required>
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                                <label>File</label>
+                                                <input type="file" name="file_name" class="form-control" placeholder="Subject Name" required>
+                                        </div>
+                                        <?php
+                                            if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
+                                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php#mainPageSubject" ||
+                                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.calendar.php"){
+                                                ?> 
+
+                                                <?php
+                                            }else{
+                                                ?> 
+                                                <li class="nav-item"><a href="teacher.subject.php?tab=gradeBook" class="nav-link">
+                                                            <i class="fa-solid fa-table-list side-logo"></i>
+                                                            <span class="link_name">Grade Book</span></a>
+                                                </li>
+                                                <?php
+                                            }
+                                        ?>
                                  </div>
                                  <div class="modal-footer">
                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -129,20 +169,20 @@
                          </li>
 
                          <?php
-                         if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
-                            $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php#mainPageSubject"){
-                            ?> 
-                            
+                            if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
+                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php#mainPageSubject" ||
+                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.profile.php" ||
+                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.announcement.php" ||
+                                $_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.calendar.php"){ ?> 
+                                
                             <?php
-                         }else{
+                            }else{
                             ?> 
                             <li class="nav-item"><a href="teacher.subject.php?tab=gradeBook" class="nav-link">
-                                         <i class="fa-solid fa-table-list side-logo"></i>
-                                         <span class="link_name">Grade Book</span></a>
-                         </li>
-                            <?php
-                         }
-                         ?>
+                                            <i class="fa-solid fa-table-list side-logo"></i>
+                                            <span class="link_name">Grade Book</span></a>
+                            </li>
+                        <?php } ?>
                          
                          <!-- change me -->
                  </ul>

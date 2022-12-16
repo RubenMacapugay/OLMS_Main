@@ -29,7 +29,7 @@ echo $date_Today.' '.$current_time;
         
         
         # Error handlers
-        if(emptyEssayTask($grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate) !== false){
+        if(emptyEssayTask($grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate) !== false){
             $_SESSION['msg'] = "emptyinput";
             header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=emptyinput&&currentSubject=$subjectId");
             exit();
@@ -44,10 +44,20 @@ echo $date_Today.' '.$current_time;
         }
         
         # create the task
-        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $taskcontent, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate);
-        $_SESSION['msg'] = "taskcompleted";
+        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate);
+        // $_SESSION['msg'] = "taskcompleted";
+        // header ("location: ../Main_Project/teacher/assets/header.view.php");
+        // header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskessaycreated&&currentSubject=$subjectId");
+        // exit();
+
+        # getting task_list details
+        $taskExists = tasknameExist($conn, $taskname, $subjectId);
+        $_SESSION["task_name"] = $taskExists["task_name"];
+        $_SESSION["task_id"] = $taskExists["task_list_id"];
+
+        # redrecting to creating questions
         header ("location: ../Main_Project/teacher/assets/header.view.php");
-        header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskessaycreated&&currentSubject=$subjectId");
+        header ("location: ../Main_Project/teacher/teacher.createEssay.php");
         exit();
     }
     
@@ -329,6 +339,39 @@ echo $date_Today.' '.$current_time;
 # -----CREATE TASK BUTTONS-----end #
 
 # --- Essay --- #
+if(isset($_POST['createEssayContent'])){
+    $taskListId = $_SESSION["task_id"];
+    $questionContent = $_POST["questionContent"];
+
+    ## check if the essay content exist -- comeback
+    $essayContentExists = essayContentExist($conn, $taskListId, $questionContent);
+    
+    # check empty feilds 
+    if(emptyEssayContent($questionContent) !== false){
+        $_SESSION['msg'] = "missingfeilds";
+        header ("location: ../Main_Project/teacher/teacher.createEssay.php?error=emptyinput");
+        exit();
+    }
+
+     # Check it questioners exists
+     if($essayContentExists !== false){
+        //$_SESSION['currentQuestion'] = $questionExists['question_id'];
+        $_SESSION['msg'] = "essayContentTaken";
+        header ("location: ../Main_Project/teacher/teacher.createEssay.php?error=questiontaken");
+        exit();
+    } 
+
+    ## create question if not exist-- comeback
+    createEssayContent($conn, $taskListId, $questionContent);
+
+    $_SESSION['msg'] = "essayContentCreated";
+
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.taskproceed.php?msg=essay");
+    exit();
+
+    
+}
 # --- Essay --- end #
 
 # --- Multiple choice --- #
@@ -746,6 +789,16 @@ echo $date_Today.' '.$current_time;
         $subjectId = $_SESSION["subjectId"];
         header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskcancelled&&currentSubject=$subjectId");
         exit();
+    }
+
+    if(isset($_POST["cancelEssayTaskSave"])){
+        $taskListId = $_SESSION["task_id"];
+        deleteTask($conn, $taskListId);
+        $_SESSION['msg'] = "createEssayCancelled";
+
+        header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskcancelled&&currentSubject=$subjectId");
+        exit();
+
     }
 
     if(isset($_POST["cancelQuestionSave"])){
@@ -1315,6 +1368,39 @@ if(isset($_POST['updateTrueOrFalse_EditTask'])){
     header ("location: ../Main_Project/teacher/assets/header.view.php");
     header ("location: ../Main_Project/teacher/teacher.editTask.php?msg=questionupdated&&taskId=$taskId");
     exit();
+}
+
+if(isset($_POST['updateEssay_EditTask'])){
+    $taskId = $_POST['updateTaskId'];
+    $questionerId = $_POST['essayQuestionerId'];
+    $questioner = $_POST['essayInputQuestion'];
+
+    $questionExists = questionerExist($conn, $taskId, $questioner);
+    $currentQuestion = getQuestionName($conn, $questionerId);
+    
+    # Logic for next button -- comeback
+    if($currentQuestion['question_name'] == $questioner){
+        # update quesitoner details
+        updateEssayQuestion($conn, $questionerId, $questioner);
+        $_SESSION['msg'] = "taskupdated";
+
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+
+    if($questionExists !== false){
+        $_SESSION['msg'] = "questionertaken";
+        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        exit();
+    }
+    # update quesitoner details
+    updateEssayQuestion($conn, $questionerId, $questioner);
+
+    $_SESSION['msg'] = "taskupdated";
+    
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
 }
 #endregion --- teacher.editTask.php end
 # --- Updates ---end #

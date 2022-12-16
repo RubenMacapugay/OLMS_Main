@@ -102,7 +102,7 @@ if(!isset($taskId) || $taskResult == false){
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="updateQuestion_EditTask" class="btn btn-primary">Update</button>
+                    <button type="submit" name="updateQuestion_EditTask" class="btn btn-primary">Save</button>
                 </div>
 
             </form>
@@ -142,7 +142,7 @@ if(!isset($taskId) || $taskResult == false){
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="updateIdentification_EditTask" class="btn btn-primary">Update</button>
+                    <button type="submit" name="updateIdentification_EditTask" class="btn btn-primary">Save</button>
                 </div>
 
             </form>
@@ -193,7 +193,43 @@ if(!isset($taskId) || $taskResult == false){
 
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" name="updateTrueOrFalse_EditTask" class="btn btn-primary">Create</button>
+                    <button type="submit" name="updateTrueOrFalse_EditTask" class="btn btn-primary">Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="edit_question_essay_Modal" tabindex="-1" aria-labelledby="editTaskModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editModalLabel">Edit Essay</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    
+                    <input type="hidden" name="updateTaskId" id="updateTaskId" value="<?php echo $_GET['taskId'];?>">
+                    <input type="hidden" class="form-control" id="essayQuestionerId"
+                        name="essayQuestionerId" aria-describedby="questionHidden">
+                    <div class="form-group mb-3 ps-0" id="taskcontentDiv">
+                        <label for="">Question</label>
+                        <textarea class="form-control" rows="5" name="essayInputQuestion"
+                            id="essayInputQuestion" required></textarea>
+                    </div>
+
+                    <div class=" mt-1">
+                        <input style="width: 270px;" type="file" name="essayInputFile" id="fileInput" class="form-control" > 
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="updateEssay_EditTask" class="btn btn-primary">Save</button>
                 </div>
 
             </form>
@@ -373,6 +409,7 @@ if(!isset($taskId) || $taskResult == false){
     </div>
 </div>
 
+
 <!-- Modal Delete -->
 <div class="modal fade" id="delete_question_multipleChoice_Modal" tabindex="-1" aria-labelledby="deleteModalTask" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -407,7 +444,7 @@ if(!isset($taskId) || $taskResult == false){
         
         <!-- Left Side Nav global-->
         <div class="col-md-2 " id="sideNav">
-            <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#updateModalTask">Click me</button>
+            
             <?php include('assets/sidebar.view.php') ?>
         </div>
 
@@ -452,7 +489,7 @@ if(!isset($taskId) || $taskResult == false){
                     }
                 ?>
                 <div class="container-fluid custom-border">
-                    <div>
+                    <div class="mb-3">
                         <?php 
                             if(isset($_GET['tab'])){
                                 if($_GET['tab'] == "fromModule"){
@@ -460,160 +497,189 @@ if(!isset($taskId) || $taskResult == false){
                                 }
                             }else{
                                 echo '<a href="teacher.subject.php?tab=taskTab">back</a>';
+                                echo '<br>';
                             }
                         ?>
                         
-                        <h2><?php echo $taskResult['task_name'];?></h2>
+                        <h2 class="mt-3"><?php echo $taskResult['task_name'];?></h2>
                         <?php
                             if($taskType == "0"){
-                                echo '<button class="btn btn-primary my-2 new_questionMultipleChoice" id="new_questionMultipleChoice"><i class="fa fa-plus"></i> Add Question</button>';
+                                echo '<button class="btn btn-primary my-2 new_questionMultipleChoice" id="new_questionMultipleChoice"><i class="fa fa-plus"></i> Add</button>';
                             } else if($taskType == "1"){
-                                echo '<button class="btn btn-primary my-2 new_questionIdentification" id="new_questionIdentification"><i class="fa fa-plus"></i> Add Question</button>';
+                                echo '<button class="btn btn-primary my-2 new_questionIdentification" id="new_questionIdentification"><i class="fa fa-plus"></i> Add</button>';
                             } else if($taskType == "2"){
-                                echo '<button class="btn btn-primary my-2 new_questionTrueOrFalse" id="new_questionTrueOrFalse"><i class="fa fa-plus"></i> Add Question</button>';
+                                echo '<button class="btn btn-primary my-2 new_questionTrueOrFalse" id="new_questionTrueOrFalse"><i class="fa fa-plus"></i> Add</button>';
                             } else if($taskType == "3"){
-                                echo '<button class="btn btn-primary my-2 new_questionEssay" id="new_questionEssay"><i class="fa fa-plus"></i> Add Question</button>';
+                                //echo '<button class="btn btn-primary my-2 new_questionEssay" id="new_questionEssay"><i class="fa fa-plus"></i> Add</button>';
                             }
                         ?>
                         
                     </div>
-                    <div>
-                        <div class="card col-md-12 " style="float:left">
-                            <div class="card-header">
-                                <h3>Questions</h3>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-hover">
-                                    <tbody>
-                                    <?php
-                                        $qry = $conn->query("SELECT * FROM question_tbl where fk_task_list_id = ".$_GET['taskId']);
-                                        $num = 0;
-                                        while($row=$qry->fetch_array()){
-                                            $num++;
-                                            ?>
-                                            <tr>
-                                                <td>
-                                                    <div class="d-flex d-flex justify-content-between">
-                                                        <p><?php echo $row['question_name'] ?></p>
-                                                        <div>
-                                                            <span class="d-none" id="questionIdEditTask"><?php echo $row['question_id'];?></span>
-                                                            <span class="d-none" id="questionerEditTask"><?php echo $row['question_name'];?></span>
-                                                            <span class="d-none" id="questionerNumberEditTask"><?php echo $num;?></span>
-                                                            <?php 
-                                                                
-                                                                $questionId = $row['question_id'];
-                                                                if ($taskType == "0"){
-                                                                    // echo "Multiple choice";
-                                                                    // Loop here for choices
-                                                                    $choicesSql = "SELECT * FROM choices_tbl WHERE fk_question_id = {$questionId}";
-                                                                    $choicesResult = mysqli_query($conn, $choicesSql);
-                                                                    $choicesList = [];
-                                                                    $chocesIdList = [];
-                                                                    while($choiceRow = mysqli_fetch_array($choicesResult)){
-                                                                        array_push($chocesIdList, $choiceRow['choices_id']);
-                                                                        array_push($choicesList, $choiceRow['choices_name']);
-                                                                    }
-                                                                    $data['choiceA'] = $choicesList[0];
-                                                                    $data['choiceB'] = $choicesList[1];
-                                                                    $data['choiceC'] = $choicesList[2];
-                                                                    $data['choiceD'] = $choicesList[3];
-
-                                                                    $data['choiceAId'] = $chocesIdList[0];
-                                                                    $data['choiceBId'] = $chocesIdList[1];
-                                                                    $data['choiceCId'] = $chocesIdList[2];
-                                                                    $data['choiceDId'] = $chocesIdList[3];
-
-                                                                    $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
-                                                                    $answerResult = mysqli_query($conn, $answerSql);
-                                                                    while($answerRow = mysqli_fetch_array($answerResult)){
-                                                                        // fetching the record $row = same from database
-                                                                        $data['answerId'] = $answerRow['answer_id'];
-                                                                        $data['answerKey'] = $answerRow['answer_key'];
-                                                                    }
-
-                                                                    ?> 
-                                                                        <span class="d-none choiceAId" id="choiceAId"><?php echo $data['choiceAId']; ?></span>
-                                                                        <span class="d-none choiceBId" id="choiceBId"><?php echo $data['choiceBId']; ?></span>
-                                                                        <span class="d-none choiceCId" id="choiceCId"><?php echo $data['choiceCId']; ?></span>
-                                                                        <span class="d-none choiceDId" id="choiceDId"><?php echo $data['choiceDId']; ?></span>
-
-                                                                        <span class="d-none choiceA" id="choiceA"><?php echo $data['choiceA']; ?></span>
-                                                                        <span class="d-none choiceB" id="choiceB"><?php echo $data['choiceB']; ?></span>
-                                                                        <span class="d-none choiceC" id="choiceC"><?php echo $data['choiceC']; ?></span>
-                                                                        <span class="d-none choiceD" id="choiceD"><?php echo $data['choiceD']; ?></span>
-
-                                                                        <!-- answer key -->
-                                                                        <span class="d-none answerId" id="answerId"><?php echo $data['answerId']; ?></span>
-                                                                        <span class="d-none answerKey" id="answerKey"><?php echo $data['answerKey']; ?></span>
-
-                                                                    <?php 
-
-                                                    
-
-                                                                    // save on span and send to modal
-                                                                    echo '<button class="btn edit_question_multipleChoice p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
-                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
-                                                                } else if($taskType == "1"){
-                                                                    // echo "Identification";
-
-                                                                    $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
-                                                                    $answerResultIdentification = mysqli_query($conn, $answerSql);
-                                                                    while($answerRow = mysqli_fetch_array($answerResultIdentification)){
-                                                                        // fetching the record $row = same from database
-                                                                        $data['answerId'] = $answerRow['answer_id'];
-                                                                        $data['answerKey'] = $answerRow['answer_key'];
-                                                                    }
-
-                                                                    // Save the answer here
-                                                                    ?> 
-                                                                    <!-- answer key -->
-                                                                    <span class="d-none answerId" id="identificatoinAnswerId"><?php echo $data['answerId']; ?></span>
-                                                                    <span class="d-none answerKey" id="identificatoinAnswerKey"><?php echo $data['answerKey']; ?></span>
-                                                                    <?php 
-
-                                                                    echo '<button class="btn edit_question_identification p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
-                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
-                                                                } else if($taskType == "2"){
-
-                                                                    // echo "True or false";
-                                                                    $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
-                                                                    $answerResultTrueOrFalse = mysqli_query($conn, $answerSql);
-                                                                    while($answerRow = mysqli_fetch_array($answerResultTrueOrFalse)){
-                                                                        // fetching the record $row = same from database
-                                                                        $data['answerId'] = $answerRow['answer_id'];
-                                                                        $data['answerKey'] = $answerRow['answer_key'];
-                                                                    }
-
-                                                                    // Save the answer here
-                                                                    ?> 
-                                                                    <!-- answer key -->
-                                                                    <span class="d-none answerId" id="trueOrFalseAnswerId"><?php echo $data['answerId']; ?></span>
-                                                                    <span class="d-none answerKey" id="trueOrFalseAnswerKey"><?php echo $data['answerKey']; ?></span>
-                                                                    <?php 
-
-                                                                    echo '<button class="btn edit_question_trueOrFalse p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
-                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
-                                                                } else if($taskType == "3"){
-                                                                    // echo "Essay";
-                                                                    echo '<button class="btn edit_question_essay p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
-                                                                    echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
-                                                                }
-                                                                echo "<br>";
-                                                            ?>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php
-                                            }
-                                        ?>
-                                    </tbody>
-
-                                </table>
+                    <div class="card col-md-12 mb-3" >
+                        <div class="card-header">
+                            <h3>List</h3>
                         </div>
-                    </div>
-                </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <th>Questions</th>
+                                    <?php
+                                        if($taskType == "3"){
+                                            echo'<th>File</th>';
+                                        }
+                                    ?>
+                                    
+                                    <th>Actions</th>
 
+                                </thead>
+                                <tbody>
+                                <?php
+                                    $qry = $conn->query("SELECT * FROM question_tbl where fk_task_list_id = ".$_GET['taskId']);
+                                    $num = 0;
+                                    while($row=$qry->fetch_array()){
+                                        $num++;
+                                        ?>
+                                        <tr>
+                                            <td>
+                                                <?php
+                                                    if($taskType == "3"){
+                                                        echo'<div>';
+                                                        echo '<pre class="" style="font-family:inherit; font-size:.9rem;">'.$row['question_name'].'</[re>';
+                                                        echo'</div>';
+                                                    }else{
+                                                        echo $row['question_name']; 
+                                                    } 
+                                                ?>
+                                            </td>
+
+                                            <?php
+                                                if($taskType == "3"){
+                                                    echo'<td>filename.doc</td>';
+                                                }
+                                            ?>
+                                            
+                                            <td>
+                                                <div>
+                                                    <span class="" id="questionIdEditTask"><?php echo $row['question_id'];?></span>
+                                                    <pre class="d-none" id="questionerEditTask"><?php echo $row['question_name'];?></pre>
+                                                    <span class="d-none" id="questoinFileNameIdEditTask"></span>
+                                                    <span class="d-none" id="questionerNumberEditTask"><?php echo $num;?></span>
+                                                    <?php 
+                                                        
+                                                        $questionId = $row['question_id'];
+                                                        if ($taskType == "0"){
+                                                            // echo "Multiple choice";
+                                                            // Loop here for choices
+                                                            $choicesSql = "SELECT * FROM choices_tbl WHERE fk_question_id = {$questionId}";
+                                                            $choicesResult = mysqli_query($conn, $choicesSql);
+                                                            $choicesList = [];
+                                                            $chocesIdList = [];
+                                                            while($choiceRow = mysqli_fetch_array($choicesResult)){
+                                                                array_push($chocesIdList, $choiceRow['choices_id']);
+                                                                array_push($choicesList, $choiceRow['choices_name']);
+                                                            }
+                                                            $data['choiceA'] = $choicesList[0];
+                                                            $data['choiceB'] = $choicesList[1];
+                                                            $data['choiceC'] = $choicesList[2];
+                                                            $data['choiceD'] = $choicesList[3];
+
+                                                            $data['choiceAId'] = $chocesIdList[0];
+                                                            $data['choiceBId'] = $chocesIdList[1];
+                                                            $data['choiceCId'] = $chocesIdList[2];
+                                                            $data['choiceDId'] = $chocesIdList[3];
+
+                                                            $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
+                                                            $answerResult = mysqli_query($conn, $answerSql);
+                                                            while($answerRow = mysqli_fetch_array($answerResult)){
+                                                                // fetching the record $row = same from database
+                                                                $data['answerId'] = $answerRow['answer_id'];
+                                                                $data['answerKey'] = $answerRow['answer_key'];
+                                                            }
+
+                                                            ?> 
+                                                                <span class="d-none choiceAId" id="choiceAId"><?php echo $data['choiceAId']; ?></span>
+                                                                <span class="d-none choiceBId" id="choiceBId"><?php echo $data['choiceBId']; ?></span>
+                                                                <span class="d-none choiceCId" id="choiceCId"><?php echo $data['choiceCId']; ?></span>
+                                                                <span class="d-none choiceDId" id="choiceDId"><?php echo $data['choiceDId']; ?></span>
+
+                                                                <span class="d-none choiceA" id="choiceA"><?php echo $data['choiceA']; ?></span>
+                                                                <span class="d-none choiceB" id="choiceB"><?php echo $data['choiceB']; ?></span>
+                                                                <span class="d-none choiceC" id="choiceC"><?php echo $data['choiceC']; ?></span>
+                                                                <span class="d-none choiceD" id="choiceD"><?php echo $data['choiceD']; ?></span>
+
+                                                                <!-- answer key -->
+                                                                <span class="d-none answerId" id="answerId"><?php echo $data['answerId']; ?></span>
+                                                                <span class="d-none answerKey" id="answerKey"><?php echo $data['answerKey']; ?></span>
+
+                                                            <?php 
+
+                                            
+
+                                                            // save on span and send to modal
+                                                            echo '<button class="btn edit_question_multipleChoice p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                            echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                        } else if($taskType == "1"){
+                                                            // echo "Identification";
+
+                                                            $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
+                                                            $answerResultIdentification = mysqli_query($conn, $answerSql);
+                                                            while($answerRow = mysqli_fetch_array($answerResultIdentification)){
+                                                                // fetching the record $row = same from database
+                                                                $data['answerId'] = $answerRow['answer_id'];
+                                                                $data['answerKey'] = $answerRow['answer_key'];
+                                                            }
+
+                                                            // Save the answer here
+                                                            ?> 
+                                                            <!-- answer key -->
+                                                            <span class="d-none answerId" id="identificatoinAnswerId"><?php echo $data['answerId']; ?></span>
+                                                            <span class="d-none answerKey" id="identificatoinAnswerKey"><?php echo $data['answerKey']; ?></span>
+                                                            <?php 
+
+                                                            echo '<button class="btn edit_question_identification p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                            echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                        } else if($taskType == "2"){
+
+                                                            // echo "True or false";
+                                                            $answerSql = "SELECT * FROM answer_tbl WHERE fk_question_id = {$questionId}";
+                                                            $answerResultTrueOrFalse = mysqli_query($conn, $answerSql);
+                                                            while($answerRow = mysqli_fetch_array($answerResultTrueOrFalse)){
+                                                                // fetching the record $row = same from database
+                                                                $data['answerId'] = $answerRow['answer_id'];
+                                                                $data['answerKey'] = $answerRow['answer_key'];
+                                                            }
+
+                                                            // Save the answer here
+                                                            ?> 
+                                                            <!-- answer key -->
+                                                            <span class="d-none answerId" id="trueOrFalseAnswerId"><?php echo $data['answerId']; ?></span>
+                                                            <span class="d-none answerKey" id="trueOrFalseAnswerKey"><?php echo $data['answerKey']; ?></span>
+                                                            <?php 
+
+                                                            echo '<button class="btn edit_question_trueOrFalse p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                            echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                        } else if($taskType == "3"){
+                                                            // echo "Essay";
+                                                            echo '<button class="btn edit_question_essay p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
+                                                            //echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
+                                                        }
+                                                        echo "<br>";
+                                                    ?>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                    <?php
+                                        }
+                                    ?>
+                                </tbody>
+
+                            </table>
+                        </div>
+                        
+
+                            
+                    </div>
             </div>
         </div>
        
@@ -736,6 +802,22 @@ if(!isset($taskId) || $taskResult == false){
         });
     });
 
+    $(document).ready(function (){
+        $(document).on('click', '.edit_question_essay', function(){
+            // Get the question and id
+            var questionId = $(this).closest('div').find('#questionIdEditTask').text();
+            var questioner = $(this).closest('div').find('#questionerEditTask').text();
+
+            $('#edit_question_essay_Modal').modal('show'); // load delete modal
+
+            // populate the question and aswer on the modal
+            // setting value for question
+            $('#essayQuestionerId').val(questionId);
+            $('#essayInputQuestion').val(questioner);
+
+        });
+    });
+
 
     // Create Question
     $(document).ready(function (){
@@ -753,6 +835,12 @@ if(!isset($taskId) || $taskResult == false){
     $(document).ready(function (){
         $(document).on('click', '.new_questionTrueOrFalse', function(){
             $('#create_question_trueOrFalse_Modal').modal('show'); // load delete modal
+        });
+    });
+
+    $(document).ready(function (){
+        $(document).on('click', '.new_questionEssay', function(){
+            $('#create_question_Essay_Modal').modal('show'); // load delete modal
         });
     });
 

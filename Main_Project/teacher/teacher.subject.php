@@ -45,6 +45,8 @@ $resultStudentsSubjectSection = getSubjectStudents($conn);
 // Display all subject's students by section progress
 $resultStudentProgress = getSubjectStudentsProgress($conn, $sectionId, $subjectId);
 
+$resultStudentList = getSubjectsStudentList($conn, $sectionId, $subjectId);
+
 //display the subject name
 // $selectSubjectName = "SELECT *, subject_list_tbl.subject_list_name FROM ((student_tbl INNER JOIN subject_list_tbl ON student_tbl.student_id = subject_list_tbl.fk_student_id ))WHERE  subject_list_tbl.fk_section_id = 1 AND subject_list_tbl.fk_teacher_id = 1 AND subject_list_tbl.fk_subject_id = 1";
 
@@ -1206,9 +1208,9 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     </div>
                                     <div class="student-table custom-border m-2">
                                         <h4>Student's scores</h4>
-                                        <div class="card">
+                                        <div class="card overflow-scroll">
                                             <div class="card-body">
-                                                <table class="table table-hover">
+                                                <table class="table table-hover ">
                                                     <thead>
                                                         <tr>
                                                             <th scope="col" class="">Student List</th>
@@ -1222,17 +1224,29 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <!-- resultStudentsSubjectSection -->
-                                                        <?php while ($rowResult = $resultStudentsSubjectSection->fetch_assoc()) : ?>
+                                                        <!-- display students -->
+                                                        <?php while ($rowResult = $resultStudentList->fetch_assoc()) : ?>
                                                             <?php 
                                                                 $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
                                                             ?>
                                                             <tr>
                                                                 <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
                                                                 
-                                                                <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : ?>
+                                                                <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : 
+                                                                    $studentId = $rowResult['student_id'];
+                                                                    $taskId = $rowTaskList2['task_list_id'];
+                                                                    $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
+                                                                    $scoreResult;
+                                                                    if($maxAttempt[0] == null){
+                                                                        $scoreResult = "-";
+                                                                    }
+                                                                    else{
+                                                                        $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
+                                                                        $scoreResult = $studentAnswer['score'];
+                                                                    }
+                                                                    ?>
                                                                     
-                                                                    <td scope="col" class="text-center">test</td>
+                                                                    <td scope="col" class="text-center"><?php echo $scoreResult?></td>
                                                                 <?php endwhile; ?>
                                                             </tr>
         

@@ -24,6 +24,7 @@ ini_set('display_errors',1);
                 <div class="custom-border">
                     <!-- Session Messages -->
                     <?php 
+                        
                         if(isset($_SESSION['msg'])){
                             
                             if($_SESSION['msg'] == "questionupdated"){
@@ -42,6 +43,14 @@ ini_set('display_errors',1);
                                 
                             }
 
+                            if($_SESSION['msg'] == "essayContentCreated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner/s has been Created!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
                             if($_SESSION['msg'] == "questionertaken"){
                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             Questioner has been taken!
@@ -53,6 +62,14 @@ ini_set('display_errors',1);
                             if($_SESSION['msg'] == "missingfeilds"){
                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
                                             Missing feilds!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "essayContentTaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Questioner/s has been taken!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
                                 
@@ -93,7 +110,7 @@ ini_set('display_errors',1);
                                     <div>
                                         <h3 class="m-3">Instruction or Question</h3>
                                         <div class="mx-3">
-                                            <textarea class="form-control" name="" id="" rows="5"></textarea>
+                                            <textarea class="form-control" id="" rows="5" name="questionContent"></textarea>
                                         </div>
                                     </div> 
                                     
@@ -108,9 +125,8 @@ ini_set('display_errors',1);
                             <div class="col-12 text-center">
                                 <button class="btn btn-secondary" name="cancelIdentification">cancel</button>
                                 <button type="submit" class="btn btn-primary ms-3"
-                                    name="nextIdentification" id="nextBtn">Create</button>
-                                <button type="submit" name="updateIdentification" class="btn btn-primary ms-3"
-                                    id="updateBtn">update</button>
+                                    name="createEssayContent" id="createEssayContentId">Create</button>
+                                
                             </div>
 
                         </div>
