@@ -89,9 +89,16 @@
                                     </div>';
                             }
 
-                            if($_SESSION['msg'] == "modulenametaken"){
-                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            if($_SESSION['msg'] == "modulenametaken"){ 
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert"> 
                                         Task name has been used! Please re-enter your inputs.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                            }
+                            
+                            if($_SESSION['msg'] == "filenotadded"){ 
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert"> 
+                                        Failed to create Task, file has not been saved! Please re-enter your inputs.
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>';
                             }

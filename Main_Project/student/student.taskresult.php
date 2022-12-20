@@ -156,6 +156,8 @@ $taskName = getCurrentTask($conn, $taskId);
 
 
 </div>
+
+
 </body>
 
 </html>

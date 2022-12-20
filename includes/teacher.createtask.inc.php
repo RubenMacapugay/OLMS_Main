@@ -6,7 +6,7 @@ include_once 'teacher.function.inc.php';
 date_default_timezone_set('Asia/Manila');
 $date_Today = date("Y-m-d");
 $current_time = date("h:i A");
-echo $date_Today.' '.$current_time;
+// echo $date_Today.' '.$current_time;
 
 # -----CREATE TASK BUTTONS----- #
     if(isset($_POST["createEssay"])){
@@ -340,11 +340,22 @@ echo $date_Today.' '.$current_time;
 
 # --- Essay --- #
 if(isset($_POST['createEssayContent'])){
+    $teacherId = $_SESSION["teacher_id"];
+    $subjectId = $_SESSION['subjectId'];
     $taskListId = $_SESSION["task_id"];
     $questionContent = $_POST["questionContent"];
+    $filename = $_FILES['file_upload']['name'];
+    
+    
+    $filepath = '../upload/' . $teacherId . $subjectId . $taskListId;
+    
+    $size = getFileSize($_FILES['file_upload']['size']);
+    
 
     ## check if the essay content exist -- comeback
     $essayContentExists = essayContentExist($conn, $taskListId, $questionContent);
+    
+    $essayFileExists = essayFileExist($conn, $taskListId, $filename);
     
     # check empty feilds 
     if(emptyEssayContent($questionContent) !== false){
@@ -353,24 +364,92 @@ if(isset($_POST['createEssayContent'])){
         exit();
     }
 
-     # Check it questioners exists
-     if($essayContentExists !== false){
+    # Check it questioners exists
+    if($essayFileExists !== false){
         //$_SESSION['currentQuestion'] = $questionExists['question_id'];
-        $_SESSION['msg'] = "essayContentTaken";
+        $_SESSION['msg'] = "essayFileTaken";
         header ("location: ../Main_Project/teacher/teacher.createEssay.php?error=questiontaken");
         exit();
     } 
 
-    ## create question if not exist-- comeback
-    createEssayContent($conn, $taskListId, $questionContent);
 
-    $_SESSION['msg'] = "essayContentCreated";
-
-    header ("location: ../Main_Project/teacher/assets/header.view.php");
-    header ("location: ../Main_Project/teacher/teacher.taskproceed.php?msg=essay");
-    exit();
 
     
+    // saving file
+    if($size < 1000.0){
+        if(!file_exists($filepath)){
+            //create folder
+            mkdir($filepath, 0777, true);
+        } 
+    
+        $temp_file = $_FILES['file_upload']['tmp_name'];
+       
+        
+        if($temp_file != ""){
+            
+            // concatinating the file
+            $newfilepath = $filepath."/". $filename;
+            
+            if(move_uploaded_file($temp_file, $newfilepath)){
+                
+                createEssayContent($conn, $taskListId, $questionContent, $filename, $filepath);
+                $_SESSION['msg'] = "taskcompleted";
+                header ("location: ../Main_Project/teacher/assets/header.view.php");
+                header ("location: ../Main_Project/teacher/teacher.taskproceed.php?msg=essay");
+                exit();
+            } else{
+            
+                echo 'Upload error encounter : ' . $_FILES['file_upload']['error'];
+                
+            }
+        }
+    
+      
+    } else{
+        echo 'File to Large';
+    }
+
+    
+}
+
+if(isset($_POST['saveEssayScore'])){
+    $submissionId = $_POST['submissionId'];
+    $score = $_POST['submmisionScore'];
+    $studentId = $_POST['studentIdHidden'];
+    $taskId = $_POST['taskIdHidden'];
+    $attemptCount = $_POST['attemptCount'];
+    $maxscore = $_POST['maxScoreHidden'];
+  
+    saveEssayScore($conn, $score, $submissionId);
+    
+    $_SESSION['msg'] = "taskgraded";
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount");
+    exit();
+}
+
+if(isset($_POST['editEssayScore'])){
+    $submissionId = $_POST['submissionId'];
+    $score = $_POST['submmisionScore'];
+    $studentId = $_POST['studentIdHidden'];
+    $taskId = $_POST['taskIdHidden'];
+    $attemptCount = $_POST['attemptCount'];
+    $maxscore = $_POST['maxScoreHidden'];
+  
+    if($score > $maxscore){
+        $_SESSION['msg'] = "scorelimitreached";
+        header ("location: ../Main_Project/teacher/assets/header.view.php");
+        header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount");
+        exit();
+    
+    }
+    saveEssayScore($conn, $score, $submissionId);
+    
+    $_SESSION['msg'] = "taskgradeedited";
+    header ("location: ../Main_Project/teacher/assets/header.view.php");
+    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount");
+    exit();
+
 }
 # --- Essay --- end #
 
@@ -1371,36 +1450,78 @@ if(isset($_POST['updateTrueOrFalse_EditTask'])){
 }
 
 if(isset($_POST['updateEssay_EditTask'])){
+    $teacherId = $_SESSION["teacher_id"];
+    $subjectId = $_SESSION['subjectId'];
     $taskId = $_POST['updateTaskId'];
+    
     $questionerId = $_POST['essayQuestionerId'];
     $questioner = $_POST['essayInputQuestion'];
-
+    
+    // $filepath = $_POST['essayInputFilepath'];
+    
+    // if ($filepath == "" || $filepath == null){
+    // }
+    $filepath = '../upload/' . $teacherId . $subjectId . $taskId;
+    
+    echo $filepath;
+    
+    $oldFilename = $_POST['essayOldInputFilename'];
+    $newFilename = $_FILES['essayNewInputFile']['name'];
+    $size = getFileSize($_FILES['essayNewInputFile']['size']);
+    
+    
+   
     $questionExists = questionerExist($conn, $taskId, $questioner);
     $currentQuestion = getQuestionName($conn, $questionerId);
     
-    # Logic for next button -- comeback
-    if($currentQuestion['question_name'] == $questioner){
-        # update quesitoner details
-        updateEssayQuestion($conn, $questionerId, $questioner);
-        $_SESSION['msg'] = "taskupdated";
-
-        header ("location: ../Main_Project/teacher/assets/header.view.php");
-        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
-        exit();
-    }
-
-    if($questionExists !== false){
-        $_SESSION['msg'] = "questionertaken";
-        header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
-        exit();
-    }
-    # update quesitoner details
-    updateEssayQuestion($conn, $questionerId, $questioner);
-
-    $_SESSION['msg'] = "taskupdated";
+ 
+    // updating file
+    if($size < 1000.0){
+        if(!file_exists($filepath)){
+            //create folder
+            mkdir($filepath, 0777, true);
+        } 
     
-    header ("location: ../Main_Project/teacher/assets/header.view.php");
-    header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+        $temp_file = $_FILES['essayNewInputFile']['tmp_name'];
+       
+        
+        if($temp_file != ""){
+            
+            // concatinating the file
+            $newfilepath = $filepath."/". $newFilename;
+            
+            if(move_uploaded_file($temp_file, $newfilepath)){
+                
+                updateEssayQuestion($conn, $questionerId, $questioner, $newFilename, $filepath);
+                
+                $_SESSION['msg'] = "taskupdated";
+                
+                // deleting file
+                $removeFile =  $filepath."/". $oldFilename;
+                $status = unlink($removeFile);
+                            
+                header ("location: ../Main_Project/teacher/assets/header.view.php");
+                header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+                exit();
+            } else{
+            
+                echo 'Upload error encounter : ' . $_FILES['essayNewInputFile']['error'];
+            }
+        }else{
+                updateEssayQuestion($conn, $questionerId, $questioner, $oldFilename);
+                
+                $_SESSION['msg'] = "taskupdated";
+                
+                header ("location: ../Main_Project/teacher/assets/header.view.php");
+                header ("location: ../Main_Project/teacher/teacher.editTask.php?taskId=$taskId");
+                exit();
+        
+        }
+    
+      
+    } else{
+        echo 'File to Large';
+    }
 }
 #endregion --- teacher.editTask.php end
 # --- Updates ---end #

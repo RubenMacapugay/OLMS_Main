@@ -214,16 +214,20 @@ if(!isset($taskId) || $taskResult == false){
                 <div class="modal-body">
                     
                     <input type="hidden" name="updateTaskId" id="updateTaskId" value="<?php echo $_GET['taskId'];?>">
-                    <input type="hidden" class="form-control" id="essayQuestionerId"
-                        name="essayQuestionerId" aria-describedby="questionHidden">
+                    <input type="hidden" name="essayQuestionerId" class="form-control" id="essayQuestionerId"
+                        aria-describedby="questionHidden">
+                    <input type="hidden" name="essayInputFilepath" id="essayInputFilepath">
+                    <input type="hidden" name="essayOldInputFilename" id="essayInputFilename">
+                    
+                    
                     <div class="form-group mb-3 ps-0" id="taskcontentDiv">
                         <label for="">Question</label>
-                        <textarea class="form-control" rows="5" name="essayInputQuestion"
+                        <textarea name="essayInputQuestion" class="form-control" rows="5" 
                             id="essayInputQuestion" required></textarea>
                     </div>
 
                     <div class=" mt-1">
-                        <input style="width: 270px;" type="file" name="essayInputFile" id="fileInput" class="form-control" > 
+                        <input style="width: 270px;" type="file" name="essayNewInputFile" id="fileInput" class="form-control" > 
                     </div>
                 </div>
 
@@ -554,7 +558,11 @@ if(!isset($taskId) || $taskResult == false){
 
                                             <?php
                                                 if($taskType == "3"){
-                                                    echo'<td>filename.doc</td>';
+                                                
+                                                    echo'<td> 
+                                                            <a href=" ../'.$row['question_filepath'].'/'.$row['question_filename'].' " target="_blank" >'.$row['question_filename'].'</a>
+                                                            <a href=" ../'.$row['question_filepath'].'/'.$row['question_filename'].' " download>download</a>
+                                                        </td>';
                                                 }
                                             ?>
                                             
@@ -660,6 +668,14 @@ if(!isset($taskId) || $taskResult == false){
                                                             echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                         } else if($taskType == "3"){
                                                             // echo "Essay";
+                                                            
+                                                            // Filepath
+                                                            ?> 
+                                                            <!-- File path and name -->
+                                                            <span class="d-none essayFilepath" id="essayFilepath"><?php echo $row['question_filepath']; ?></span>
+                                                            <span class="d-none essayFilename" id="essayFilename"><?php echo $row['question_filename']; ?></span>
+                                                            <?php 
+                                                            
                                                             echo '<button class="btn edit_question_essay p-0 me-2" type="button"><i class="fa-regular fa-pen-to-square text-primary"></i></button>';
                                                             //echo '<button class="btn remove_question p-0" type="button"><i class="fa-solid fa-trash text-danger"></i></button>';
                                                         }
@@ -807,12 +823,17 @@ if(!isset($taskId) || $taskResult == false){
             // Get the question and id
             var questionId = $(this).closest('div').find('#questionIdEditTask').text();
             var questioner = $(this).closest('div').find('#questionerEditTask').text();
+            var essayFilepath = $(this).closest('div').find('#essayFilepath').text();
+            var essayFilename = $(this).closest('div').find('#essayFilename').text();
+            
 
             $('#edit_question_essay_Modal').modal('show'); // load delete modal
 
             // populate the question and aswer on the modal
             // setting value for question
             $('#essayQuestionerId').val(questionId);
+            $('#essayInputFilepath').val(essayFilepath);
+            $('#essayInputFilename').val(essayFilename);
             $('#essayInputQuestion').val(questioner);
 
         });

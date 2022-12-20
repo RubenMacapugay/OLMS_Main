@@ -1,2 +1,0 @@
-## Student
-get the subject name from subject_tbl using the fk_subject_id from subject_list_tbl and fk_student_id
