@@ -84,13 +84,13 @@
      </li>
 
      <li class="nav-item">
-       <a class="nav-link pb-1" href="#">
+       <a class="nav-link pb-1" href="admin.announcement.php">
          <i class="fas fa-fw fa-info"></i>
          <span>Announcements</span></a>
      </li>
 
      <li class="nav-item">
-       <a class="nav-link" href="#">
+       <a class="nav-link" href="restore.database.php">
          <i class="fas fa-fw fa-database"></i>
          <span>Backup / Restore Database </span></a>
      </li>

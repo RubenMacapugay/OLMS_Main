@@ -6,53 +6,6 @@
 // $gradings = loadModuleSection();
 
 ?>
-
- <!-- upload module -->
- <div class="modal fade" id="uploadManyModal" tabindex="-1" aria-labelledby="uploadManyModalLabel" aria-hidden="true">
-         <div class="modal-dialog modal-dialog-centered">
-                 <div class="modal-content">
-                         <div class="modal-header">
-                                 <h1 class="modal-title fs-5" id="uploadModalLabel">Upload Files</h1>
-                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                         </div>
-                         <form action="#" method="POST" enctype="multipart/form-data">
-
-                                 <div class="modal-body">
-                                         <div class="form-group">
-                                                 <label>Select Subject</label>
-                                                 <select class="form-select" aria-label="Default select example">
-                                                         <option selected>Select Subject...</option>
-                                                         <option value="1">One</option>
-                                                         <option value="2">Two</option>
-                                                         <option value="3">Three</option>
-                                                 </select>
-                                         </div>
-                                         <div class="form-group">
-                                         <label>Select Section</label>
-                                               <div class="d-flex">
-                                                <select class="form-select" id="moduleSection" name="moduleSection">
-                                                        <option selected="" disabled="">Select module section</option>
-                                                </select>
-                                                <button class="btn btn-primary ms-4 col-3" data-bs-toggle="modal" data-bs-target="#createModuleSection" id="btnFirstGrading" type="button">Add</button>
-                                               </div> 
-                                         </div>
-                                         <div class="form-group">
-                                                 <label>Module Name</label>
-                                                 <input type="text" name="file_name" class="form-control" placeholder="Subject Name" required>
-                                         </div>
-                                         <div class="form-group">
-                                                 <label>Upload Files</label>
-                                                 <input type="file" name="file_upload" id="fileInput" class="form-control" required>
-                                         </div>
-                                 </div>
-                                 <div class="modal-footer">
-                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                         <button type="submit" name="btnUpload" class="btn btn-primary">Upload File</button>
-                                 </div>
-                         </form>
-        </div>
-    </div>
-</div>
 <!-- End Modal -->
 
 <!-- Add Section Modal -->
@@ -113,7 +66,7 @@
     <div class="navbar py-0" id="test-nav">
         <ul class="navbar-nav  w-100">
             <i class="fa-solid fa-grip side-button-logo" id="sidenavBtn"></i>
-            <li class="nav-item sub-list"><a href="" class="nav-link sub-title">OLMS - Teacher</a></li>
+            <li class="nav-item sub-list fw-bold"><a href="#" class="nav-link sub-title">Teacher Page</a></li>
 
                          <li class="nav-item"><a href="teacher.php" class="nav-link">
                                          <i class="fa-solid fa-house-chimney side-logo"></i>
@@ -123,7 +76,7 @@
                                          <i class="fa-solid fa-book side-logo"></i>
                                          <span class="link_name">Subjects</span></a>
                          </li>
-                         <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadManyModal">
+                         <li class="nav-item"><a href="teacher.multiUpload.php" class="nav-link">
                                          <i class="fa-solid fa-file-upload side-logo"></i>
                                          <span class="link_name">Upload File</span></a>
                          </li>
