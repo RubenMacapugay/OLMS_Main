@@ -21,6 +21,7 @@ $_SESSION['score'] = 0;
     //Getting the list of task in specific subject of student on subject_list_tbl
     $subjectId = $_SESSION['subjectId'];
     $studentId = $_SESSION['student_id'];
+    
 
 
     $date_now = date("Y-m-d h:i"); 
@@ -83,6 +84,8 @@ $_SESSION['score'] = 0;
 
     # display the subject data
     $resultStudentSubject = getSubjectData($conn, $studentId, $subjectId);
+    
+    echo $subjectId .' to '. $resultStudentSubject['section_id'];
 
     # getTask count per grading ---
     $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
@@ -157,6 +160,18 @@ $_SESSION['score'] = 0;
                                     showTaskTab();
                                 }; </script>";
                             }
+                        }
+                        
+                        if(isset($_SESSION['msg'])){
+                            if($_SESSION['msg'] == "taskSubmitted"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                Task has been submitted!
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>';
+                                
+                            }
+                            
+                            unset($_SESSION['msg']);
                         }
                     ?>
                     <!-- Tab Header ROW -->
@@ -992,8 +1007,8 @@ $_SESSION['score'] = 0;
                                                                                     value="<?php echo $row['task_list_id']; ?>">
                                                                                 <input type="hidden" name="task_type"
                                                                                     value="<?php echo $row['fk_task_type']; ?>">
-                                                                                <button type="submit" class="list-group-item list-group-item-action text-primary text-decoration-underline"
-                                                                                    name="submitTaskDetails"><?php echo $row['task_name']?></button>
+                                                                                <p class="list-group-item list-group-item-action text-secondary text-decoration-none"
+                                                                                    ><?php echo $row['task_name']?></p>
                                                                             </form>
                                                                         </td>
                                                                         <td>-</td>

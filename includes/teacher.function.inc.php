@@ -256,6 +256,30 @@ function essayContentExist($conn, $taskListId, $questionContent){
     }
 }
 
+function essayFileExist($conn, $taskListId, $filename){
+    $selectQuestionContent = "SELECT * FROM question_tbl WHERE fk_task_list_id = ? AND question_filename = ?;";
+
+    # prepare the statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectQuestionContent)){
+        header ('location: ../Main_Project/teacher/teacher.createquestioner.php?error=selectstmtfailed');
+        exit();
+    }
+
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "is", $taskListId, $filename);
+    mysqli_stmt_execute($stmt);
+
+    # save the data to variable then return the data or false
+    $resultData = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        $result = false;
+        return $result;
+    }
+}
+
 function getQuestionName($conn, $questionId){
     $selectQuestionName = "SELECT * FROM question_tbl WHERE question_id = ?";
 
@@ -355,19 +379,21 @@ function getModuleName($conn, $id){
         mysqli_stmt_close($stmt);
     }
 
-    function createEssayContent($conn, $taskListId, $questionContent){
-        $insertQuestion = "INSERT INTO `question_tbl`(`fk_task_list_id`, `question_name`) VALUES (?, ?);";
+    function createEssayContent($conn, $taskListId, $questionContent, $filename, $filepath){
+        $insertQuestion = "INSERT INTO `question_tbl`(`fk_task_list_id`, `question_name`, `question_filename`, `question_filepath`) VALUES (?, ?, ?, ?);";
         # start the prepared statement
         $stmt = mysqli_stmt_init($conn);
         if(!mysqli_stmt_prepare($stmt, $insertQuestion)){
             header ('location: ../Main_Project/teacher/teacher.createEssay.php?error=stmtfailed');
+            return false;
             exit();
         } 
 
         # binding user input
-        mysqli_stmt_bind_param($stmt, "is", $taskListId, $questionContent);    
+        mysqli_stmt_bind_param($stmt, "isss", $taskListId, $questionContent, $filename, $filepath);    
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
+        return true;
     }
 
     function createAnswer($conn, $questionerId, $answerselect){
@@ -410,6 +436,16 @@ function getModuleName($conn, $id){
 
         return $id;
     
+    }
+    
+    function saveEssayScore($conn, $score, $submissionId){
+        $saveScore = "UPDATE `submission_tbl` SET `score`='$score' WHERE submission_id = $submissionId";
+        // $resultScore = mysqli_query($conn, $saveScore);
+        $resultScore = $conn->query($saveScore);
+    
+        $id = mysqli_insert_id($conn);
+    
+        return $id;
     }
 # --- Create Functions --- end #
 
@@ -530,8 +566,8 @@ function getModuleName($conn, $id){
         mysqli_query($conn, $updateQuestion);
     } 
 
-    function updateEssayQuestion($conn, $questionerId, $questioner){
-        $updateQuestion  = "UPDATE `question_tbl` SET `question_name` = '$questioner'WHERE question_id = {$questionerId}";
+    function updateEssayQuestion($conn, $questionerId, $questioner, $filename, $filepath){
+        $updateQuestion  = "UPDATE `question_tbl` SET `question_name` = '$questioner', `question_filename` = '$filename', `question_filepath` = '$filepath' WHERE question_id = {$questionerId}";
         mysqli_query($conn, $updateQuestion);
     }
 
@@ -569,6 +605,8 @@ function getScore($conn, $taskId, $studentId){
     return $studentAnswer = mysqli_fetch_assoc($scoreRow); 
 }
 
+
+
 function getModuleSection($conn, $subjectId, $gradingId){
     $selectModuleSectionPerGrading = "SELECT * FROM module_section_tbl WHERE (fk_grading_id = $gradingId AND fk_subject_list_id = $subjectId)";
     $resultModuleSection =  $conn->query($selectModuleSectionPerGrading) or die ($mysqli->error);
@@ -593,6 +631,85 @@ function getMaxAttempt2($conn, $taskId, $studentId){
     }
     return $result;
 
+}
+
+function getMaxAttempt($conn, $taskId, $studentId){
+    $sql = "SELECT MAX(attempt) FROM submitted_answer_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
+    $attemptRow = mysqli_query($conn, $sql);
+    $result = mysqli_fetch_assoc($attemptRow);
+    return $result['MAX(attempt)'];
+}
+
+function getMaxScore($conn, $taskId, $maxAttempt, $studentId){
+    $scoreQuery = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId and fk_student_id = $studentId";
+    $scoreRow = mysqli_query($conn, $scoreQuery);
+    return $studentAnswer = mysqli_fetch_assoc($scoreRow);
+
+   
+}
+
+function getCurrentTask($conn, $taskId){
+    #query
+    $selectTaskName = "SELECT * FROM task_list_tbl where task_list_id = ?;";
+
+    # start the preapred statement
+    $stmt = mysqli_stmt_init($conn);
+    if(!mysqli_stmt_prepare($stmt, $selectTaskName)){
+        header ('location: ../Main_Project/student/student.task.php?error=tasknotexist');
+        exit();
+    }
+    
+    # binding user input
+    mysqli_stmt_bind_param($stmt, "i", $taskId);
+    mysqli_stmt_execute($stmt);
+
+    # save result
+    $resultData = mysqli_stmt_get_result($stmt);
+
+    # check if theres returned data
+    if($row = mysqli_fetch_assoc($resultData)){
+        return $row;
+    } else{
+        return false;
+    }
+
+    # close the statement
+    mysqli_stmt_close($stmt);
+}
+
+function getChoicesRow($conn, $quesionId){
+    $query = "SELECT * FROM choices_tbl WHERE fk_question_id = $quesionId";
+    $choices = mysqli_query($conn,$query);
+    return $choices;
+}
+
+function getSubmittedAnswerRow($conn,$taskId, $studentId, $maxAttempt){
+    $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = $maxAttempt AND fk_task_list_id = $taskId and fk_student_id = $studentId";
+    return $submittedAnswers = mysqli_query($conn,$submittedQuery);
+}
+
+function getQuestionById($conn, $questionId){
+    $questionQuery = "SELECT * FROM question_tbl WHERE question_id = '$questionId'";
+    $questionRow = mysqli_query($conn,$questionQuery);
+    $currentQuestion = mysqli_fetch_assoc($questionRow); 
+    return $currentQuestion;
+}
+
+function getCorrectAnswerIdentification($conn, $questionId){
+    $sql = "SELECT * from answer_tbl where fk_question_id = $questionId";
+    $correctAnswer = mysqli_query($conn,$sql);
+    return $result = mysqli_fetch_assoc($correctAnswer); 
+}
+
+function getAttempts($conn, $taskId, $studentId){
+    $sql = 
+    "SELECT * FROM submission_tbl 
+    LEFT JOIN task_list_tbl 
+    ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id
+    where fk_task_list_id = $taskId 
+    and fk_student_id = $studentId";
+    $resultTaskList =  $conn->query($sql) or die ($mysqli->error);
+    return $resultTaskList;
 }
 
 function getScore2($conn, $taskId, $maxAttempt, $studentId){
@@ -620,9 +737,15 @@ function getSubjectStudents($conn){
 
 }
 
+function getStudent($conn, $studentId){
+    $selectStudentsSubjectSection = "SELECT * FROM student_tbl WHERE student_id = $studentId";
+    $row = mysqli_query($conn, $selectStudentsSubjectSection);
+    return $result = mysqli_fetch_assoc($row); 
+}
+
 function getSubjectStudentsProgress($conn, $sectionId, $subjectId){
     // $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled FROM student_tbl LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id  GROUP BY student_tbl.student_id";
-    $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled 
+    $sql = "SELECT COUNT(DISTINCT fk_task_list_id) AS Task_Completed, student_tbl.student_name AS student_name, student_tbl.student_date_enrolled AS student_date_enrolled, student_tbl.student_id AS student_id
     FROM student_tbl 
     LEFT JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id
     LEFT JOIN student_subjects_tbl ON student_subjects_tbl.fk_student_id = student_tbl.student_id
@@ -630,18 +753,37 @@ function getSubjectStudentsProgress($conn, $sectionId, $subjectId){
     AND student_subjects_tbl.fk_subject_list_id = $subjectId
     GROUP BY student_tbl.student_id";
     $result =  $conn->query($sql) or die ($mysqli->error);
+    
     return $result;
 }
 
 function getSubjectsStudentList($conn, $sectionId, $subjectId){
-    $sql = "SELECT *
-    FROM student_tbl 
-    LEFT JOIN student_subjects_tbl ON student_subjects_tbl.fk_student_id = student_tbl.student_id
-    WHERE student_tbl.fk_section_id = $sectionId 
-    AND student_subjects_tbl.fk_subject_list_id = $subjectId
-    GROUP BY student_tbl.student_id";
+    // $sql = "SELECT *
+    // FROM student_tbl 
+    // LEFT JOIN student_subjects_tbl ON student_subjects_tbl.fk_student_id = student_tbl.student_id
+    // WHERE student_tbl.fk_section_id = $sectionId 
+    // AND student_subjects_tbl.fk_subject_list_id = $subjectId
+    // GROUP BY student_tbl.student_id";
+    
+    $sql = "SELECT * from student_tbl 
+    left join student_subjects_tbl ON student_subjects_tbl.fk_student_id = student_tbl.student_id
+    left join subject_list_tbl ON subject_list_tbl.subject_list_id = student_subjects_tbl.fk_subject_list_id
+    left join section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id
+    where student_subjects_tbl.fk_subject_list_id = $subjectId
+    AND section_tbl.section_id = $sectionId
+    GROUP by student_tbl.student_id";
     $result =  $conn->query($sql) or die ($mysqli->error);
     return $result;
+}
+
+function getFileSize($size){
+    $kb_size = $size / 1024;
+    $format_size = number_format($kb_size, 2) ; //. ' KB'
+    return $format_size;
+}
+
+function getSubmittedWithFile(){
+    
 }
 
 function checkTotalTaskCount($conn, $subjectId){

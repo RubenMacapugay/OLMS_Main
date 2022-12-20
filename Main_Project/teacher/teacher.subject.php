@@ -13,8 +13,9 @@ $sectionId = $_SESSION['section_id'];
 $subjectId = $_SESSION['subjectId'];
 $teacherId = $_SESSION['teacher_id'];
 
+// echo $sectionId.' to '.$subjectId;
 
-
+#region
 
 // get subject
 $currentSubjectData = teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId);
@@ -52,6 +53,8 @@ $resultStudentList = getSubjectsStudentList($conn, $sectionId, $subjectId);
 
 //display Task List
 $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
+#endregion
+
 ?>  
 
 <!-- Modal -->
@@ -472,6 +475,14 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                 }
                             }
                             
+                            if($_SESSION['msg'] == "missingparameter"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Theres something wrong on url, please try again!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                               
+                            }
+                            
 
                             unset($_SESSION['msg']);
                         }
@@ -525,7 +536,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                 <div class="active tab-content p-2" >
                                     <div class="card">
                                         <div class="card-header d-flex justify-content-between align-items-center" style="background-color: #1F78FC; color: white; font-weight: bold;">
-                                            <h2 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h2>
+                                            <h2 class="mb-0"><?php echo $currentSubjectData['subject_name']?></h2>
                                             <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
                                             <!-- <p>Subject Description</p>
                                             <p>description Lorem, ipsum dolor sit amet consectetur adipisicing elit.
@@ -1037,87 +1048,89 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     <div class="custom-border m-2">
                                         <h4>Task List</h4>
                                         <div class="card m-2">
-                                            <table class="table table-hover ms-1 ">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Task Names</th>
-                                                        <th scope="col" class="text-center">Action</th>
-                                                        <th scope="col" class="text-center">Start</th>
-                                                        <th scope="col" class="text-center">Due</th>
-                                                        <th scope="col" class="text-center">Status</th>
-        
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php 
-                                                        //Getting results from subject_tbl
-                                                        $subjectId = $_SESSION['subjectId'];
-                                                        $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
-                                                        $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
-                                                    ?>
-                                                    <?php while($row = $resultList->fetch_assoc()): ?>
-                                                        <?php 
-                                                            $tableRowTaskId = $row['task_list_id'];
-                                                            $tableRowTaskName = $row['task_name'];
-                                                            $tableRowSubType = $row['sub_type'];
-                                                            $tableRowDueDate = $row['date_deadline'];
-                                                            $tableRowDueTime = $row['time_limit'];
-                                                            $tableRowMaxAttempts = $row['max_attempts'];
-                                                            $tableRowQuestionItem = $row['question_item'];
-                                                            $tableRowMaxScore = $row['max_score'];
-                                                            $tableRowAllowLate = $row['submission_choice'];
-        
-                                                            $startedDate = strtotime($row['date_created']);
-                                                            $formatedDateCreated = date('F, j Y', $startedDate);
-        
-                                                            $endDate = strtotime($row['date_deadline']);
-                                                            $formatedDateDue = date('F, j Y', $endDate);
-                                                        ?>
+                                            <div class="card-body">
+                                                <table class="table table-hover ">
+                                                    <thead>
                                                         <tr>
-                                                            
-                                                            <td>
-                                                                <?php echo '<a href="teacher.editTask.php?taskId='.$tableRowTaskId.'">'.$tableRowTaskName.'</a>';?>
-                                                            </td>
-                                                            <td>
-                                                                <div>
-                                                                    <!-- Task details -->
-                                                                    <span class="d-none" id="taskId_DeleteEdit"><?php echo $tableRowTaskId;?></span>
-        
-                                                                    <span class="d-none" id="tableTaskName"><?php echo $tableRowTaskName;?></span>
-                                                                    <span class="d-none" id="tableSubType"><?php echo $tableRowSubType;?></span>
-                                                                    <span class="d-none" id="tableDueDate"><?php echo $tableRowDueDate;?></span>
-                                                                    <span class="d-none" id="tableDueTime"><?php echo $tableRowDueTime;?></span>
-                                                                    <span class="d-none" id="tableMaxAttempts"><?php echo $tableRowMaxAttempts;?></span>
-                                                                    <span class="d-none" id="tableQuestionItem"><?php echo $tableRowQuestionItem;?></span>
-                                                                    <span class="d-none" id="tableMaxScore"><?php echo $tableRowMaxScore;?></span>
-                                                                    <span class="d-none" id="tableAllowLate"><?php echo $tableRowAllowLate;?></span>
-        
-                                                                    <i class="fa-regular fa-pen-to-square text-primary  updateTableTaskBtn me-2"></i>
-                                                                    <i class="fa-solid fa-trash text-danger me-2 deleteTableTaskBtn" ></i>
-                                                                </div>
-                                                            </td>
-                                                            <td><?php echo $formatedDateCreated?></td>
-                                                            <td><?php echo $formatedDateDue ?></td>
-                                                            <td>
-                                                                <form method='POST' action='../../includes/teacher.createtask.inc.php'>
-                                                                    <input type="hidden" type="hidden" name="taskId" value="<?php echo $tableRowTaskId;?>"> 
-                                                                    <?php 
-                                                                        $isGivenTask = $row['given'];
-                                                                        if($isGivenTask == "Yes"){
-                                                                            echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
-                                                                            echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
-                                                                            
-                                                                        } else if($isGivenTask == "" || $isGivenTask == "No"){
-                                                                            echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
-                                                                            echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
-                                                                        }
-                                                                    ?>
-                                                                </form>
-                                                            </td>
+                                                            <th scope="col">Task Names</th>
+                                                            <th scope="col" class="text-center">Action</th>
+                                                            <th scope="col" class="text-center">Start</th>
+                                                            <th scope="col" class="text-center">Due</th>
+                                                            <th scope="col" class="text-center">Status</th>
+            
                                                         </tr>
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php 
+                                                            //Getting results from subject_tbl
+                                                            $subjectId = $_SESSION['subjectId'];
+                                                            $selectTaskList = "SELECT * FROM task_list_tbl WHERE fk_subject_list_id= $subjectId";
+                                                            $resultList =  $conn->query($selectTaskList) or die ($mysqli->error);
+                                                        ?>
+                                                        <?php while($row = $resultList->fetch_assoc()): ?>
+                                                            <?php 
+                                                                $tableRowTaskId = $row['task_list_id'];
+                                                                $tableRowTaskName = $row['task_name'];
+                                                                $tableRowSubType = $row['sub_type'];
+                                                                $tableRowDueDate = $row['date_deadline'];
+                                                                $tableRowDueTime = $row['time_limit'];
+                                                                $tableRowMaxAttempts = $row['max_attempts'];
+                                                                $tableRowQuestionItem = $row['question_item'];
+                                                                $tableRowMaxScore = $row['max_score'];
+                                                                $tableRowAllowLate = $row['submission_choice'];
+            
+                                                                $startedDate = strtotime($row['date_created']);
+                                                                $formatedDateCreated = date('F, j Y', $startedDate);
+            
+                                                                $endDate = strtotime($row['date_deadline']);
+                                                                $formatedDateDue = date('F, j Y', $endDate);
+                                                            ?>
+                                                            <tr>
+                                                                
+                                                                <td>
+                                                                    <?php echo '<a href="teacher.editTask.php?taskId='.$tableRowTaskId.'">'.$tableRowTaskName.'</a>';?>
+                                                                </td>
+                                                                <td>
+                                                                    <div>
+                                                                        <!-- Task details -->
+                                                                        <span class="d-none" id="taskId_DeleteEdit"><?php echo $tableRowTaskId;?></span>
+            
+                                                                        <span class="d-none" id="tableTaskName"><?php echo $tableRowTaskName;?></span>
+                                                                        <span class="d-none" id="tableSubType"><?php echo $tableRowSubType;?></span>
+                                                                        <span class="d-none" id="tableDueDate"><?php echo $tableRowDueDate;?></span>
+                                                                        <span class="d-none" id="tableDueTime"><?php echo $tableRowDueTime;?></span>
+                                                                        <span class="d-none" id="tableMaxAttempts"><?php echo $tableRowMaxAttempts;?></span>
+                                                                        <span class="d-none" id="tableQuestionItem"><?php echo $tableRowQuestionItem;?></span>
+                                                                        <span class="d-none" id="tableMaxScore"><?php echo $tableRowMaxScore;?></span>
+                                                                        <span class="d-none" id="tableAllowLate"><?php echo $tableRowAllowLate;?></span>
+            
+                                                                        <i class="fa-regular fa-pen-to-square text-primary  updateTableTaskBtn me-2"></i>
+                                                                        <i class="fa-solid fa-trash text-danger me-2 deleteTableTaskBtn" ></i>
+                                                                    </div>
+                                                                </td>
+                                                                <td><?php echo $formatedDateCreated?></td>
+                                                                <td><?php echo $formatedDateDue ?></td>
+                                                                <td>
+                                                                    <form method='POST' action='../../includes/teacher.createtask.inc.php'>
+                                                                        <input type="hidden" type="hidden" name="taskId" value="<?php echo $tableRowTaskId;?>"> 
+                                                                        <?php 
+                                                                            $isGivenTask = $row['given'];
+                                                                            if($isGivenTask == "Yes"){
+                                                                                echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="No">';
+                                                                                echo '<input class="btn btn-danger fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="ungive">';
+                                                                                
+                                                                            } else if($isGivenTask == "" || $isGivenTask == "No"){
+                                                                                echo '<input type="hidden" type="hidden" name="isGivenTaskTab" value="Yes">';
+                                                                                echo '<input class="btn btn-success fs-6 py-0" type="submit" name="updateTaskGiveTaskTab" value="give">';
+                                                                            }
+                                                                        ?>
+                                                                    </form>
+                                                                </td>
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                    </tbody>
+                                                </table>
+                                            </div>
     
                                         </div>
                                     </div>
@@ -1140,48 +1153,52 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                             <option value="5">Exam</option>
                                         </select> -->
                                     </div>
+                                    
                                     <div class="student-table custom-border m-2" id="subject-students-progress">
                                         <h4>Progress</h4>
                                         <div class="card">
-                                            <table class="table table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col" class="">Student List</th>
-                                                        <!-- <th scope="col" class="text-center">Progress</th> -->
-                                                        <th scope="col" class="text-center">Task Completed</th>
-                                                        <th scope="col" class="text-center">Enrolled</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- resultStudentsSubjectSection -->
-                                                    <?php while ($rowResult = $resultStudentProgress->fetch_assoc()) : 
-                                                        $startedDateEnrolled = strtotime($rowResult['student_date_enrolled']);
-                                                        $formatedDateEnrolled = date('F, j Y', $startedDateEnrolled);
-                                                        ?>
+                                            <div class="card-body">
+                                                <table class="table table-hover">
+                                                    <thead>
                                                         <tr>
-                                                            <td><?php echo $rowResult['student_name'];?></td>
-                                                            <!-- <td> -->
-                                                                <?php //echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?>
-                                                                <!-- <div class="d-flex justify-content-center">
-                                                                    <div class="progress-bar d-inline subjectStudentProgress">
-                                                                        <div class="circular-progress">
-                                                                            <div class="value-container"></div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div> -->
-                                                                
-                                                            <!-- </td> -->
-                                                            <td><?php echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?></td>
-                                                            
-    
-                                                            <td><?php echo $formatedDateEnrolled?></td>
-    
+                                                            <th scope="col" class="">Student List</th>
+                                                            <!-- <th scope="col" class="text-center">Progress</th> -->
+                                                            <th scope="col" class="text-center">Task Completed</th>
+                                                            <th scope="col" class="text-center">Enrolled</th>
                                                         </tr>
-                                                    <?php endwhile; ?>
+                                                    </thead>
                                                     
-                                                    
-                                                </tbody>
-                                            </table>
+                                                    <tbody>
+                                                        <!-- resultStudentsSubjectSection -->
+                                                        <?php while ($rowResult = $resultStudentProgress->fetch_assoc()) : 
+                                                            $startedDateEnrolled = strtotime($rowResult['student_date_enrolled']);
+                                                            $formatedDateEnrolled = date('F, j Y', $startedDateEnrolled);
+                                                            ?>
+                                                            <tr>
+                                                                <td><a href="student_subject.progress.php?studentId=<?php echo $rowResult['student_id'] ?>"><?php echo $rowResult['student_name'] ?></a></td>
+                                                                <!-- <td> -->
+                                                                    <?php //echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?>
+                                                                    <!-- <div class="d-flex justify-content-center">
+                                                                        <div class="progress-bar d-inline subjectStudentProgress">
+                                                                            <div class="circular-progress">
+                                                                                <div class="value-container"></div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div> -->
+                                                                    
+                                                                <!-- </td> -->
+                                                                <td><?php echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?></td>
+                                                                
+        
+                                                                <td><?php echo $formatedDateEnrolled?></td>
+        
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                        
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
                                         </div>
                                     </div>
@@ -1206,6 +1223,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                             <option value="5">Exam</option>
                                         </select> -->
                                     </div>
+                                    
                                     <div class="student-table custom-border m-2">
                                         <h4>Student's scores</h4>
                                         <div class="card overflow-scroll">
@@ -1223,17 +1241,19 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                             <?php endwhile; ?>
                                                         </tr>
                                                     </thead>
+                                                    
                                                     <tbody>
                                                         <!-- display students -->
                                                         <?php while ($rowResult = $resultStudentList->fetch_assoc()) : ?>
                                                             <?php 
                                                                 $resultTaskList2 =  getTasks($conn, $subjectId, $teacherId);
+                                                                $studentId = $rowResult['student_id'];
                                                             ?>
+                                                            
                                                             <tr>
-                                                                <td><a href="student_subject.progress.php"><?php echo $rowResult['student_name'] ?></a></td>
+                                                                <td><a href="student_subject.progress.php?studentId=<?=$studentId?>"><?php echo $rowResult['student_name'] ?></a></td>
                                                                 
                                                                 <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : 
-                                                                    $studentId = $rowResult['student_id'];
                                                                     $taskId = $rowTaskList2['task_list_id'];
                                                                     $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
                                                                     $scoreResult;

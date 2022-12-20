@@ -163,10 +163,10 @@
                                          <i class="fa-solid fa-book side-logo"></i>
                                          <span class="link_name">Subjects</span></a>
                          </li>
-                         <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadManyModal">
+                         <!-- <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadManyModal">
                                          <i class="fa-solid fa-file-upload side-logo"></i>
                                          <span class="link_name">Upload File</span></a>
-                         </li>
+                         </li> -->
 
                          <?php
                             if($_SERVER['REQUEST_URI'] == "/OLMS/OLMS_Main/OLMS_Main/Main_Project/teacher/teacher.php" ||
