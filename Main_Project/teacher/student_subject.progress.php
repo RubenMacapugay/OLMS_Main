@@ -1,5 +1,25 @@
 <?php include('assets/header.view.php')?>
 
+    <?php 
+    if(!isset($_GET['studentId'])) {
+        //header ("location: teacher.subject.php");
+        $_SESSION['msg'] = "missingparameter";
+    }
+    #quesries
+    $sectionId = $_SESSION['section_id'];
+    $subjectId = $_SESSION['subjectId'];
+    $teacherId = $_SESSION['teacher_id'];
+    $studentId = $_GET['studentId'];
+    
+    $currentSubjectData = teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId);
+    
+    $studentData = getStudent($conn, $studentId);
+    
+    //display Task List
+    $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
+    
+    ?>
+
     <!--Body content -->
 
     <div class="container-fluid " id="content">
@@ -13,59 +33,87 @@
 
             <!-- Main Content -->
             <div class="col-md-8 py-4 main-content" id="teacherSubjectContent">
-                <div class="d-flex justify-content-between mx-3">
-                    <div class="d-flex align-items-end">
-                        <h3 class="mb-0">Subject Name</h3>
-                        <p class="text-muted mb-0 ms-2">BSIT 4.1B</p>
-                    </div>
-
-                </div>
-                <div class="card ">
-                    <div class="card-header d-flex justify-content-between">
-                        <div class="d-flex align-items-end">
-                            <p class="mb-0">Maralit III, Carlos Romulo P.</p>
+                <div>
+                    <?php
+                        if(isset($_SESSION['msg'])){
+                            if($_SESSION['msg'] == "missingparameter"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Theres something wrong on url, please try again!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                            }
+                            unset($_SESSION['msg']);
+                        }
+                    ?>
+                    <div class="custom-border">
+                        <div class="mx-3">
+                            <a href="teacher.subject.php">back</a>
+                            <div class="d-flex align-items-end mt-3">
+                                <h3 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h3>
+                                <p class="text-muted mb-0 ms-2"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
+                            </div>
+        
                         </div>
-                        <div class="flex-right">
-                            <i class="fa-regular fa-pen-to-square text-primary  me-2" type="button"></i>
-                            <i class="fa-solid fa-trash text-danger me-2" type="button"></i>
+                        <div class="card ">
+                            <div class="card-header d-flex justify-content-between">
+                                <div class="d-flex align-items-end">
+                                    <p class="mb-0"><?php echo $studentData['student_name'];?></p>
+                                </div>
+                            </div>
+                            <div class="card-body p-2">
+                                <table class="table table-hover px-4 section-table">
+                                    <thead class="">
+                                        <tr>
+                                        <!-- $resultTaskList -->
+                                            <th scope="col">Task List</th>
+                                            <th scope="col" class="text-center">Attempts</th>
+                                            <th scope="col" class="text-center ">Status</th>
+        
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- <td><a href="studentTaskAttempts.php?studentId=<?php //echo 1?>">01 Quiz 1</a></td> -->
+                                        <?php while ($rowTaskList = $resultTaskList->fetch_assoc()) : 
+                                                $taskId = $rowTaskList['task_list_id'];
+                                                $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
+                                        
+                                        ?>
+                                            <tr>
+                                                <td scope="col"  class="">
+                                                    <a href="studentTaskAttempts.php?studentId=<?=$studentId?>&&taskId=<?=$taskId?>"><?php echo $rowTaskList['task_name']; ?></a>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                        if($maxAttempt[0] == null){
+                                                            echo "-";
+                                                        } else if($maxAttempt[0] >= 0){
+                                                            echo $maxAttempt[0];
+                                                        }
+                                                    ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                        if($maxAttempt[0] == null){
+                                                            echo "No submitted";
+                                                        } else if($maxAttempt[0] >= 0){
+                                                            echo "Submitted";
+
+                                                        }
+                                                    ?>
+                                                
+                                                </td>
+                                            </tr>
+                                        <?php endwhile; ?>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+        
                         </div>
                     </div>
-                    <div class="card-body p-0">
-                        <table class="table table-hover px-4 section-table">
-                            <thead class="">
-                                <tr>
-                                    <th scope="col">Task List</th>
-                                    <th scope="col" class="text-center">Progress</th>
-                                    <th scope="col" class="text-center">Duration</th>
-                                    <th scope="col" class="text-center ">Status</th>
-
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><a href="">01 Quiz 1</a></td>
-                                    <td>10/30</td>
-                                    <td>08/05/22 - 08/10/22</td>
-                                    <td>Graded</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="">01 Assignment 1</a></td>
-                                    <td>10/30</td>
-                                    <td>08/05/22 - 08/10/22</td>
-                                    <td class="">Late</td>
-                                </tr>
-                                <tr>
-                                    <td><a href="">01 Project 1</a></td>
-                                    <td>10/30</td>
-                                    <td>08/05/22 - 08/10/22</td>
-                                    <td>Finished</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-
                 </div>
+                
+                
             </div>
 
             <!-- Right Banner -->

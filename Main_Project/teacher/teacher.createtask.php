@@ -89,9 +89,16 @@
                                     </div>';
                             }
 
-                            if($_SESSION['msg'] == "modulenametaken"){
-                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            if($_SESSION['msg'] == "modulenametaken"){ 
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert"> 
                                         Task name has been used! Please re-enter your inputs.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                            }
+                            
+                            if($_SESSION['msg'] == "filenotadded"){ 
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert"> 
+                                        Failed to create Task, file has not been saved! Please re-enter your inputs.
                                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                     </div>';
                             }
@@ -194,19 +201,57 @@
                                         </div>
                                     </div>
 
-                                    <!-- Task Content for Essay -->
+                                    <!-- Task Content for Essay
                                     <div class="mb-3 ps-0" id="taskcontentDiv">
                                         <label for="">Task Content</label>
                                         <textarea class="form-control" name="taskcontent"
                                             placeholder="Content Description" id="floatingTextarea"></textarea>
+                                    </div> -->
+
+                                     <!-- Max score and allow late submission -->
+                                    <div class="row mb-3">
+                                        <!-- max score -->
+                                        <div class="col-6 mb-3 " id="inputMaxScoreDiv">
+                                            <label for="inputMaxScore">Max score</label>
+                                            <input type="number" class="form-control" name="maxscore"
+                                                id="inputMaxScore" placeholder="0" min="0">
+                                        </div>
+
+                                        <!-- question itemss -->
+                                        <div class="col-6" id="questionItemsDiv">
+                                            <label for="">Question items</label>
+                                            <input type="number" class="form-control w-100" name="questionitems"
+                                                placeholder="0" min="0"></input>
+                                        </div>
+
+                                        <!-- allow late submission -->
+                                        <div class="col-6">
+                                            <label>Allow late submission</label>
+                                            <div class="mt-1">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="submissionchoice" type="radio"
+                                                        id="radioYes" value="Yes">
+                                                    <label class="form-check-label" for="radioYes">
+                                                        Yes
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="submissionchoice" type="radio"
+                                                        id="radioNo" checked value="No">
+                                                    <label class="form-check-label" for="radioNo">
+                                                        no
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        
+
                                     </div>
 
-                                    <!-- Question Items -->
-                                    <div class="mb-3" id="questionItemsDiv">
-                                        <label for="">Question items</label>
-                                        <input type="number" class="form-control" name="questionitems"
-                                            placeholder="0" min="0"></input>
-                                    </div>
+                                    
+
+                                    
                                 </div>
 
                                 <div class="form-group col-md-6">
@@ -250,36 +295,10 @@
                                         </div>
                                     </div>
 
-                                    <!-- Max score and allow late submission -->
-                                    <div class="row mb-3">
-                                        <!-- max score -->
-                                        <div class="col-6 mb-3 " id="inputMaxScoreDiv">
-                                            <label for="inputMaxScore">Max score</label>
-                                            <input type="number" class="form-control" name="maxscore"
-                                                id="inputMaxScore" placeholder="0" min="0">
-                                        </div>
-                                        <!-- allow late submission -->
-                                        <div class="col-6">
-                                            <label>Allow late submission</label>
-                                            <div class="mt-1">
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" name="submissionchoice" type="radio"
-                                                        id="radioYes" checked value="Yes">
-                                                    <label class="form-check-label" for="radioYes">
-                                                        Yes
-                                                    </label>
-                                                </div>
-                                                <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" name="submissionchoice" type="radio"
-                                                        id="radioNo" value="No">
-                                                    <label class="form-check-label" for="radioNo">
-                                                        no
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
+                                   
 
-                                    </div>
+                                    <!-- Question Items -->
+                                    
 
                                 </div>
                             </div>
@@ -323,79 +342,81 @@
 
 <!-- Script Links Bootstrap/Jquery -->
 <?php include('assets/scriptlink.view.php')?>
+
+<!-- Displaying the input feilds when selecting subtype -->
 <script>
-// Map your choices to your option value
-var lookup = {
-    '1': ['Multiple Choice', 'Identification', 'True or False',  'Essay'],
-    '2': ['Multiple Choice', 'Identification', 'True or False', 'Essay'],
-    '3': ['Multiple Choice', 'Identification', 'True or False'],
-    '4': ['Multiple Choice', 'Identification', 'True or False']
-};
-// When an option is changed, search the above for matching choices
-$('#options').on('change', function() {
-    // Set selected option as variable
-    var selectValue = $(this).val();
+    // Map your choices to your option value
+    var lookup = {
+        '1': ['Multiple Choice', 'Identification', 'True or False',  'Essay'],
+        '2': ['Multiple Choice', 'Identification', 'True or False', 'Essay'],
+        '3': ['Multiple Choice', 'Identification', 'True or False'],
+        '4': ['Multiple Choice', 'Identification', 'True or False']
+    };
+    // When an option is changed, search the above for matching choices
+    $('#options').on('change', function() {
+        // Set selected option as variable
+        var selectValue = $(this).val();
 
-    // Empty the target field
-    $('#subtype').empty();
-    // For each chocie in the selected option
-    for (i = 0; i < lookup[selectValue].length; i++) {
-        // Output choice in the target field
-        $('#subtype').append("<option value='" + i + "'>" + lookup[selectValue][i] +
-            "</option>");
+        // Empty the target field
+        $('#subtype').empty();
+        // For each chocie in the selected option
+        for (i = 0; i < lookup[selectValue].length; i++) {
+            // Output choice in the target field
+            $('#subtype').append("<option value='" + i + "'>" + lookup[selectValue][i] +
+                "</option>");
+        }
+
+        showDiv(lookup[selectValue]);
+    });
+
+    document.getElementById('questionItemsDiv').style.display = "none";
+    function showDiv(select) {
+
+        if (select.value == 3) {
+            // document.getElementById('taskcontentDiv').style.display = "block";
+            document.getElementById('questionItemsDiv').style.display = "none";
+            document.getElementById('inputMaxScoreDiv').style.display = "block";
+            document.getElementById('createBtn').style.display = "none";
+            document.getElementById('createTrueOrFalse').style.display = "none";
+            document.getElementById('createWithQuestionBtn').style.display = "block";
+            document.getElementById('createIdentificationBtn').style.display = "none";
+            document.getElementById('createEnumerationBtn').style.display = "none";
+        } else if (select.value == 2) {
+            // document.getElementById('taskcontentDiv').style.display = "none";
+            document.getElementById('questionItemsDiv').style.display = "block";
+            document.getElementById('createWithQuestionBtn').style.display = "none";
+            document.getElementById('createBtn').style.display = "none";
+            document.getElementById('createTrueOrFalse').style.display = "block";
+            document.getElementById('inputMaxScoreDiv').style.display = "none";
+            document.getElementById('createIdentificationBtn').style.display = "none";
+            document.getElementById('createEnumerationBtn').style.display = "none";
+        } else if (select.value == 1) {
+            // type your code here
+            // document.getElementById('taskcontentDiv').style.display = "none";
+            document.getElementById('questionItemsDiv').style.display = "block";
+            document.getElementById('inputMaxScoreDiv').style.display = "none";
+            document.getElementById('createBtn').style.display = "none";
+            document.getElementById('createTrueOrFalse').style.display = "none";
+            document.getElementById('createWithQuestionBtn').style.display = "none";
+            document.getElementById('createIdentificationBtn').style.display = "block";
+            document.getElementById('createEnumerationBtn').style.display = "none";
+        } else {
+            // document.getElementById('taskcontentDiv').style.display = "none";
+            document.getElementById('questionItemsDiv').style.display = "block";
+            document.getElementById('createWithQuestionBtn').style.display = "none";
+            document.getElementById('createBtn').style.display = "block";
+            document.getElementById('inputMaxScoreDiv').style.display = "none";
+            document.getElementById('createIdentificationBtn').style.display = "none";
+            document.getElementById('createTrueOrFalse').style.display = "none";
+            document.getElementById('createEnumerationBtn').style.display = "none";
+        }
     }
 
-    showDiv(lookup[selectValue]);
-});
-
-document.getElementById('questionItemsDiv').style.display = "none";
-function showDiv(select) {
-
-    if (select.value == 3) {
-        document.getElementById('taskcontentDiv').style.display = "block";
-        document.getElementById('questionItemsDiv').style.display = "none";
-        document.getElementById('inputMaxScoreDiv').style.display = "block";
-        document.getElementById('createBtn').style.display = "none";
-        document.getElementById('createTrueOrFalse').style.display = "none";
-        document.getElementById('createWithQuestionBtn').style.display = "block";
-        document.getElementById('createIdentificationBtn').style.display = "none";
-        document.getElementById('createEnumerationBtn').style.display = "none";
-    } else if (select.value == 2) {
-        document.getElementById('taskcontentDiv').style.display = "none";
-        document.getElementById('questionItemsDiv').style.display = "block";
-        document.getElementById('createWithQuestionBtn').style.display = "none";
-        document.getElementById('createBtn').style.display = "none";
-        document.getElementById('createTrueOrFalse').style.display = "block";
-        document.getElementById('inputMaxScoreDiv').style.display = "none";
-        document.getElementById('createIdentificationBtn').style.display = "none";
-        document.getElementById('createEnumerationBtn').style.display = "none";
-    } else if (select.value == 1) {
-        // type your code here
-        document.getElementById('taskcontentDiv').style.display = "none";
-        document.getElementById('questionItemsDiv').style.display = "block";
-        document.getElementById('inputMaxScoreDiv').style.display = "none";
-        document.getElementById('createBtn').style.display = "none";
-        document.getElementById('createTrueOrFalse').style.display = "none";
-        document.getElementById('createWithQuestionBtn').style.display = "none";
-        document.getElementById('createIdentificationBtn').style.display = "block";
-        document.getElementById('createEnumerationBtn').style.display = "none";
-    } else {
-        document.getElementById('taskcontentDiv').style.display = "none";
-        document.getElementById('questionItemsDiv').style.display = "block";
-        document.getElementById('createWithQuestionBtn').style.display = "none";
-        document.getElementById('createBtn').style.display = "block";
-        document.getElementById('inputMaxScoreDiv').style.display = "none";
-        document.getElementById('createIdentificationBtn').style.display = "none";
-        document.getElementById('createTrueOrFalse').style.display = "none";
-        document.getElementById('createEnumerationBtn').style.display = "none";
-    }
-}
-
-var createBtn = document.querySelector("#createBtn");
-var hideForm = document.querySelector("#questionerDiv");
-createBtn.addEventListener("click", function() {
-    hideForm.classList.add("show-div");
-});
+    var createBtn = document.querySelector("#createBtn");
+    var hideForm = document.querySelector("#questionerDiv");
+    createBtn.addEventListener("click", function() {
+        hideForm.classList.add("show-div");
+    });
 </script>
 
 <script type="text/javascript">
@@ -425,56 +446,54 @@ createBtn.addEventListener("click", function() {
 
 <script>
     //Tabpane
-let tabHeader = document.getElementsByClassName("tab-header")[0];
-let tabIndicator = document.getElementsByClassName("tab-indicator")[0];
-let tabBody = document.getElementsByClassName("tab-body")[0];
+    let tabHeader = document.getElementsByClassName("tab-header")[0];
+    let tabIndicator = document.getElementsByClassName("tab-indicator")[0];
+    let tabBody = document.getElementsByClassName("tab-body")[0];
 
-let tabsPane = tabHeader.getElementsByTagName("div");
+    let tabsPane = tabHeader.getElementsByTagName("div");
 
-let danger = document.getElementsByClassName("dangerBtn");
+    let danger = document.getElementsByClassName("dangerBtn");
 
-for (let i = 0; i < tabsPane.length; i++) {
-    tabsPane[i].addEventListener("click", function() {
+    for (let i = 0; i < tabsPane.length; i++) {
+        tabsPane[i].addEventListener("click", function() {
+            tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+            tabsPane[i].classList.add("active");
+            tabBody.getElementsByClassName("active")[0].classList.remove("active");
+            tabBody.getElementsByClassName("tab-content")[i].classList.add("active");
+
+            tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
+        });
+
+
+    }
+
+    //Tester
+    function showGradingTab() {
         tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-        tabsPane[i].classList.add("active");
-        tabBody.getElementsByClassName("active")[0].classList.remove("active");
-        tabBody.getElementsByClassName("tab-content")[i].classList.add("active");
+            tabsPane[0].classList.add("active");
+            tabBody.getElementsByClassName("active")[0].classList.remove("active");
+            tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
 
-        tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
-    });
+            tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
+    }
 
+    function showTaskTab() {
+        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+            tabsPane[1].classList.add("active");
+            tabBody.getElementsByClassName("active")[0].classList.remove("active");
+            tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
 
-}
+            tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
+    }
 
-//Tester
-function showGradingTab() {
-    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-        tabsPane[0].classList.add("active");
-        tabBody.getElementsByClassName("active")[0].classList.remove("active");
-        tabBody.getElementsByClassName("tab-content")[0].classList.add("active");
+    function showGradingTab() {
+        tabHeader.getElementsByClassName("active")[0].classList.remove("active");
+            tabsPane[3].classList.add("active");
+            tabBody.getElementsByClassName("active")[0].classList.remove("active");
+            tabBody.getElementsByClassName("tab-content")[3].classList.add("active");
 
-        tabIndicator.style.left = `calc(calc(100% / 4) * ${0})`;
-}
-
-function showTaskTab() {
-    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-        tabsPane[1].classList.add("active");
-        tabBody.getElementsByClassName("active")[0].classList.remove("active");
-        tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
-
-        tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
-}
-
-function showGradingTab() {
-    tabHeader.getElementsByClassName("active")[0].classList.remove("active");
-        tabsPane[3].classList.add("active");
-        tabBody.getElementsByClassName("active")[0].classList.remove("active");
-        tabBody.getElementsByClassName("tab-content")[3].classList.add("active");
-
-        tabIndicator.style.left = `calc(calc(100% / 4) * ${3})`;
-}
-
-
+            tabIndicator.style.left = `calc(calc(100% / 4) * ${3})`;
+    }
 </script>
 
 </body>

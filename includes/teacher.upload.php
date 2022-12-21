@@ -20,10 +20,12 @@ if(isset($_POST['btnUpload']))
     {
         $query = "INSERT INTO module_tbl (`module_name`,`module_file`) VALUES ('$name', '$upload_files')";
         $query_run = mysqli_query($connection, $query);
+        
+        $folder = "../upload/";
 
         if($query_run)
         {
-            move_uploaded_file($_FILES["file_upload"]["tmp_name"], "../upload/".$_FILES["file_upload"]["name"]);
+            move_uploaded_file($_FILES["file_upload"]["tmp_name"], $folder.$_FILES["file_upload"]["name"]);
             $_SESSION['success'] = "File is Added";
             header('Location: ../Main_Project/teacher/teacher.subject.php');
         }

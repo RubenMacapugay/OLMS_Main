@@ -24,6 +24,7 @@ ini_set('display_errors',1);
                 <div class="custom-border">
                     <!-- Session Messages -->
                     <?php 
+                        
                         if(isset($_SESSION['msg'])){
                             
                             if($_SESSION['msg'] == "questionupdated"){
@@ -37,6 +38,14 @@ ini_set('display_errors',1);
                             if($_SESSION['msg'] == "questionercreated"){
                                 echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
                                             Questioner has been Created!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+
+                            if($_SESSION['msg'] == "essayContentCreated"){
+                                echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
+                                            Questioner/s has been Created!
                                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                             </div>';
                                 
@@ -57,11 +66,35 @@ ini_set('display_errors',1);
                                             </div>';
                                 
                             }
+
+                            if($_SESSION['msg'] == "essayContentTaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Questioner/s has been taken!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+                            
+                            if($_SESSION['msg'] == "essayFileTaken"){
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                            Filename already exists!
+                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                            </div>';
+                                
+                            }
+                            
+                            if($_SESSION['msg'] == "filenotadded"){ 
+                                echo '<div class="alert alert-danger alert-dismissible fade show" role="alert"> 
+                                        Failed to create Task, file has not been saved! Please re-enter your inputs.
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
+                            }
                             unset($_SESSION['msg']);
                         }
                     ?>
 
-                    <form method='POST' action='../../includes/teacher.createtask.inc.php' id="createEssayForm">
+                    <form method='POST' action='../../includes/teacher.createtask.inc.php' id="createEssayForm" enctype="multipart/form-data">
+                    
                         <div class="row">
 
                             <div class="col-6">
@@ -90,15 +123,17 @@ ini_set('display_errors',1);
                             <div class="col-12">
                                 
                                 <div class="card mb-3">
+                                
                                     <div>
                                         <h3 class="m-3">Instruction or Question</h3>
                                         <div class="mx-3">
-                                            <textarea class="form-control" name="" id="" rows="5"></textarea>
+                                            <textarea class="form-control" id="" rows="5" name="questionContent"></textarea>
                                         </div>
                                     </div> 
                                     
                                     <div class="m-3">
                                         <h3>Attach file</h3>
+                                        
                                         <input style="width: 270px;" type="file" name="file_upload" id="fileInput" class="form-control" > 
                                     </div>
                                 </div>
@@ -108,9 +143,8 @@ ini_set('display_errors',1);
                             <div class="col-12 text-center">
                                 <button class="btn btn-secondary" name="cancelIdentification">cancel</button>
                                 <button type="submit" class="btn btn-primary ms-3"
-                                    name="nextIdentification" id="nextBtn">Create</button>
-                                <button type="submit" name="updateIdentification" class="btn btn-primary ms-3"
-                                    id="updateBtn">update</button>
+                                    name="createEssayContent" id="createEssayContentId">Create</button>
+                                
                             </div>
 
                         </div>

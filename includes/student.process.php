@@ -2,6 +2,10 @@
 <?php 
 require_once 'dbh.inc.php';
 require_once 'student.function.inc.php';
+
+date_default_timezone_set('Asia/Manila');
+$date_Today = date("Y-m-d");
+$current_time = date("h:i A");
 ?>
 
 
@@ -75,7 +79,7 @@ if(isset($_POST['nextQuestion'])){
         $submitted = 'Yes';
 
         // save the score
-        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId);
+        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId, $date_Today, $current_time);
         $submissionId = $id;
 
         updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionId);
@@ -139,9 +143,9 @@ if(isset($_POST['nextIdentificationQuestion'])){
         $submitted = 'Yes';
 
         // save score to submission_tbl
-        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId);
+        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId, $date_Today, $current_time);
         $submissionId = $id;
-
+        
         updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionId);
 
         header("LOCATION: ../Main_Project/student/student.taskresult.php?msg=result&&questionId=$questionId&&taskId=$taskId");
@@ -198,7 +202,7 @@ if(isset($_POST['nextTrueOrFalseQuestion'])){
         $attempt = $submittedCount + 1;
         $submitted = 'Yes';
         
-        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId);
+        $id = saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId, $date_Today, $current_time);
         $submissionId = $id;
 
         updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionId);
@@ -211,6 +215,97 @@ if(isset($_POST['nextTrueOrFalseQuestion'])){
         header("location: ../Main_Project/student/student.trueorfalse.php?questionId=". $row['question_id']."&taskId=". $taskId);
     }
 
+}
+
+if(isset($_POST['submitEssayQuestion'])){
+    $subjectId = $_SESSION['subjectId'];
+    $studentId = $_SESSION['student_id'];
+    $taskListId = $_POST['taskId'];
+ 	$questionId = $_POST['questionId'];
+    $questionAnswer = $_POST['questionAnswer'];
+    $filename = $_FILES['file_upload']['name'];
+    
+    // student file path
+    $filepath = '../upload/student/' . $studentId . $subjectId . $taskListId;
+    
+    $size = getFileSize($_FILES['file_upload']['size']);
+    
+#-----
+    $submittedCount = checkSubmittedCount ($conn, $studentId, $taskListId);
+    $currentAttempt = $submittedCount + 1;
+ 
+   
+#-----
+
+    // saving file
+    if($size < 1000.0){
+        if(!file_exists($filepath)){
+            //create folder
+            mkdir($filepath, 0777, true);
+        } 
+    
+        $temp_file = $_FILES['file_upload']['tmp_name'];
+       
+        
+        if($temp_file != ""){
+            
+            // concatinating the file
+            $newfilepath = $filepath."/". $filename;
+            
+            if(move_uploaded_file($temp_file, $newfilepath)){
+                
+                // to submitted_answer_tbl
+                saveEssayAnswer($conn, $questionAnswer, $currentAttempt, $questionId, $taskListId, $studentId, $filename, $filepath);
+                $submitted = 'Yes';
+                
+                $taskExists = getTaskName($conn, $taskListId);
+                $taskName = $taskExists['task_name'];
+                
+                // save score to submission_tbl
+                $id = saveEssayNoScore($conn, $taskName, $currentAttempt, $studentId, $submitted, $taskListId, $date_Today, $current_time);
+                $submissionId = $id;
+                
+                updateCurrentSubmissionId($conn, $taskListId, $currentAttempt, $submissionId);
+                
+                $_SESSION['msg'] = "taskSubmitted";
+                header("location: ../Main_Project/student/student.subjects.php");
+                exit();
+                
+            } else{
+            
+                echo 'Upload error encounter : ' . $_FILES['file_upload']['error'];
+                
+            }
+        } else{
+        
+            // to submitted_answer_tbl
+            saveEssayAnswerNoFile($conn, $questionAnswer, $currentAttempt, $questionId, $taskListId, $studentId);
+            $submitted = 'Yes';
+            
+            $taskExists = getTaskName($conn, $taskListId);
+            $taskName = $taskExists['task_name'];
+            
+            // save score to submission_tbl
+            $id = saveEssayNoScore($conn, $taskName, $currentAttempt, $studentId, $submitted, $taskListId, $date_Today, $current_time);
+            $submissionId = $id;
+            
+            updateCurrentSubmissionId($conn, $taskListId, $currentAttempt, $submissionId);
+            
+            $_SESSION['msg'] = "taskSubmitted";
+            header("location: ../Main_Project/student/student.subjects.php");
+            exit();
+        
+        
+        }
+    
+      
+    } else{
+        echo 'File to Large';
+    }
+    
+    
+    
+    
 }
 
 

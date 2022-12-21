@@ -152,7 +152,6 @@ function getScore($conn, $taskId, $maxAttempt, $studentId){
     $scoreQuery = "SELECT * FROM submission_tbl where attempt = $maxAttempt and fk_task_list_id = $taskId and fk_student_id = $studentId";
     $scoreRow = mysqli_query($conn, $scoreQuery);
     return $studentAnswer = mysqli_fetch_assoc($scoreRow);
-
    
 }
 
@@ -239,10 +238,17 @@ function getCorrectAnswerIdentification($conn, $questionId){
 }
 
 function getSubjectData($conn, $studentId, $subjectId){
-    $selectStudentSubjects = "SELECT section_tbl.section_name, subject_tbl.subject_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId and subject_tbl.subject_id = $subjectId";
+    $selectStudentSubjects = "SELECT section_tbl.section_name, section_tbl.section_id, subject_tbl.subject_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId and subject_tbl.subject_id = $subjectId";
     $correctAnswer = mysqli_query($conn, $selectStudentSubjects);
     return $result = mysqli_fetch_assoc($correctAnswer); 
 }
+
+function getFileSize($size){
+    $kb_size = $size / 1024;
+    $format_size = number_format($kb_size, 2) ; //. ' KB'
+    return $format_size;
+}
+
 
 
 # Create/Insert
@@ -266,9 +272,18 @@ function saveCurrentTrueOrFalseAnswer($conn, $selected_choice, $currentAttempt, 
     }
 }
 
+function saveEssayAnswer($conn, $questionAnswer, $currentAttempt, $questionId, $taskId, $studentId, $filename, $filepath){
+    $insertCurrentAnswer = "INSERT INTO submitted_answer_tbl (submitted_answer_key, attempt, fk_question_id, fk_task_list_id, fk_student_id, submitted_filename, submitted_filepath) values ('$questionAnswer', $currentAttempt, $questionId, $taskId, $studentId, '$filename', '$filepath')";
+    $currentSubmittedAnswer = mysqli_query($conn, $insertCurrentAnswer);
+}
 
-function saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId){
-    $saveScore = "INSERT INTO submission_tbl (submission_name, score, attempt, fk_student_id, submitted, fk_task_list_id) values ('$taskName', '$taskScore', '$attempt', '$studentId', '$submitted', '$taskId')";
+function saveEssayAnswerNoFile($conn, $questionAnswer, $currentAttempt, $questionId, $taskId, $studentId){
+    $insertCurrentAnswer = "INSERT INTO submitted_answer_tbl (submitted_answer_key, attempt, fk_question_id, fk_task_list_id, fk_student_id) values ('$questionAnswer', $currentAttempt, $questionId, $taskId, $studentId)";
+    $currentSubmittedAnswer = mysqli_query($conn, $insertCurrentAnswer);
+}
+
+function saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitted, $taskId, $date_Today, $current_time){
+    $saveScore = "INSERT INTO submission_tbl (submission_name, score, attempt, fk_student_id, submitted, fk_task_list_id, submission_date, submission_time) values ('$taskName', '$taskScore', '$attempt', '$studentId', '$submitted', '$taskId', '$date_Today', '$current_time')";
     // $resultScore = mysqli_query($conn, $saveScore);
     $resultScore = $conn->query($saveScore);
 
@@ -277,9 +292,18 @@ function saveScore($conn, $taskName, $taskScore, $attempt, $studentId, $submitte
     return $id;
 }
 
+function saveEssayNoScore($conn, $taskName, $attempt, $studentId, $submitted, $taskId, $date_Today, $current_time){
+    $saveScore = "INSERT INTO submission_tbl (submission_name, attempt, fk_student_id, submitted, fk_task_list_id, submission_date, submission_time) values ('$taskName', '$attempt', '$studentId', '$submitted', '$taskId', '$date_Today', '$current_time')";
+    // $resultScore = mysqli_query($conn, $saveScore);
+    $resultScore = $conn->query($saveScore);
+
+    $id = mysqli_insert_id($conn);
+
+    return $id;
+}
 
 # Update 
-function updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionTblId){
+function updateCurrentSubmissionId($conn, $taskId, $attempt, $submissionTblId, ){
     $updateQuery = "UPDATE submitted_answer_tbl SET fk_submission_tbl_id = '$submissionTblId' where fk_task_list_id = '$taskId' and attempt = '$attempt'";
     $resultScore = mysqli_query($conn, $updateQuery);
 }
@@ -307,9 +331,21 @@ function isDeadline($date_Today, $endDate, $newTaskTimeFormat){
     }
 }
 
+function isNearDeadline($date_Today, $endDate, $newTaskTimeFormat){
+    if( (($date_Today == $endDate) && (time() <= strtotime($newTaskTimeFormat))) ||
+        ($date_Today < $endDate)){
+        # echo $rowFirstGrading['task_name'].'Time na<br>';
+        return true;
+    }else{
+        return false;
+    }
+}
+
 function isGiven($value){
     if($value == "Yes"){
         return true;
+    }else if ($value == ""){
+        return false;
     }else{
         return false;
     }
