@@ -4,7 +4,7 @@
      <div class="navbar py-0" id="test-nav">
          <ul class="navbar-nav  w-100">
              <i class="fa-solid fa-grip side-button-logo" id="sidenavBtn"></i>
-             <li class="nav-item sub-list"><a href="" class="nav-link sub-title">OLMS - SHS</a></li>
+             <li class="nav-item sub-list fw-bold"><a href="" class="nav-link sub-title">Student Page</a></li>
 
              <li class="nav-item"><a href="student.php" class="nav-link">
                      <i class="fa-solid fa-house-chimney side-logo"></i>
