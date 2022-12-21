@@ -59,7 +59,11 @@
                     <div class="row ">
 
                         <!-- Subjects Display -->
-                        <?php while($row = $resultSubject->fetch_assoc()): ?>
+                        <?php while($row = $resultSubject->fetch_assoc()): 
+                            $subjectId = $row['subject_list_id']; 
+                            $subjectToDoResultDashboard = getSubjectToDoCount($conn, $subjectId, $studentId);
+                            
+                        ?>
                         <div class="col-sm-6 col-md-6 col-lg-4 pt-2">
                             <div class="card">
                                 <img src="images/img-2.jpg" class="card-img-top" alt="Subject Image">
@@ -90,10 +94,16 @@
 
                                         <button type="button" class="btn position-relative p-0">
                                             <i class="fa-regular fa-clipboard"></i>
-                                            <span
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                3
-                                            </span>
+                                            
+                                            <?php if($subjectToDoResultDashboard['NotChecked_COUNT'] > 0){
+                                                ?>
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        <?=$subjectToDoResultDashboard['NotChecked_COUNT']?>
+                                                    </span>
+                                                <?php
+                                            }
+                                            ?>
                                         </button>
                                         <a href=""><i class="fa-solid fa-arrow-right"></i></a>
                                     </div>

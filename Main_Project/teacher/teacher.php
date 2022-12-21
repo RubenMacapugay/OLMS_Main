@@ -63,18 +63,21 @@
                     <div class="row ">
 
                         <!-- Subjects Display -->
-                        <?php while($row = $resultSubject->fetch_assoc()): ?>
+                        <?php while($row = $resultSubject->fetch_assoc()): 
+                            $id = $row['subject_list_id']; 
+                            $subjectToGradeResult = getSubjectToGradeCount($conn, $id);
+                        ?>
                         <div class="col-sm-6 col-md-6 col-lg-4 pt-2">
                             <div class="card">
                                 <img src="images/img-2.jpg" class="card-img-top" alt="Subject Image">
 
                                 <div class="card-body">
 
-                                    <div class="progress-bar me-3">
+                                    <!-- <div class="progress-bar me-3">
                                         <div class="circular-progress">
                                             <div class="value-container"></div>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                     <h3 class="card-title"><?php echo $row['subject_name'];?></h3>
                                     <p class="card-text"><?php echo $row['grade_level_name'].' - '.$row['section_name'];?></p>
@@ -94,10 +97,16 @@
 
                                         <button type="button" class="btn position-relative p-0">
                                             <i class="fa-regular fa-clipboard"></i>
-                                            <span
-                                                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                3
-                                            </span>
+                                            
+                                            <?php if($subjectToGradeResult['NotChecked_COUNT'] > 0){
+                                                ?>
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        <?=$subjectToGradeResult['NotChecked_COUNT']?>
+                                                    </span>
+                                                <?php
+                                            } 
+                                            ?>
                                         </button>
                                         <a href=""><i class="fa-solid fa-arrow-right"></i></a>
                                     </div>

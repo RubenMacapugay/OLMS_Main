@@ -87,6 +87,11 @@ $teacherId = $_SESSION['teacher_id'];
 $studentId = $_GET['studentId'];
 $taskId = $_GET['taskId'];
 
+if(isset($_GET['path'])) $path = $_GET['path'];
+    
+if(isset($_GET['tab'])) $tab = $_GET['tab'];
+
+
 # get subject details
 $maxAttempt = $_GET['attemptCount'];
 
@@ -140,7 +145,12 @@ $taskName = getCurrentTask($conn, $taskId);
                 ?>
                     <div class="card">
                         <div class="card-body">
-                            <a href="studentTaskAttempts.php?studentId=<?=$studentId?>&&taskId=<?=$taskId?>">back</a>
+                            <?php
+                                
+                                if(true){
+									echo '<a href="studentTaskAttempts.php?studentId='.$studentId.'&&taskId='.$taskId.'&&tab='.$tab.'">back</a>';
+                                }
+                            ?>
                             <h3 class="mt-3">Displaying submitted task</h3>
                             
                             <div class="container my-4 custom-border p-4">

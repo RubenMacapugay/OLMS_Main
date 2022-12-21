@@ -94,7 +94,7 @@
 }
 
 .tab-header>div {
-    width: calc(100% / 4);
+    width: calc(100% / 5);
     text-align: center;
     color: #888;
     font-weight: 600;
@@ -116,7 +116,7 @@
 
 .tab-indicator {
     position: relative;
-    width: calc(100% / 4);
+    width: calc(100% / 5);
     height: 5px;
     background: #00acee;
     left: 0px;

@@ -402,6 +402,13 @@ if(isset($_POST['createEssayContent'])){
                 echo 'Upload error encounter : ' . $_FILES['file_upload']['error'];
                 
             }
+        } else{
+            createEssayContentNoFile($conn, $taskListId, $questionContent);
+            $_SESSION['msg'] = "taskcompleted";
+            header ("location: ../Main_Project/teacher/assets/header.view.php");
+            header ("location: ../Main_Project/teacher/teacher.taskproceed.php?msg=essay");
+            exit();
+        
         }
     
       

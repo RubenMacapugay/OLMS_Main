@@ -193,6 +193,20 @@ function getTasksPerGrading($conn, $studentId, $subjectId, $gradingId, $moduleSe
     return $resultTasksFirstGrading;
 }
 
+function getSubjectToDoCount($conn, $subjectId, $studentId){
+    $sql = 
+    "SELECT COUNT(*) as NotChecked_COUNT, subject_list_tbl.subject_list_name, submission_tbl.fk_student_id
+    FROM task_list_tbl 
+    RIGHT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id
+    LEFT JOIN subject_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id
+    WHERE task_list_tbl.sub_type = 3 AND score IS NULL and subject_list_tbl.subject_list_id = $subjectId and submission_tbl.fk_student_id = $studentId";
+    $result = mysqli_query($conn, $sql);
+    return $studentAnswer = mysqli_fetch_assoc($result);
+
+}
+
+
+
 function getCurrentAttemptAnswer($conn, $taskId){
     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) AND fk_task_list_id = $taskId";
     $submittedAnswers = mysqli_query($conn,$submittedQuery);
@@ -238,7 +252,7 @@ function getCorrectAnswerIdentification($conn, $questionId){
 }
 
 function getSubjectData($conn, $studentId, $subjectId){
-    $selectStudentSubjects = "SELECT section_tbl.section_name, section_tbl.section_id, subject_tbl.subject_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId and subject_tbl.subject_id = $subjectId";
+    $selectStudentSubjects = "SELECT section_tbl.section_name, section_tbl.section_id, subject_tbl.subject_name, subject_list_tbl.subject_list_name, gradelevel_tbl.grade_level_name FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id)  INNER JOIN student_subjects_tbl ON student_subjects_tbl.fk_subject_list_id = subject_list_tbl.subject_list_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = student_subjects_tbl.fk_subject_list_id) WHERE student_subjects_tbl.fk_student_id = $studentId and subject_tbl.subject_id = $subjectId";
     $correctAnswer = mysqli_query($conn, $selectStudentSubjects);
     return $result = mysqli_fetch_assoc($correctAnswer); 
 }
