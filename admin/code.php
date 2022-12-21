@@ -1,7 +1,7 @@
 <?php
 //session_start();
 include('security.php');
-$connection = mysqli_connect('localhost', 'root', '', 'db_olms');
+$connection = mysqli_connect('localhost', 'root', '', 'olms_hfa');
 
  
 // Admin registration
@@ -114,45 +114,45 @@ if(isset($_POST['delete_btn']))
 // Teachers registration
 if(isset($_POST['regbtn_teacher']))
 {
-    $un_teacher = $_POST['username_teacher'];
-    $email_teacher = $_POST['email_teacher'];
+    $fn_teacher = $_POST['fname_teacher'];
+    $id_teacher = $_POST['id_teacher'];
     $pw_teacher = $_POST['pw_teacher'];
     $cpw_teacher = $_POST['confirmpw_teacher'];
 
-    $email_teacher_query = "SELECT * FROM reg_teacher WHERE email='$email_teacher' ";
-    $email_teacher_query_run = mysqli_query($connection, $email_teacher_query);
-    if(mysqli_num_rows($email_teacher_query_run) > 0)
+    $fname_teacher_query = "SELECT * FROM teacher_tbl WHERE teacher_name = '$fn_teacher'";
+    $fname_teacher_query_run = mysqli_query($connection, $fname_teacher_query);
+    if(mysqli_num_rows($fname_teacher_query_run) > 0)
     {
-        $_SESSION['status'] = "Email Already Taken. Please Try Another one.";
+        $_SESSION['status'] = "ID already Taken. Please Try Another one.";
         $_SESSION['status_code'] = "error";
-        header('Location: reg_teacher.php');  
+        header('Location: teacher.account.php');  
     }
     else
     {
         if($pw_teacher === $cpw_teacher)
         {
-            $query = "INSERT INTO reg_teacher (username,email,password) VALUES ('$un_teacher','$email_teacher','$pw_teacher')";
+            $query = "INSERT INTO teacher_tbl (teacher_name , teacher_number , teacher_password) VALUES ('$fn_teacher','$id_teacher','$pw_teacher')";
             $query_run = mysqli_query($connection, $query);
             
             if($query_run)
             {
                 // echo "Saved";
-                $_SESSION['status'] = "Teacher Profile Added";
+                $_SESSION['status'] = "Teacher Account Added";
                 $_SESSION['status_code'] = "success";
-                header('Location: reg_teacher.php');
+                header('Location: teacher.account.php');
             }
             else 
             {
-                $_SESSION['status'] = "Teacher Profile Not Added";
+                $_SESSION['status'] = "Teacher Account Not Added";
                 $_SESSION['status_code'] = "error";
-                header('Location: reg_teacher.php');  
+                header('Location: teacher.account.php');  
             }
         }
         else 
         {
             $_SESSION['status'] = "Password and Confirm Password Does Not Match";
             $_SESSION['status_code'] = "warning";
-            header('Location: reg_teacher.php');  
+            header('Location: teacher.account.php');  
         }
     }
 }
@@ -169,48 +169,72 @@ if(isset($_POST['edit_teacher_btn']))
 
 
 // Update Teacher Accounts
-if(isset($_POST['update_teacher_btn']))
+if(isset($_POST['edtbtn_teacher']))
 {
     $id_teacher = $_POST['edit_teacher_id'];
-    $un_teacher = $_POST['edit_teacher_un'];
-    $email_teacher = $_POST['edit_teacher_email'];
-    $pw_teacher = $_POST['edit_teacher_pw'];
+    $edt_fn_teacher = $_POST['edit_fname_teacher'];
+    $edt_id_teacher = $_POST['edit_id_teacher'];
+    $edt_pw_teacher = $_POST['edit_pw_teacher'];
 
-    $query = "UPDATE reg_teacher SET username='$un_teacher', email='$email_teacher', password='$pw_teacher' WHERE id='$id_teacher' ";
+    $query = "UPDATE teacher_tbl SET teacher_name = '$edt_fn_teacher', teacher_number = '$edt_id_teacher', teacher_password='$edt_pw_teacher' WHERE teacher_id = '$id_teacher' ";
     $query_run = mysqli_query($connection, $query);
 
     if($query_run)
     {
         $_SESSION['success'] = "Your Data is Updated";
-        header('Location: reg_teacher.php');
+        header('Location: teacher.account.php');
     }
     else
     {
         $_SESSION['status'] = "Your Data is Not updated";
-        header('Location: reg_teacher.php');
+        header('Location: teacher.account.php');
     }
 }
 
 //Delete Teacher Accounts
 if(isset($_POST['delete_teacher_btn']))
 {
-    $id_teacher = $_POST['delete_teacher_id'];
+    $delete_id_teacher = $_POST['delete_teacher_id'];
 
-    $query = "DELETE FROM reg_teacher WHERE id='$id_teacher' ";
+    $deletequery = "DELETE FROM teacher_tbl WHERE teacher_id = '$delete_id_teacher'";
+    $delete_query_run = mysqli_query($connection, $deletequery);
+
+    if($delete_query_run)
+    {
+        $_SESSION['success'] = "Your Data is Deleted";
+        header('Location: teacher.account.php');
+    }
+    else
+    {
+        $_SESSION['status'] = "Your Data is not Deleted";
+        header('Location: teacher.account.php');
+    }
+}
+
+
+// ----------------------------------------------------------------------------------------------------------------------------
+// Student Profile
+// Update Student Accounts
+if(isset($_POST['edtbtn_student']))
+{
+    $id_student = $_POST['edit_student_id'];
+    $edt_id_student = $_POST['edit_id_student'];
+    $edt_pw_student = $_POST['edit_pw_student'];
+
+    $query = "UPDATE student_tbl SET student_number = '$edt_id_student', student_password = '$edt_pw_student' WHERE student_id = '$id_student' ";
     $query_run = mysqli_query($connection, $query);
 
     if($query_run)
     {
-        $_SESSION['success'] = "Your Data is Delete";
-        header('Location: reg_teacher.php');
+        $_SESSION['success'] = "Your Data is Updated";
+        header('Location: student_list.php');
     }
     else
     {
-        $_SESSION['status'] = "Your Data is not Delete";
-        header('Location: reg_teacher.php');
+        $_SESSION['status'] = "Your Data is Not updated";
+        header('Location: student_list.php');
     }
 }
-
 
 // -----------------------------------------------------------------------------------------------------------------------------
 //Admin Login

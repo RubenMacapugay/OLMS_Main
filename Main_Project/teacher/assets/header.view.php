@@ -63,7 +63,7 @@
                 <div class="container-fluid ms-5">
                     <!-- Left -->
                     <img src="images/HFA-Logo.png" alt="Logo" width="40" height="40">
-                    <a href="teacher.php" class="navbar-brand fs-3 page-title">Dashboard</a>
+                    <a href="teacher.php" class="navbar-brand fs-5 page-title">Oblates Learning Management System</a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop"
                         aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
