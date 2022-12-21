@@ -199,13 +199,49 @@ function getSubjectToDoCount($conn, $subjectId, $studentId){
     FROM task_list_tbl 
     RIGHT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id
     LEFT JOIN subject_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id
-    WHERE task_list_tbl.sub_type = 3 AND score IS NULL and subject_list_tbl.subject_list_id = $subjectId and submission_tbl.fk_student_id = $studentId";
+    WHERE score IS NULL and subject_list_tbl.subject_list_id = $subjectId and submission_tbl.fk_student_id = $studentId";
     $result = mysqli_query($conn, $sql);
     return $studentAnswer = mysqli_fetch_assoc($result);
 
 }
 
+function getStudentSubmittedTaskCount($conn, $subjectId, $studentId){
+    $sql = 
+        "SELECT * from submission_tbl left join task_list_tbl on submission_tbl.fk_task_list_id = task_list_tbl.task_list_id 
+        WHERE submission_tbl.fk_student_id = $studentId
+        AND task_list_tbl.fk_subject_list_id = $subjectId
+        GROUP BY submission_tbl.fk_task_list_id;";
+    $result = mysqli_query($conn, $sql);
+    $num = 0;
+    foreach ($result as $row){
+        $num ++;
+    }
+    return $num;
+}
 
+function getSubjectTaskCount($conn, $subjectId){
+    $sql = 
+    "SELECT COUNT(*) as mycount from task_list_tbl where fk_subject_list_id and given = 'Yes' ;";
+    $result = mysqli_query($conn, $sql);
+    $resultAll = mysqli_fetch_assoc($result);
+
+    return $resultAll;
+}
+function getLengNotSubmitted($conn, $subjectId, $studentId){
+    $sql = 
+    "SELECT *, task_list_tbl.fk_subject_list_id, submission_tbl.fk_student_id 
+    FROM submission_tbl 
+    RIGHT JOIN task_list_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id 
+    and submission_tbl.fk_student_id = $studentId 
+    WHERE submission_tbl.fk_task_list_id IS NULL 
+    and task_list_tbl.fk_subject_list_id = $subjectId;";
+    $result = mysqli_query($conn, $sql);
+    $num = 0;
+    foreach ($result as $row){
+        $num ++;
+    }
+    return $num;
+}
 
 function getCurrentAttemptAnswer($conn, $taskId){
     $submittedQuery = "SELECT * FROM submitted_answer_tbl WHERE attempt = ( SELECT MAX(attempt) FROM submitted_answer_tbl ) AND fk_task_list_id = $taskId";

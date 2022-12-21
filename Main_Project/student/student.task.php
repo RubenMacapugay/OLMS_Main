@@ -37,7 +37,7 @@ $_SESSION['questionCounter'] = 1;
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-8 py-4 main-content" id="subjectMainContent">
+        <div class="col-md-10 py-4 main-content" id="subjectMainContent">
             <div class="row mx-0">
                 <div class="custom-border">
                     <a href="student.subjects.php?tab=taskTab" class="text-primary">Back</a>
@@ -45,6 +45,10 @@ $_SESSION['questionCounter'] = 1;
                     
                     <!-- Change according to the type of grading -->
                     <h3 class="text-center"><?php echo $taskName; ?></h3>
+                    <div class="p-4">
+                        <h4>Task instruction</h4>
+                        <p class="ms-4 text-break"><?=$taskExists['task_instruction']?></p>
+                    </div>
 
                     <?php // Display Multiple Choice
                     if($subType == 0){
@@ -95,10 +99,7 @@ $_SESSION['questionCounter'] = 1;
             </div>
         </div>
 
-        <!-- Right Banner -->
-        <div class="custom-border col-md-2 mt-4" id="rightBanner">
-            <?php include('assets/banner.view.php')?>
-        </div>
+       
 
     </div>
 </div>

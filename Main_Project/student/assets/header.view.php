@@ -31,11 +31,12 @@ require_once('../../includes/student.function.inc.php');
 // setting default date
 date_default_timezone_set('Asia/Manila');
 
-if(!isset($_SESSION['student_id']) || isset($_SESSION['teacher_id'])){
-    echo 'lost teacher';
-    header ("location: ../../includes/logout.inc.php");
-} 
+// if(!isset($_SESSION['student_id']) || isset($_SESSION['teacher_id'])){
+//     echo 'lost teacher';
+//     header ("location: ../../includes/logout.inc.php");
+// } 
 
+$studentId = $_SESSION['student_id'];
 ?>
 
 <div class="container-fluid" id="header">

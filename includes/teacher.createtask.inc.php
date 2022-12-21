@@ -17,16 +17,17 @@ $current_time = date("h:i A");
         $taskcontent = $_POST["taskcontent"];
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        // $datecreated = $_POST["datecreated"];
-        $datecreated = $date_Today;
+        // $datecreated = $date_Today;
+        $datecreated = $_POST["datecreated"];
         $datedeadline = $_POST["datedeadline"];
         //set time created
-        $time_created = $current_time;
+        // $time_created = $current_time;
+        $time_created = $_POST["timecreated"];
         $time = $_POST["timelimit"];
         $maxscore = $_POST["maxscore"]; 
         $maxattempts = $_POST["maxattempts"];
-        $allowlate = $_POST["submissionchoice"]; 
-        
+        $allowlate = $_POST["submissionchoice"];
+        $taskinstruction = $_POST["taskinstruction"];
         
         # Error handlers
         if(emptyEssayTask($grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxscore, $maxattempts, $allowlate) !== false){
@@ -44,7 +45,7 @@ $current_time = date("h:i A");
         }
         
         # create the task
-        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate);
+        createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate, $taskinstruction);
         // $_SESSION['msg'] = "taskcompleted";
         // header ("location: ../Main_Project/teacher/assets/header.view.php");
         // header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=taskessaycreated&&currentSubject=$subjectId");
@@ -70,16 +71,19 @@ $current_time = date("h:i A");
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
         // $datecreated = $_POST["datecreated"];
-        $datecreated = $date_Today;
+        // $datecreated = $date_Today;
+        $datecreated = $_POST["datecreated"];
         $datedeadline = $_POST["datedeadline"];
         // time created
-        $time_created = $current_time;
+        // $time_created = $current_time;
+        $time_created = $_POST["timecreated"];
         $time = $_POST["timelimit"];
         $maxattempts = $_POST["maxattempts"];
         $allowlate = $_POST["submissionchoice"]; 
 
         $subjectId = $_POST["subjectid"];
         $_SESSION["subjectId"] = $_POST["subjectid"];
+        $taskinstruction = $_POST["taskinstruction"];
 
         if(isset($_SESSION["subjectId"])){
             $subjectId = $_SESSION["subjectId"];
@@ -102,7 +106,7 @@ $current_time = date("h:i A");
         }
 
         # create the task - add max score
-        createTask($conn, $subjectId, $grading, $moduleSection,  $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection,  $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate, $taskinstruction);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -128,14 +132,17 @@ $current_time = date("h:i A");
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
         // $datecreated = $_POST["datecreated"];
-        $datecreated = $date_Today;
+        // $datecreated = $date_Today;
+        $datecreated = $_POST["datecreated"];
         $datedeadline = $_POST["datedeadline"];
         // time created
-        $time_created = $current_time;
+        // $time_created = $current_time;
+        $time_created = $_POST["timecreated"];
         $time = $_POST["timelimit"];
         // $maxscore = $_POST["maxscore"]; THERES NO MAX SCORE
         $maxattempts = $_POST["maxattempts"];
         $allowlate = $_POST["submissionchoice"]; 
+        $taskinstruction = $_POST["taskinstruction"];
 
         $subjectId = $_POST["subjectid"];
         $_SESSION["subjectId"] = $_POST["subjectid"];
@@ -160,7 +167,7 @@ $current_time = date("h:i A");
         }
 
         # create the task
-        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate, $taskinstruction);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -183,14 +190,15 @@ $current_time = date("h:i A");
         $questionitems = $_POST["questionitems"]; 
         $tasktype = $_POST["tasktype"];
         $subtype = $_POST["subtype"];
-        // $datecreated = $_POST["datecreated"];
+        $datecreated = $_POST["datecreated"];
         $datecreated = $date_Today;
         $datedeadline = $_POST["datedeadline"];
         // time created
-        $time_created = $current_time;
+        $time_created = $_POST["timecreated"];
         $time = $_POST["timelimit"];
         $maxattempts = $_POST["maxattempts"];
         $allowlate = $_POST["submissionchoice"]; 
+        $taskinstruction = $_POST["taskinstruction"];
 
         $subjectId = $_POST["subjectid"];
         $_SESSION["subjectId"] = $_POST["subjectid"];
@@ -200,7 +208,7 @@ $current_time = date("h:i A");
             $subjectId = $_POST["subjectid"];
         }
         
-        # Error handlers
+        // # Error handlers
         if(emptyWithAnswerTask($grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time, $maxattempts, $allowlate) !== false) { # comeback
             $_SESSION['msg'] = "emptyinput";
             header ("location: ../Main_Project/teacher/teacher.createtask.php?msg=emptyinput&&currentSubject=$subjectId");
@@ -215,7 +223,7 @@ $current_time = date("h:i A");
         }
 
         # create the task
-        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate);
+        createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate, $taskinstruction);
         
         # getting task_list details
         $taskExists = tasknameExist($conn, $taskname, $subjectId);
@@ -371,9 +379,6 @@ if(isset($_POST['createEssayContent'])){
         header ("location: ../Main_Project/teacher/teacher.createEssay.php?error=questiontaken");
         exit();
     } 
-
-
-
     
     // saving file
     if($size < 1000.0){
@@ -420,6 +425,7 @@ if(isset($_POST['createEssayContent'])){
 }
 
 if(isset($_POST['saveEssayScore'])){
+    $tab = $_POST['tab_input'];
     $submissionId = $_POST['submissionId'];
     $score = $_POST['submmisionScore'];
     $studentId = $_POST['studentIdHidden'];
@@ -431,11 +437,12 @@ if(isset($_POST['saveEssayScore'])){
     
     $_SESSION['msg'] = "taskgraded";
     header ("location: ../Main_Project/teacher/assets/header.view.php");
-    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount");
+    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount&&tab=$tab");
     exit();
 }
 
 if(isset($_POST['editEssayScore'])){
+    $tab = $_POST['tab_input'];
     $submissionId = $_POST['submissionId'];
     $score = $_POST['submmisionScore'];
     $studentId = $_POST['studentIdHidden'];
@@ -454,7 +461,7 @@ if(isset($_POST['editEssayScore'])){
     
     $_SESSION['msg'] = "taskgradeedited";
     header ("location: ../Main_Project/teacher/assets/header.view.php");
-    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount");
+    header ("location: ../Main_Project/teacher/studentTaskView.php?studentId=$studentId&&taskId=$taskId&&submissionId=$submissionId&&attemptCount=$attemptCount&&tab=$tab");
     exit();
 
 }
@@ -1088,9 +1095,12 @@ if(isset($_POST['editEssayScore'])){
         $timelimit = $_POST['timelimit'];
         $maxattempts = $_POST['maxattempts'];
         $submissionchoice = $_POST['submissionchoice'];
+        $timeCreated = $_POST['timestart'];
+        $dateCreated = $_POST['datestart'];
+        $taskinstruction = $_POST['taskinstruction'];
 
         // check if the task name exist
-        updateTaskMultipleChoice($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice);
+        updateModalTaskWithQuestion($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice, $timeCreated, $dateCreated, $taskinstruction);
 
         // set session message that update success
         $_SESSION['msg'] = "taskupdated";
@@ -1164,9 +1174,12 @@ if(isset($_POST['editEssayScore'])){
         $maxattempts = $_POST['maxattempts'];
         $maxscore = $_POST['maxscore'];
         $submissionchoice = $_POST['submissionchoice'];
+        $timeCreated = $_POST['timestart'];
+        $dateCreated = $_POST['datestart'];
+        $taskinstruction = $_POST['taskinstruction'];
 
         // check if the task name exist
-        updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice);
+        updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice, $timeCreated, $dateCreated, $taskinstruction);
 
         // set session message that update success
         $_SESSION['msg'] = "taskupdated";

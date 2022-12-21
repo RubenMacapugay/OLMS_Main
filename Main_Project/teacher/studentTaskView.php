@@ -8,12 +8,14 @@
                 <h1 class="modal-title fs-5" id="createModuleSection">Add task score</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
+            
+			<form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
 
                 <div class="modal-body">
                   
-                    <div class="form-group">
+                    <div class="form-group"> 
                         <label>Score</label>
+                        <input type="hidden" name="tab_input" value="<?=$_GET['tab']?>">
                         <input type="hidden" id="student_IdInput" name="studentIdHidden"> 
                         <input type="hidden" id="task_IdInput" name="taskIdHidden">
                         <input type="hidden" id="submission_idInput" name="submissionId">
@@ -41,7 +43,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="createModuleSection">Add task score</h1>
+                <h1 class="modal-title fs-5" id="createModuleSection">Edit task score</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="../../includes/teacher.createtask.inc.php" method="POST" enctype="multipart/form-data">
@@ -50,6 +52,7 @@
                   
                     <div class="form-group">
                         <label>Score</label>
+                        <input type="hidden" name="tab_input" value="<?=$_GET['tab']?>">
                         <input type="hidden" id="student_IdInputEdit" name="studentIdHidden"> 
                         <input type="hidden" id="task_IdInputEdit" name="taskIdHidden">
                         <input type="hidden" id="submission_idInputEdit" name="submissionId">
@@ -426,7 +429,7 @@ $taskName = getCurrentTask($conn, $taskId);
 	            var taskScore = $(this).closest('div').find('.task_score').text();
 	            var maxScore = $(this).closest('div').find('.max_score').text();
 	            
-	            alert(submmistionId);
+	            
 	            // alert(studentId + " " + taskId);
 	            // Opening the Modal
 	            $('#editScoreModal').modal('show');

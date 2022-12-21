@@ -281,8 +281,21 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                         id="inputTaskDescription" aria-describedby="taskname"
                                         placeholder="sample: 01 Quiz 01">
                                 </div>
+                                <div class="mb-3">
+                                    <label for="inputTaskDescription" class="form-label mb-0">Task instruction</label>
+                                    <input type="name" class="form-control" name="taskinstruction"
+                                        id="inputTaskInstruction" aria-describedby="taskname"
+                                        placeholder="instruction">
+                                </div>
 
                                 <!-- Duration -->
+                                <div class="mb-3">
+                                    <label class="form-check-label" for="inputDates">Start date</label>
+                                    <div class="d-flex align-items-center">
+                                        <input type="date" class="form-control" name="datestart"
+                                            id="inputStartDate">
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-check-label" for="inputDates">Due date</label>
                                     <div class="d-flex align-items-center">
@@ -292,19 +305,23 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                 </div>
 
                                 <!-- Attempts and Time -->
-                                <div class="row">
+                                <div class="row mb-3">
                                     <!-- Time -->
+                                    <div class="col-6 mb-3">
+                                        <label for="inputTime">Start time</label>
+                                        <input type="time" class="form-control" name="timestart" id="inputStartTime">
+                                    </div>
                                     <div class="col-6 mb-3">
                                         <label for="inputTime">Due time</label>
                                         <input type="time" class="form-control" name="timelimit" id="inputTime">
                                     </div>
                                     
                                     <!-- Max Attempts -->
-                                    <div class="col-6">
-                                        <label for="inputMaxAttempt">Max attemps</label>
-                                        <input type="number" class="form-control" name="maxattempts"
-                                            id="inputMaxAttempts"  min="0">
-                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <label for="inputMaxAttempt">Max attemps</label>
+                                    <input type="number" class="form-control" name="maxattempts"
+                                        id="inputMaxAttempts"  min="0">
                                 </div>
 
                                 <!-- Max score and allow late submission -->
@@ -1089,18 +1106,25 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                 $tableRowTaskId = $row['task_list_id'];
                                                                 $tableRowTaskName = $row['task_name'];
                                                                 $tableRowSubType = $row['sub_type'];
+                                                                $tableRowCreatedDate = $row['date_created'];
                                                                 $tableRowDueDate = $row['date_deadline'];
+                                                                $tableRowCreatedTime = $row['time_created'];
                                                                 $tableRowDueTime = $row['time_limit'];
                                                                 $tableRowMaxAttempts = $row['max_attempts'];
                                                                 $tableRowQuestionItem = $row['question_item'];
                                                                 $tableRowMaxScore = $row['max_score'];
                                                                 $tableRowAllowLate = $row['submission_choice'];
+                                                                $tableRowTakInstruction = $row['task_instruction'];
             
                                                                 $startedDate = strtotime($row['date_created']);
                                                                 $formatedDateCreated = date('F, j Y', $startedDate);
             
                                                                 $endDate = strtotime($row['date_deadline']);
                                                                 $formatedDateDue = date('F, j Y', $endDate);
+                                                                
+                                                                $newTimeCreatedFormat = date('H:i:s',strtotime($tableRowCreatedTime));
+                                                                
+                                                                
                                                             ?>
                                                             <tr>
                                                                 
@@ -1114,12 +1138,15 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
             
                                                                         <span class="d-none" id="tableTaskName"><?php echo $tableRowTaskName;?></span>
                                                                         <span class="d-none" id="tableSubType"><?php echo $tableRowSubType;?></span>
+                                                                        <span class="d-none" id="tableCreatedDate"><?php echo $tableRowCreatedDate;?></span>
                                                                         <span class="d-none" id="tableDueDate"><?php echo $tableRowDueDate;?></span>
+                                                                        <span class="d-none" id="tableCreatedTime"><?php echo $newTimeCreatedFormat;?></span>
                                                                         <span class="d-none" id="tableDueTime"><?php echo $tableRowDueTime;?></span>
                                                                         <span class="d-none" id="tableMaxAttempts"><?php echo $tableRowMaxAttempts;?></span>
                                                                         <span class="d-none" id="tableQuestionItem"><?php echo $tableRowQuestionItem;?></span>
                                                                         <span class="d-none" id="tableMaxScore"><?php echo $tableRowMaxScore;?></span>
                                                                         <span class="d-none" id="tableAllowLate"><?php echo $tableRowAllowLate;?></span>
+                                                                        <span class="d-none" id="tableTaskInstruction"><?php echo $tableRowTakInstruction;?></span>
             
                                                                         <i class="fa-regular fa-pen-to-square text-primary  updateTableTaskBtn me-2"></i>
                                                                         <i class="fa-solid fa-trash text-danger me-2 deleteTableTaskBtn" ></i>
@@ -1283,7 +1310,18 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                     }
                                                                     ?>
                                                                     
-                                                                    <td scope="col" class="text-center"><?php echo $scoreResult?></td>
+                                                                    <td scope="col" class="text-center">
+                                                                        <?php 
+                                                                        $subType = $rowTaskList2['sub_type'];
+                                                                        if($subType == "3"){
+                                                                            echo $scoreResult. '/' .$rowTaskList2['max_score'];
+                                                                            
+                                                                        } else {
+                                                                            echo $scoreResult. '/' .$rowTaskList2['question_item'];
+                                                                        
+                                                                        }
+                                                                        ?>
+                                                                    </td>
                                                                 <?php endwhile; ?>
                                                             </tr>
         
@@ -1317,7 +1355,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                     <thead>
                                                         <tr>
                                                             <th scope="col" class="">Task name</th>
-                                                            <th class="text-center" style="min-width: 200px;">Not graded tasks</th>
+                                                            <th class="text-center" style="min-width: 200px;">No. of students</th>
                                                         </tr>
                                                     </thead>
                                                     
@@ -1508,10 +1546,13 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
             var taskId = $(this).closest('div').find('#taskId_DeleteEdit').text();
             var taskSubType = $(this).closest('div').find('#tableSubType').text();
             var taskName = $(this).closest('div').find('#tableTaskName').text();
+            var taskStartDate = $(this).closest('div').find('#tableCreatedDate').text();
             var taskEndDate = $(this).closest('div').find('#tableDueDate').text();
+            var taskStartTime = $(this).closest('div').find('#tableCreatedTime').text();
             var taskEndTime = $(this).closest('div').find('#tableDueTime').text();
             var taskMaxAttempts = $(this).closest('div').find('#tableMaxAttempts').text();
             var taskMaxScore = $(this).closest('div').find('#tableMaxScore').text();
+            var taskRowInstruction = $(this).closest('div').find('#tableTaskInstruction').text();
             
             // for radio button
             var taskAllowLate = $(this).closest('div').find('#tableAllowLate').text();
@@ -1522,10 +1563,13 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
             $('#updateTaskId').val(taskId);
             $('#inputSubType').val(taskSubType);
             $('#inputTaskDescription').val(taskName);
+            $('#inputStartDate').val(taskStartDate);
             $('#inputEndDate').val(taskEndDate);
+            $('#inputStartTime').val(taskStartTime);
             $('#inputTime').val(taskEndTime);
             $('#inputMaxAttempts').val(taskMaxAttempts);
             $('#inputMaxScore').val(taskMaxScore);
+            $('#inputTaskInstruction').val(taskRowInstruction);
 
             if(taskAllowLate == "Yes"){
                 $('#radioYes').prop('checked',true);

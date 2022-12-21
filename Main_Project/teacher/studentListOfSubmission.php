@@ -74,7 +74,7 @@
                                         <tr>
                                         <!-- $resultTaskList -->
                                             <th scope="col">Task List</th>
-                                            <th scope="col" class="text-center">Submitted Tasks</th>
+                                            <th scope="col" style="min-width: 180px;" class="text-center">No. of not graded</th>
         
                                         </tr>
                                     </thead>

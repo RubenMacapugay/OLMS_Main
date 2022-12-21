@@ -213,10 +213,9 @@ $_SESSION['score'] = 0;
                                         <div class="card-header ">
                                             <h3 class="section-title">First Grading</h3>
                                             <br>
-                                            <div>
+                                            <div class="d-flex flex-row-reverse">
                                                 <ul class="nav justify-content-between align-items-center">
-                                                    <li class="nav-item"><?php echo $firstGradingTask; ?> Task</li>
-                                                    <li class="nav-item d-flex align-items-center">
+                                                    <li class="nav-item d-flex text-right">
                                                         <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
                                                     </li>
@@ -353,9 +352,8 @@ $_SESSION['score'] = 0;
                                         <div class="card-header">
                                             <h4 class="section-title">Second Grading</h4>
                                             <br>
-                                            <div>
+                                            <div class="d-flex flex-row-reverse">
                                                 <ul class="nav justify-content-between align-items-center">
-                                                    <li class="nav-item"><?php echo $secondGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
@@ -494,9 +492,8 @@ $_SESSION['score'] = 0;
                                         <div class="card-header">
                                             <h4 class="section-title">Third Grading</h4>
                                             <br>
-                                            <div>
+                                            <div class="d-flex flex-row-reverse">
                                                 <ul class="nav justify-content-between align-items-center">
-                                                    <li class="nav-item"><?php echo $thirdGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
@@ -636,9 +633,8 @@ $_SESSION['score'] = 0;
                                         <div class="card-header">
                                             <h4 class="section-title">Fourth Grading</h4>
                                             <br>
-                                            <div>
+                                            <div class="d-flex flex-row-reverse">
                                                 <ul class="nav justify-content-between align-items-center">
-                                                    <li class="nav-item"><?php echo $fourthGradingTask; ?> Task</li>
                                                     <li class="nav-item d-flex align-items-center">
                                                         <a class="nav-link content-collapse" type="">Content
                                                             <i class="fa-solid fa-chevron-down"></i></a>
@@ -810,6 +806,7 @@ $_SESSION['score'] = 0;
                                                         <th scope="col">Task List</th>
                                                         <th scope="col" class="text-center">Start</th>
                                                         <th scope="col" class="text-center">Due</th>
+                                                        <th scope="col" class="text-center">Score</th>
                                                         <th scope="col" class="text-center">Remaining attempt</th>
                                                         <!-- <th scope="col" class="text-center">Status</th> -->
         
@@ -870,6 +867,18 @@ $_SESSION['score'] = 0;
                                                                             <td class="">
                                                                                 <?php echo $formatedDateDue.'<br>'?>
                                                                                 <?php echo $newTaskTimeFormat?>
+                                                                            </td>
+                                                                            <td>
+                                                                                <?php
+                                                                                    if($row['sub_type'] == "3"){
+                                                                                        if(!isset($scoreResult)){
+                                                                                            $scoreResult = "-";
+                                                                                        }
+                                                                                        echo $scoreResult.' / ' .$row['max_score'];
+                                                                                    }else{
+                                                                                        echo $scoreResult.' / ' .$row['question_item'];
+                                                                                    }
+                                                                                ?>
                                                                             </td>
                                                                             <td class=""><?=$row['max_attempts']-$maxAttempt[0]?></td>
                                                                             <!-- <td>-</td> -->

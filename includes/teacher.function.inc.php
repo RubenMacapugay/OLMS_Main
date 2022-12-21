@@ -342,21 +342,20 @@ function getModuleName($conn, $id){
 
 
 # --- Create Functions --- #
-    function createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate){
+    function createTask($conn, $subjectId, $grading, $moduleSection, $taskname, $questionitems, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxattempts, $allowlate, $taskinstruction){
         
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_created`, `time_limit`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time_created', '$time', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `question_item`, `fk_task_type`, `sub_type`, `date_created`, `date_deadline`, `time_created`, `time_limit`, `max_attempts`, `submission_choice`, `task_instruction`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$questionitems', '$tasktype', '$subtype', '$datecreated', '$datedeadline', '$time_created', '$time', '$maxattempts', '$allowlate', '$taskinstruction')";
         
         mysqli_query($conn, $sqlInsertTask);
 
         echo 'success';
     }
 
-    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate){
-
+    function createNoQuestion($conn, $subjectId, $grading, $moduleSection, $taskname, $tasktype, $subtype, $datecreated, $datedeadline, $time_created, $time, $maxscore, $maxattempts, $allowlate, $taskinstruction){
         // I need to capture the subject ID
-        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `fk_task_type`, `sub_type`, `date_created`, `time_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`) 
-            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$tasktype', '$subtype', '$datecreated', '$time_created', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate')";
+        $sqlInsertTask = "INSERT INTO `task_list_tbl` (`fk_subject_list_id`, `fk_grading_id`, `fk_module_section_id`, `task_name`, `fk_task_type`, `sub_type`, `date_created`, `time_created`, `date_deadline`, `time_limit`, `max_score`, `max_attempts`, `submission_choice`, `task_instruction`) 
+            VALUES ('$subjectId', '$grading', '$moduleSection', '$taskname', '$tasktype', '$subtype', '$datecreated', '$time_created', '$datedeadline', '$time', '$maxscore', '$maxattempts', '$allowlate', '$taskinstruction')";
         
         mysqli_query($conn, $sqlInsertTask);
         
@@ -607,9 +606,14 @@ function getModuleName($conn, $id){
         $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `submission_choice` = '$submissionchoice' WHERE task_list_id = {$taskId}";
         mysqli_query($conn, $updateTaskGiven);
     }
+    
+    function updateModalTaskWithQuestion($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $submissionchoice, $timeCreated, $dateCreated, $taskinstruction){
+        $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `submission_choice` = '$submissionchoice', `time_created` =  '$timeCreated', `date_created` =  '$dateCreated', `task_instruction` = '$taskinstruction' WHERE task_list_id = {$taskId}";
+        mysqli_query($conn, $updateTaskGiven);
+    }
 
-    function updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice){
-        $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `max_score` =  '$maxscore', `submission_choice` = '$submissionchoice' WHERE task_list_id = {$taskId}";
+    function updateTaskEssay($conn, $taskId, $taskname, $datedeadline, $timelimit, $maxattempts, $maxscore, $submissionchoice, $timeCreated, $dateCreated, $taskinstruction){
+        $updateTaskGiven  = "UPDATE `task_list_tbl` SET `task_name` =  '$taskname', `date_deadline` =  '$datedeadline', `time_limit` =  '$timelimit', `max_attempts` =  '$maxattempts', `max_score` =  '$maxscore', `submission_choice` = '$submissionchoice', `time_created` =  '$timeCreated', `date_created` =  '$dateCreated', `task_instruction` = '$taskinstruction' WHERE task_list_id = {$taskId}";
         mysqli_query($conn, $updateTaskGiven);
     }
 # --- Update Functions --- end #
@@ -653,6 +657,7 @@ function getTaskCountNotGraded($conn, $subjectId){
     FROM task_list_tbl 
     left JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id 
     WHERE submission_tbl.score is null 
+    AND submission_tbl.submission_id > 0 
     AND task_list_tbl.fk_subject_list_id = $subjectId 
     GROUP BY task_list_tbl.task_list_id";
     $result =  $conn->query($sql) or die ($mysqli->error);

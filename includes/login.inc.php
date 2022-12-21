@@ -13,8 +13,11 @@ if(isset($_POST["login_btn"])){
         header("location: ../login.php?error=emptyinput");
         exit();
     }
+    
     $userTeacher = 'tch';
     $userStudent = 'std';
+    $userParent = 'prt';
+    
     $userIndicator = substr($username, 0, 3);
     
     # Login student/teacher
@@ -22,6 +25,8 @@ if(isset($_POST["login_btn"])){
         loginStudent($conn, $sql_student, $username, $pwd);
     } else if($userTeacher === $userIndicator){
         loginTeacher($conn, $sql_teacher, $username, $pwd);
+    } else if($userParent === $userIndicator){
+        loginParent($conn, $sql_parent, $sql_student_id, $username, $pwd);
     }
 } 
 else{

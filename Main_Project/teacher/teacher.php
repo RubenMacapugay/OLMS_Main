@@ -8,7 +8,7 @@
     // $selectTeacherSubject = "SELECT * FROM subject_list_tbl where fk_teacher_id = $subjectId";
     $selectTeacherSubject = "SELECT * FROM ((((subject_list_tbl INNER JOIN section_tbl ON subject_list_tbl.fk_section_id = section_tbl.section_id) INNER JOIN gradelevel_tbl ON gradelevel_tbl.grade_level_id = section_tbl.fk_grade_level_id)INNER JOIN teacher_tbl ON teacher_tbl.teacher_id = subject_list_tbl.fk_teacher_id) INNER JOIN subject_tbl ON subject_tbl.subject_id = subject_list_tbl.fk_subject_id) WHERE subject_list_tbl.fk_teacher_id = $teacherId";
     $resultSubject =  $conn->query($selectTeacherSubject) or die ($mysqli->error);
-
+    
 ?>
 
 

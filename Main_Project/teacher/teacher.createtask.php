@@ -201,12 +201,12 @@
                                         </div>
                                     </div>
 
-                                    <!-- Task Content for Essay
+                                    <!-- Task Content for Essay -->
                                     <div class="mb-3 ps-0" id="taskcontentDiv">
-                                        <label for="">Task Content</label>
-                                        <textarea class="form-control" name="taskcontent"
+                                        <label for="">Task instruction</label>
+                                        <textarea class="form-control" name="taskinstruction"
                                             placeholder="Content Description" id="floatingTextarea"></textarea>
-                                    </div> -->
+                                    </div>
 
                                      <!-- Max score and allow late submission -->
                                     <div class="row mb-3">
@@ -266,33 +266,37 @@
                                     
 
                                     <!-- Duration -->
-                                    <div class="mb-3">
-                                        <label class="form-check-label" for="inputDates">Date Due</label>
+                                    <div class="mb-3"> 
+                                    <!-- comeback -->
+                                        <label class="form-check-label" for="inputDates">Date start & due</label>
                                         <div class="d-flex align-items-center">
                                             <!-- Start Duration -->
-                                            <!-- <input type="date" class="form-control" name="datecreated"
+                                            <input type="date" class="form-control" name="datecreated"
                                                 id="inputStartDate">
-                                            <span class="mx-2">to</span> -->
+                                            <span class="mx-2">to</span>
                                             <!-- End Duration -->
                                             <input type="date" class="form-control" name="datedeadline"
                                                 id="inputEndDate">
                                         </div>
                                     </div>
 
-                                    <!-- Attempts and Time -->
+                                    <!-- Time create and due -->
                                     <div class="row">
-                                        <!-- Attempts -->
+                                        <label for="inputTime">Time created & due</label>
                                         <div class="col-6 mb-3">
-                                            <label for="inputTime">Time Due</label>
-                                            <input type="time" class="form-control" name="timelimit" id="inputTime" >
+                                            <input type="time" class="form-control" name="timecreated" id="inputTime" >
                                         </div>
                                         
-                                        <!-- Time -->
+                                        <!-- Max   -->
                                         <div class="col-6">
-                                            <label for="inputMaxScore">Max attemps</label>
-                                            <input type="number" class="form-control" name="maxattempts"
+                                            <input type="time" class="form-control" name="timelimit"
                                                 id="inputMaxScore" placeholder="0" min="0">
                                         </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="inputMaxScore">Max attemps</label>
+                                        <input type="number" class="form-control" name="maxattempts"
+                                            id="inputMaxScore" placeholder="0" min="0">
                                     </div>
 
                                    

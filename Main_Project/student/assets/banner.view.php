@@ -9,6 +9,17 @@
         INNER JOIN teacher_tbl ON teacher_tbl.teacher_id = subject_list_tbl.fk_teacher_id
         WHERE student_subjects_tbl.fk_student_id = $studentId";
     $resultSubject =  $conn->query($selectStudentSubjects) or die ($mysqli->error);
+    
+    $selectStudentTaskssss = "SELECT * FROM task_list_tbl WHERE task_list_tbl.fk_subject_list_id = $subjectId";
+    $resultTasksStudents =  $conn->query($selectStudentTaskssss) or die ($mysqli->error);
+    
+    
+
+    
+    // count the total task per student subject
+    $studentSubjectTaskCount = getSubjectTaskCount($conn, $subjectId);
+    echo $studentSubjectTaskCount['mycount'];
+    
 ?>
 
 <!-- <div class="custom-border">
@@ -23,7 +34,7 @@
 <div class="custom-border">
     <div class="announcement-mini">
         <h4 class="position-relative">
-            Announcement <span class="badge text-bg-secondary mb-1">1</span>
+            Announcement <span class="badge text-bg-secondary mb-1">-</span>
         </h4>
         <div class="announcement-item">
             <p>This is sample text</p>
@@ -34,11 +45,16 @@
     <div class="announcement-mini">
         <div class="d-flex justify-content-between">
             <h4>Todo</h4> 
-            <span class="badge text-bg-secondary mb-2">3</span>    
+            <span class="badge text-bg-secondary mb-2">-</span>    
         </div>
         <?php foreach ($resultSubject as $row) { 
             $subjectId = $row['subject_list_id']; 
             $subjectToDoResult = getSubjectToDoCount($conn, $subjectId, $studentId);
+            $lengStudentNotSubmitted = getLengNotSubmitted($conn, $subjectId, $studentId);
+            
+            // total student submitted task
+            $studentSubmittedTaskCount = getStudentSubmittedTaskCount($conn, $subjectId, $studentId);   
+            
         ?>
             <form action="student.setSessionSubject.php" method="POST">
                 <input type="hidden" name="subject_list_id" value="<?php echo $row['subject_list_id']; ?>">
@@ -48,14 +64,11 @@
                     <button type="submit" name="submitSubjectId" class="btn btn-link p-0">
                         <?=$row['subject_list_name']?> 
                     </button>
-                    <?php if($subjectToDoResult['NotChecked_COUNT'] > 0){
-                        ?>
-                            <span class="badge text-bg-warning text-white mb-2 p-2">
-                                <?=$subjectToDoResult['NotChecked_COUNT']?>
-                            </span>
-                        <?php
-                    } 
-                    ?>
+                    
+                    
+                    <span class="badge text-bg-warning text-white mb-2 p-2">-
+                    </span>
+                    
                 </div>
             </form>
             
@@ -66,9 +79,17 @@
 
 <div class="custom-border mt-3">
     <div class="announcement-mini">
-        <h4>Parent</h4>
+        
+        <h4><?=$_SESSION['userType']?></h4>
         <div class="deadlines-item">
-            <p class="text-muted">Juan Dela Crux</p>
+            <?php 
+                if(isset($_SESSION['parent_name'])){
+                    echo '<p class="text-muted">'.$_SESSION['parent_name'].'</p>';
+                } else if (isset($_SESSION['my_child'])){
+                    echo '<p class="text-muted">'.$_SESSION['my_child'].'</p>';
+                }
+            
+            ?>
         </div>
     </div>
 </div>
