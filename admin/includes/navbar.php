@@ -4,7 +4,6 @@
      <!-- Sidebar - Brand -->
      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin-dashboard.php">
        <img src="./img/HFA-Logo.png" alt="Logo" width="50" height="50" class="d-inline-block align-text-top">
-       <div class="sidebar-brand-text mx-3">OLMS</div>
      </a>
 
      <!-- Divider -->
@@ -25,15 +24,76 @@
        Management Accounts
      </div>
 
-      <!-- Nav Item - Account -->
-      <li class="nav-item active">
-       <a class="nav-link" href="teacher.head.php">
+     <!-- Nav Item - Account -->
+     <li class="nav-item">
+       <a class="nav-link pb-3" href="teacher.account.php">
          <i class="fas fa-fw fa-users"></i>
-         <span>Subject Head</span></a>
+         <span>Teacher's Account</span></a>
      </li>
 
+     <li class="nav-item">
+       <a class="nav-link pt-0" href="teacher.assign.php">
+         <i class="fas fa-fw fa-tasks"></i>
+         <span>Assign Subject</span></a>
+     </li>
+
+     <!-- Divider -->
+     <hr class="sidebar-divider">
 
 
+     <!-- <li class="nav-item">
+       <a class="nav-link pb-1 pt-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Downloadable Materials</span></a>
+    </li> -->
+
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="student_list.php">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Enrolled Students</span></a>
+     </li>
+
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="subject_list.php">
+         <i class="fas fa-fw fa-book"></i>
+         <span>Subjects</span></a>
+     </li>
+
+     <!-- <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Sections</span></a>
+    </li> 
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Grades</span></a>
+    </li>
+
+    <li class="nav-item">
+       <a class="nav-link pb-1" href="#">
+         <i class="fas fa-fw fa-users"></i>
+         <span>Strand</span></a>
+    </li> -->
+
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="calendar.php">
+         <i class="fas fa-fw fa-calendar"></i>
+         <span>Calendar</span></a>
+     </li>
+
+     <li class="nav-item">
+       <a class="nav-link pb-1" href="admin.announcement.php">
+         <i class="fas fa-fw fa-info"></i>
+         <span>Announcements</span></a>
+     </li>
+
+     <li class="nav-item">
+       <a class="nav-link" href="restore.database.php">
+         <i class="fas fa-fw fa-database"></i>
+         <span>Backup / Restore Database </span></a>
+     </li>
      <!-- Nav Item - Pages Collapse Menu -->
      <!-- <li class="nav-item">
        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
@@ -154,17 +214,8 @@
            <i class="fa fa-bars"></i>
          </button>
 
-         <!-- Topbar Search -->
-         <!-- <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-            <div class="input-group">
-              <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..." aria-label="Search" aria-describedby="basic-addon2">
-              <div class="input-group-append">
-                <button class="btn btn-primary" type="button">
-                  <i class="fas fa-search fa-sm"></i>
-                </button>
-              </div>
-            </div>
-          </form> -->
+         <!-- Topbar Name -->
+         <h1 class="h5 ms-3 mb-0 text-gray-1000">Oblates Learning Management System | Admin Page</h1>
 
 
          <!-- Topbar Navbar -->
@@ -193,9 +244,9 @@
            <!-- Nav Item - Alerts -->
            <li class="nav-item dropdown no-arrow mx-1">
              <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="fas fa-bell fa-fw"></i>
+               <!-- <i class="fas fa-bell fa-fw"></i> -->
                <!-- Counter - Alerts -->
-               <span class="badge badge-danger badge-counter">3+</span>
+               <!-- <span class="badge badge-danger badge-counter">3+</span> -->
              </a>
              <!-- Dropdown - Alerts -->
              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="alertsDropdown">
@@ -242,9 +293,9 @@
            <!-- Nav Item - Messages -->
            <li class="nav-item dropdown no-arrow mx-1">
              <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-               <i class="fas fa-envelope fa-fw"></i>
+               <!-- <i class="fas fa-envelope fa-fw"></i> -->
                <!-- Counter - Messages -->
-               <span class="badge badge-danger badge-counter">7</span>
+               <!-- <span class="badge badge-danger badge-counter">7</span> -->
              </a>
              <!-- Dropdown - Messages -->
              <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="messagesDropdown">
@@ -295,19 +346,13 @@
              </div>
            </li>
 
-           <div class="topbar-divider d-none d-sm-block"></div>
+           <!-- <div class="topbar-divider d-none d-sm-block"></div> -->
 
            <!-- Nav Item - User Information -->
            <li class="nav-item dropdown no-arrow">
              <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
-                Administrator
-                 <?php
-
-                  // echo $_SESSION['admin_username'];
-
-                  ?>
-
+                 Administrator
                </span>
                <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
              </a>
@@ -362,10 +407,7 @@
                <form action="logout.php" method="POST">
 
                  <button type="submit" name="logout_btn" class="btn btn-primary">Logout</button>
-
                </form>
-
-
              </div>
            </div>
          </div>

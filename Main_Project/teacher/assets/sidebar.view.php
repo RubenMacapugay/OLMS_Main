@@ -6,7 +6,6 @@
 // $gradings = loadModuleSection();
 
 ?>
-
  <!-- upload module -->
  <div class="modal fade" id="uploadManyModal" tabindex="-1" aria-labelledby="uploadManyModalLabel" aria-hidden="true">
          <div class="modal-dialog modal-dialog-centered">
@@ -153,7 +152,7 @@
     <div class="navbar py-0" id="test-nav">
         <ul class="navbar-nav  w-100">
             <i class="fa-solid fa-grip side-button-logo" id="sidenavBtn"></i>
-            <li class="nav-item sub-list"><a href="" class="nav-link sub-title">OLMS - Teacher</a></li>
+            <li class="nav-item sub-list fw-bold"><a href="#" class="nav-link sub-title">Teacher Page</a></li>
 
                          <li class="nav-item"><a href="teacher.php" class="nav-link">
                                          <i class="fa-solid fa-house-chimney side-logo"></i>
@@ -163,7 +162,8 @@
                                          <i class="fa-solid fa-book side-logo"></i>
                                          <span class="link_name">Subjects</span></a>
                          </li>
-                         <!-- <li class="nav-item"><a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#uploadManyModal">
+
+                         <li class="nav-item"><a href="teacher.multiUpload.php" class="nav-link">
                                          <i class="fa-solid fa-file-upload side-logo"></i>
                                          <span class="link_name">Upload File</span></a>
                          </li> -->

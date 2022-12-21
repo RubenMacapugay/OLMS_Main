@@ -1,4 +1,10 @@
-<?php include('assets../header.view.php') ?>
+<?php
+include('security.php');
+//session_start();
+
+include('includes/header.php');
+include('includes/navbar.php');
+?>
 
 <!-- Add Announcement -->
 <div class="modal fade" id="addAnouncement" tabindex="-1" aria-labelledby="addAnouncementModalLabel" aria-hidden="true">
@@ -6,9 +12,28 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="uploadModalLabel">Add Announcement</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
             </div>
-            <form action="../../includes/save_schedule.php" method="post" id="schedule-form">
+            <!-- <form action="../../includes/teacher.upload.php" method="POST" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Announcement Name</label>
+                        <input type="text" name="file_name" class="form-control" placeholder="Announcement Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea class="form-control" name="taskcontent" placeholder="Announcement..." id="floatingTextarea"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" name="btnUpload" class="btn btn-primary">Upload</button>
+                </div>
+            </form> -->
+            <form action="admin_save_schedule.php" method="post" id="schedule-form">
                 <input type="hidden" name="id" value="">
                 <div class="modal-body">
                     <div class="form-group mb-2">
@@ -28,7 +53,7 @@
                         <input type="datetime-local" class="form-control form-control-sm rounded-0" name="end_datetime" id="end_datetime" required>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         <button type="submit" name="btnUpload" class="btn btn-primary">Add</button>
                     </div>
                 </div>
@@ -38,20 +63,23 @@
     </div>
 </div>
 
-<!--Body content -->
-<div class="container-fluid " id="content">
-
-    <div class="row overflow-hidden">
-
-        <!-- Left Side Nav global-->
-        <div class="col-md-2 " id="sideNav">
-            <?php include('assets../sidebar.view.php') ?>
+<div class="container-fluid">
+    <!--DataTables Example-->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <div class="d-flex">
+                <div class="p-2 flex-grow-1">
+                    <div class="mt-3 font-weight-bold text-primary">
+                        Student List
+                    </div>
+                </div>
+                <div class="p-2">
+                    <button class="btn btn-primary m-3" data-toggle="modal" data-target="#addAnouncement">Add Announcement</button>
+                </div>
+            </div>
         </div>
-
-        <!-- Main Content -->
-        <div class="col-md-8 py-4 main-content" id="subjectMainContent">
+        <div class="card-body">
             <div class="custom-border">
-                <button class="btn btn-primary m-3" data-bs-toggle="modal" data-bs-target="#addAnouncement">Add Announcement</button>
                 <div class="card mb-2">
                     <div class="card-header text-center">
                         <h3>Announcement</h3>
@@ -98,30 +126,8 @@
 
             </div>
         </div>
-
-        <!-- Right Banner -->
-        <div class="custom-border col-md-2 mt-4" id="rightBanner">
-            <?php include('assets/banner.view.php') ?>
-        </div>
-
     </div>
 </div>
 
-<!-- Script Links Bootstrap/Jquery -->
-<?php include('assets/scriptlink.view.php') ?>
-
-<!-- Javascrpit Files -->
-<script src="js/main.js"></script>
-<script>
-    let btn2 = document.querySelector(".table-control-collapse");
-    let customHideTable = document.querySelector(".section-table-content");
-    customHideTable.classList.toggle("custom-hide");
-    btn2.onclick = function() {
-        customHideTable.classList.toggle("custom-hide");
-    };
-</script>
-
-
-</body>
-
-</html>
+<?php include('includes/script.php'); ?>
+<?php include('includes/footer.php'); ?>

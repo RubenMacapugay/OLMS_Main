@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>OLMS - Student Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link href="../css/master.css" rel="stylesheet">
@@ -19,6 +19,8 @@
         rel="stylesheet">
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/72c32f013b.js" crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/x-icon" href="images/HFA-Logo.png">
 </head> 
 
 <body>
@@ -42,9 +44,10 @@ $studentId = $_SESSION['student_id'];
 <div class="container-fluid" id="header">
     <div class="row">
         <nav class="navbar navbar-expand-md navbar-top">
-            <div class="container-fluid">
+            <div class="container-fluid ms-5">
                 <!-- Left -->
-                <a href="#" class="navbar-brand fs-3 page-title">Change Title</a>
+                <img src="images/HFA-Logo.png" alt="Logo" width="40" height="40">
+                    <a href="student.php" class="navbar-brand fs-5 page-title">Oblates Learning Management System</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTop"
                     aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -69,7 +72,7 @@ $studentId = $_SESSION['student_id'];
                         <li class="nav-item dropdown">
 
                             <a href="" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">User </a>
+                                aria-expanded="false"></a>
                             <ul class="dropdown-menu  dropdown-menu-end">
                                 
                                 <li><a href="student.profile.php" class="dropdown-item">profile</a></li>
