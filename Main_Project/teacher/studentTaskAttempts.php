@@ -22,6 +22,14 @@ $studentData = getStudent($conn, $studentId);
 # get attempts 
 $taskAttempts = getAttempts($conn, $taskId, $studentId);
 
+$currentTask = getCurrentTask($conn, $taskId);
+$taskName = $currentTask['task_name'];
+
+if(isset($_GET['path'])) $path = $_GET['path'];
+    
+if(isset($_GET['tab'])) $tab = $_GET['tab'];
+
+
 ?>
     <!--Body content -->
 
@@ -39,24 +47,42 @@ $taskAttempts = getAttempts($conn, $taskId, $studentId);
                 <div>
                     <div class="custom-border">
                         <div class="mx-3">
-                            <a href="student_subject.progress.php?studentId=<?=$studentId?>">back</a>
+                            <?php
+                                if(isset($_GET['tab'])){
+                                    if($_GET['tab'] == "tocheck"){
+                                        echo '<a href="studentListOfSubmission.php?taskListId='.$taskId.'&&tab='.$tab.'">back</a>';
+                                    }
+                                    
+                                    if($_GET['tab'] == "gradeBook"){
+                                        echo '<a href="student_subject.progress.php?studentId='.$studentId.'&&tab='.$tab.'">back</a>';
+                                    }
+                                    
+                                    if($_GET['tab'] == "progress"){
+                                        echo '<a href="student_subject.progress.php?studentId='.$studentId.'&&tab='.$tab.'">back</a>';
+                                    }
+                                }
+                            ?>
                             <div class="d-flex align-items-end mt-3">
                                 <h3 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h3>
                                 <p class="text-muted mb-0 ms-2"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
+                                
                             </div>
         
                         </div>
                         <div class="card ">
                             <div class="card-header d-flex justify-content-between">
-                                <div class="d-flex align-items-end">
-                                    <p class="mb-0"><?=$studentData['student_name']?></p>
+                                <div class="">
+                                    <h4 class="d-block"><?=$taskName?></h4>
+                                    <p class="d-block mb-0"><?=$studentData['student_name']?></p>
                                 </div>
                             </div>
                             <div class="card-body p-2">
                                 <table class="table table-hover px-4 section-table">
                                     <thead class="">
                                         <tr>
-                                            <th scope="col">Task attempts</th>
+                                            <th scope="col">
+                                                <span>Task attempts</span>
+                                            </th>
                                             <th scope="col" class="text-center">Time Submitted</th>
                                             <th scope="col" class="text-center">Date Submitted</th>
                                             <th scope="col" class="text-center ">Score</th>
@@ -70,7 +96,7 @@ $taskAttempts = getAttempts($conn, $taskId, $studentId);
                                             $score = getScore2($conn, $taskId, $attemptCount, $studentId)
                                         ?>
                                             <tr>
-                                                <td><?=$attemptCount?> <a class="ms-2" href="studentTaskView.php?studentId=<?=$studentId?>&&taskId=<?=$taskId?>&&submissionId=<?=$submissionId?>&&attemptCount=<?=$attemptCount?>">View</a></td> 
+                                                <td><?=$attemptCount?> <a class="ms-2" href="studentTaskView.php?tab=<?=$tab?>&&studentId=<?=$studentId?>&&taskId=<?=$taskId?>&&submissionId=<?=$submissionId?>&&attemptCount=<?=$attemptCount?>">View</a></td> 
                                                 <td>
                                                     <?php 
                                                         if($rowTaskAttempts['submission_time'] == ""){

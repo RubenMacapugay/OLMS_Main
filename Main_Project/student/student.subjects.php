@@ -28,64 +28,61 @@ $_SESSION['score'] = 0;
     $date_Today = date("Y-m-d"); 
 
 
-    # tester --- 
+    #region
         $taskId = 204;
-        // // $sqlAttempt = "SELECT MAX(attempt) FROM submitted_answer_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
-        // // $attemptRow = mysqli_query($conn, $sqlAttempt);
-        // // $result = mysqli_fetch_assoc($attemptRow);
-        // // $maxAttempt = $result['MAX(attempt)'];
+    // // $sqlAttempt = "SELECT MAX(attempt) FROM submitted_answer_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
+    // // $attemptRow = mysqli_query($conn, $sqlAttempt);
+    // // $result = mysqli_fetch_assoc($attemptRow);
+    // // $maxAttempt = $result['MAX(attempt)'];
 
-        
-        // $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
-        // if($maxAttempt[0] == null){
-        //     echo 'Theres no return value';
-        //     print_r ($maxAttempt);
-        // }
-        // else{
-        //     echo 'Max Attempt for ' .$taskId. ': '.$maxAttempt[0].'<br>';
-        //     print_r ($maxAttempt);
-        //     $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
-        //     echo 'Score: '.$studentAnswer['score'];
-        // }
+    
+    // $maxAttempt = getMaxAttempt2($conn, $taskId, $studentId);
+    // if($maxAttempt[0] == null){
+    //     echo 'Theres no return value';
+    //     print_r ($maxAttempt);
+    // }
+    // else{
+    //     echo 'Max Attempt for ' .$taskId. ': '.$maxAttempt[0].'<br>';
+    //     print_r ($maxAttempt);
+    //     $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
+    //     echo 'Score: '.$studentAnswer['score'];
+    // }
 
-        // time
-        // $time = "01:10 PM";
-        // $firstFormat = date('h:i A', strtotime($time));
-        // $secondFormat = date('H:i', strtotime($time));
+    // time
+    // $time = "01:10 PM";
+    // $firstFormat = date('h:i A', strtotime($time));
+    // $secondFormat = date('H:i', strtotime($time));
 
-        // echo $secondFormat;
-        
-        // $time = "07:50 PM";
-        // $timee = "11:55 PM";
-        // $secondFormat = date('H:i', strtotime($timee));
-        // //echo $secondFormat;
-        // if (time() > $secondFormat){
-        //     echo " >= ".$secondFormat;
-        // }else{
-        //     echo ' <= '.$secondFormat;
-        // }
-        // $date = date('m/d/Y h:i:s a', time());
-        // echo $date;
-        
-        
-        # tester --- end
-
-
-
-
+    // echo $secondFormat;
+    
+    // $time = "07:50 PM";
+    // $timee = "11:55 PM";
+    // $secondFormat = date('H:i', strtotime($timee));
+    // //echo $secondFormat;
+    // if (time() > $secondFormat){
+    //     echo " >= ".$secondFormat;
+    // }else{
+    //     echo ' <= '.$secondFormat;
+    // }
+    // $date = date('m/d/Y h:i:s a', time());
+    // echo $date;
+    
+    
+    #endregion
+    
     // get the subject name
-
     if(isset($_GET['msg'])){
         $msg = $_GET['msg'];
         if($msg == "cancelled"){
             unset($_SESSION['questionCount']);
         }
     }
-
+    
+    #region
     # display the subject data
     $resultStudentSubject = getSubjectData($conn, $studentId, $subjectId);
     
-    echo $subjectId .' to '. $resultStudentSubject['section_id'];
+    // echo $subjectId .' to '. $resultStudentSubject['section_id'];
 
     # getTask count per grading ---
     $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1); // check the remaining task for students, by counting the submmision tasks answered by students
@@ -107,7 +104,7 @@ $_SESSION['score'] = 0;
     $resultTasks =  $conn->query($selectStudentTasks) or die ($mysqli->error);
 
     $resultTasksProgress =  $conn->query($selectStudentTasks) or die ($mysqli->error);
-
+    #endregion
 
 
     # display the module section in first grading --- end
@@ -151,7 +148,7 @@ $_SESSION['score'] = 0;
            
             <div class="row mx-0">
 
-                <div class="container-fluid">
+                <div class="container-fluid" id="studentTabs">
 
                     <?php
                         if(isset($_GET['tab'])){
@@ -176,7 +173,7 @@ $_SESSION['score'] = 0;
                     ?>
                     <!-- Tab Header ROW -->
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-lg-8 col-md-12">
                             <!-- Tab header   -->
                             <div class="tab-header">
                                 <div class="active">
@@ -205,7 +202,7 @@ $_SESSION['score'] = 0;
 
                                         <div class="card-header section-name d-flex justify-content-between align-items-center" style="background-color: #1F78FC; color: white; font-weight: bold;">
                                             <!-- Change this -->
-                                            <h2 class="fw-bold mb-0"><?php echo $resultStudentSubject['subject_name'];?></h2>
+                                            <h2 class="fw-bold mb-0"><?php echo $resultStudentSubject['subject_list_name'];?></h2>
                                             <p class="fw-bold mb-0"><?php echo $resultStudentSubject['grade_level_name'].' - '.$resultStudentSubject['section_name'];?></p>
                                         </div>
                                         
@@ -243,7 +240,7 @@ $_SESSION['score'] = 0;
                                                         <!-- for updating module_section -->
                                                        
                                                         <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                        <a class="nav-link text-primary content-collapse" type=""> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
@@ -263,7 +260,7 @@ $_SESSION['score'] = 0;
                                                             <tbody>
                                                                 <tr>
                                                                     <td class=""><a class="section-link"
-                                                                            href="student.module.php">01 Module
+                                                                            href="">01 Module
                                                                             1</a></td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
@@ -317,7 +314,7 @@ $_SESSION['score'] = 0;
                                                                         # * debugging purpose end
                                                                     ?>
 
-                                                                    <?php if(isGiven($rowFirstGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0])){ 
+                                                                    <?php if(isGiven($rowFirstGrading['given']) && isAttemptReached($taskMaxAttempt, $maxAttempt[0]) ){ 
                                                                                 if(isDeadline($date_Today, $endDate, $newTaskTimeFormat) !== true){ ?> 
                                                                                     <tr>
                                                                                         <td class="">
@@ -385,7 +382,7 @@ $_SESSION['score'] = 0;
                                                         <!-- for updating module_section -->
                                                         
                                                         <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                        <a class="nav-link text-primary content-collapse" type=""> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
@@ -405,7 +402,7 @@ $_SESSION['score'] = 0;
                                                             <tbody>
                                                                 <tr>
                                                                     <td class=""><a class="section-link"
-                                                                            href="student.module.php">01 Module
+                                                                            href="">01 Module
                                                                             1</a></td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
@@ -526,7 +523,7 @@ $_SESSION['score'] = 0;
                                                         <!-- for updating module_section -->
                                                         
                                                         <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                        <a class="nav-link text-primary content-collapse" type=""> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
@@ -546,7 +543,7 @@ $_SESSION['score'] = 0;
                                                             <tbody>
                                                                 <tr>
                                                                     <td class=""><a class="section-link"
-                                                                            href="student.module.php">01 Module
+                                                                            href="">01 Module
                                                                             1</a></td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
@@ -670,7 +667,7 @@ $_SESSION['score'] = 0;
                                                         
                                                         <!-- for updating module_section -->
                                                         <h4 class="module-section-title" id="moduleTaskName"><?php echo $rowModuleTask['module_section_name']; ?> </h4>
-                                                        <a class="nav-link text-primary content-collapse" type=""> Hide <i
+                                                        <a class="nav-link text-primary content-collapse" type=""> Content <i
                                                                 class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0" ><?php echo $rowModuleTask['module_section_desc']; ?></p>
@@ -689,9 +686,7 @@ $_SESSION['score'] = 0;
             
                                                             <tbody>
                                                                 <tr>
-                                                                    <td class=""><a class="section-link"
-                                                                            href="student.module.php">01 Module
-                                                                            1</a></td>
+                                                                    <td class=""><a class="section-link" href="">01 Module 1</a></td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
                                                                     <td class="">-</td>
@@ -808,15 +803,14 @@ $_SESSION['score'] = 0;
                                     </div>
                                     <div class="custom-border m-2">
                                         <h4>My Task's</h4>
-                                        <div class="card">
+                                        <div class="card p-3">
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Task List</th>
-                                                        <th scope="col" class="text-center">Type</th>
                                                         <th scope="col" class="text-center">Start</th>
                                                         <th scope="col" class="text-center">Due</th>
-                                                        <th scope="col" class="text-center">Score</th>
+                                                        <th scope="col" class="text-center">Remaining attempt</th>
                                                         <!-- <th scope="col" class="text-center">Status</th> -->
         
                                                     </tr>
@@ -872,13 +866,12 @@ $_SESSION['score'] = 0;
                                                                                         name="submitTaskDetails"><?php echo $row['task_name']?></button>
                                                                                 </form>
                                                                             </td>
-                                                                            <td>-</td>
                                                                             <td class=""><?php echo $formatedDatecreated?></td>
                                                                             <td class="">
                                                                                 <?php echo $formatedDateDue.'<br>'?>
                                                                                 <?php echo $newTaskTimeFormat?>
                                                                             </td>
-                                                                            <td class=""><?php echo $scoreResult;?></td>
+                                                                            <td class=""><?=$row['max_attempts']-$maxAttempt[0]?></td>
                                                                             <!-- <td>-</td> -->
                                                                         </tr>
                                                         <?php       }?>
@@ -950,14 +943,13 @@ $_SESSION['score'] = 0;
                                             </div>
                                         </div> -->
                                         <h4>Completed Task's</h4>
-                                        <div class="card">
+                                        <div class="card p-3">
                                             <table class="table table-hover">
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Task List</th>
-                                                        <th scope="col" class="text-center">Type</th>
-                                                        <th scope="col" class="text-center">Start</th>
-                                                        <th scope="col" class="text-center">Due</th>
+                                                        <th scope="col" class="text-center">Date created</th>
+                                                        <th scope="col" class="text-center" style="min-width: 140px;">Time created</th>
                                                         <th scope="col" class="text-center">Score</th>
                                                         <!-- <th scope="col" class="text-center">Status</th> -->
         
@@ -993,6 +985,12 @@ $_SESSION['score'] = 0;
                                                                 $studentAnswer = getScore2($conn, $taskId, $maxAttempt[0], $studentId);
                                                                 $scoreResult = $studentAnswer['score'];
                                                             }
+                                                            
+                                                            // submitted date and time
+                                                            $submissionTime = $studentAnswer['submission_time'];
+                                                            $submissionDate = strtotime($studentAnswer['submission_date']);
+                                                            $formatedSubmissionDate = date('F, j Y', $submissionDate);
+                                                            
         
                                                             // time limit for task
                                                             $taskTime = $row["time_limit"];
@@ -1011,13 +1009,21 @@ $_SESSION['score'] = 0;
                                                                                     ><?php echo $row['task_name']?></p>
                                                                             </form>
                                                                         </td>
-                                                                        <td>-</td>
-                                                                        <td class=""><?php echo $formatedDatecreated?></td>
+                                                                        <td class=""><?=$formatedSubmissionDate?></td>
+                                                                        <td class=""><?=$submissionTime?></td>
                                                                         <td class="">
-                                                                            <?php echo $formatedDateDue.'<br>'?>
-                                                                            <?php echo $newTaskFormat?>
+                                                                            <?php 
+                                                                                if($scoreResult == null){
+                                                                                    echo 'Waiting';
+                                                                                } else{
+                                                                                    if($row['sub_type'] == "3"){
+                                                                                        echo $scoreResult.' / '.$row['max_score'];
+                                                                                    } else{
+                                                                                        echo $scoreResult.' / '.$row['question_item'];
+                                                                                    }
+                                                                                }
+                                                                            ?>
                                                                         </td>
-                                                                        <td class=""><?php echo $scoreResult;?></td>
                                                                         <!-- <td>-</td> -->
                                                                     </tr>
                                                             <?php } ?>
@@ -1072,7 +1078,7 @@ $_SESSION['score'] = 0;
             tabBody.getElementsByClassName("active")[0].classList.remove("active");
             tabBody.getElementsByClassName("tab-content")[i].classList.add("active");
 
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${i})`;
+            tabIndicator.style.left = `calc(calc(100% / 3) * ${i})`;
         });
     }
 
@@ -1082,7 +1088,7 @@ $_SESSION['score'] = 0;
             tabBody.getElementsByClassName("active")[0].classList.remove("active");
             tabBody.getElementsByClassName("tab-content")[1].classList.add("active");
 
-            tabIndicator.style.left = `calc(calc(100% / 4) * ${1})`;
+            tabIndicator.style.left = `calc(calc(100% / 3) * ${1})`;
     }
 
     //Module collapse ----------

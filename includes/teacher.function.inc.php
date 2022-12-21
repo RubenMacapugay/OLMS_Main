@@ -395,6 +395,23 @@ function getModuleName($conn, $id){
         mysqli_stmt_close($stmt);
         return true;
     }
+    
+    function createEssayContentNoFile($conn, $taskListId, $questionContent){
+        $insertQuestion = "INSERT INTO `question_tbl`(`fk_task_list_id`, `question_name`) VALUES (?, ?);";
+        # start the prepared statement
+        $stmt = mysqli_stmt_init($conn);
+        if(!mysqli_stmt_prepare($stmt, $insertQuestion)){
+            header ('location: ../Main_Project/teacher/teacher.createEssay.php?error=stmtfailed');
+            return false;
+            exit();
+        } 
+
+        # binding user input
+        mysqli_stmt_bind_param($stmt, "is", $taskListId, $questionContent);    
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        return true;
+    }
 
     function createAnswer($conn, $questionerId, $answerselect){
         $insertAnswer = "INSERT INTO `answer_tbl`(`answer_key`, `fk_question_id`) VALUES (?, ?);";
@@ -619,6 +636,29 @@ function getTasks($conn, $subjectId, $teacherId){
     return $resultTaskList;
 }
 
+function getSubjectToGradeCount($conn, $subjectId){
+    $selectSubjectToGradeCount = 
+        "SELECT COUNT(*) as NotChecked_COUNT, subject_list_tbl.subject_list_name
+        FROM task_list_tbl 
+        RIGHT JOIN submission_tbl ON submission_tbl.fk_task_list_id = task_list_tbl.task_list_id
+        LEFT JOIN subject_list_tbl ON subject_list_tbl.subject_list_id = task_list_tbl.fk_subject_list_id
+        WHERE task_list_tbl.sub_type = 3 AND score IS NULL and subject_list_tbl.subject_list_id = $subjectId";
+        $result = mysqli_query($conn, $selectSubjectToGradeCount);
+        return $studentAnswer = mysqli_fetch_assoc($result);
+}
+
+function getTaskCountNotGraded($conn, $subjectId){
+    $sql = 
+    "SELECT task_list_tbl.task_list_id, task_list_tbl.task_name, COUNT(*) as not_graded_count 
+    FROM task_list_tbl 
+    left JOIN submission_tbl ON task_list_tbl.task_list_id = submission_tbl.fk_task_list_id 
+    WHERE submission_tbl.score is null 
+    AND task_list_tbl.fk_subject_list_id = $subjectId 
+    GROUP BY task_list_tbl.task_list_id";
+    $result =  $conn->query($sql) or die ($mysqli->error);
+    return $result;
+
+}
 function getMaxAttempt2($conn, $taskId, $studentId){
     $sql = "SELECT MAX(attempt) FROM submission_tbl where fk_task_list_id = $taskId and fk_student_id = $studentId";
     $resultQuery = mysqli_query($conn, $sql);
@@ -737,6 +777,17 @@ function getSubjectStudents($conn){
 
 }
 
+function getStudentSubnmissionList($conn, $taskId){
+    $selectTeacherTasksPerGrading = 
+    "SELECT Count(*) as myCount, student_tbl.student_name as student, student_tbl.student_id as id
+    FROM student_tbl 
+    right JOIN submission_tbl ON submission_tbl.fk_student_id = student_tbl.student_id 
+    WHERE submission_tbl.score is null 
+    AND fk_task_list_id = $taskId
+    GROUP BY student_tbl.student_id";
+    $resultTasksPerGrading =  $conn->query($selectTeacherTasksPerGrading) or die ($mysqli->error);
+    return $resultTasksPerGrading;
+}
 function getStudent($conn, $studentId){
     $selectStudentsSubjectSection = "SELECT * FROM student_tbl WHERE student_id = $studentId";
     $row = mysqli_query($conn, $selectStudentsSubjectSection);

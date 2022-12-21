@@ -39,13 +39,26 @@
     // setting default date
     date_default_timezone_set('Asia/Manila');
     $date_Today = date("Y-m-d");
-
+    
+    
+    if(!isset($_SESSION['teacher_id']) || isset($_SESSION['student_id'])){
+        echo 'lost teacher';
+        header ("location: ../../includes/logout.inc.php");
+    } 
+    
+    $teacherId = $_SESSION['teacher_id'];
+    
+    
+    
     ?>
 
 
     <div class="container-fluid" id="header">
         
         <div class="row">
+        <?php
+           
+        ?>
             <nav class="navbar navbar-expand-md navbar-top">
                 <div class="container-fluid ms-5">
                     <!-- Left -->

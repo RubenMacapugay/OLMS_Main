@@ -14,7 +14,7 @@ include('assets/header.view.php');
 <?php
 $sectionId = $_SESSION['section_id'];
 $subjectId = $_SESSION['subjectId'];
-$teacherId = $_SESSION['teacher_id'];
+
 
 // echo $sectionId.' to '.$subjectId;
 
@@ -24,6 +24,12 @@ $teacherId = $_SESSION['teacher_id'];
 // $currentSubjectData = teacherSubjectExist($conn, $subjectId, $teacherId);
 $currentSubjectData = teacherSubjectExist2($conn, $subjectId, $sectionId, $teacherId);
 
+
+// get the total task
+$totalTaskCount = checkTotalTaskCount($conn, $subjectId);
+
+// get the count of not graded task
+$resultTaskToGradeCount = getTaskCountNotGraded($conn, $subjectId);
 
 // getTask count per grading;
 $firstGradingTask = checkTaskCountPerGrading($conn, $subjectId, 1);
@@ -329,9 +335,10 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                         </div>';
                             }
 
-                            if ($_GET['tab'] == "moduleTab") {
-                                echo "<script> window.onload = function() {
-                                        showGradingTab();
+                                if($_GET['tab'] == "moduleTab"){
+                                    echo "<script> window.onload = function() {
+                                        showModuleTab();
+
                                     }; </script>";
                             } else if ($_GET['tab'] == "taskTab") {
                                 echo "<script> window.onload = function() {
@@ -393,9 +400,9 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                             
                             if($_SESSION['msg'] == "missingparameter"){
                                 echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                            Theres something wrong on url, please try again!
-                                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                            </div>';
+                                        Theres something wrong on url, please try again!
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>';
                                
                             }
                             
@@ -413,10 +420,19 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     showGradingTab();
                                 }; </script>";
                             }
+                            if($_GET['tab'] == "progress"){
+                                echo "<script> window.onload = function() {
+                                    showProgress();
+                                }; </script>";
+                            }
                             if($_GET['tab'] == "moduleTab"){
-                                
                                 echo "<script> window.onload = function() {
                                     showModuleTab();
+                                }; </script>";
+                            }
+                            if($_GET['tab'] == "tocheck"){
+                                echo "<script> window.onload = function() {
+                                    showToCheck();
                                 }; </script>";
                             }
                         }
@@ -427,7 +443,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 
                     <!-- Subject Header (tabpane header) -->
                     <div class="row">
-                        <div class="col-8">
+                        <div class="col-lg-10 col-md-12">
                             <div class="tab-header">
                                 <div class="active">
                                     Modules
@@ -441,6 +457,10 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                 <div>
                                     Grade Book
                                 </div>
+                                <div>
+                                    To Check
+                                </div>
+                                
                             </div>
                             <div class="tab-indicator"></div>
                         </div>
@@ -448,7 +468,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 
                     <!-- Subject Content (tabpane body) -->
                     <div class="row mt-2">
-                        <div class="tabs px-0">
+                        <div class="col-8 tabs px-0 overflow-hidden">
                             <div class="tab-body">
 
                                 <!-- Subject Modules Tab -->
@@ -507,12 +527,13 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                 <i class="fa-solid fa-trash text-danger mx-2 deleteTeacherModal" type="button"></i>
                                                                 <i class="fa-solid fa-circle-plus mx-2" data-bs-toggle="modal" data-bs-target="#uploadModal"></i> -->
                                                             </div>
+
                                                             <div class="d-flex">
                                                                 <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection mx-2 " type="button"></i>
                                                                 <i class="fa-solid fa-trash text-danger mx-2 deleteTeacherModal" type="button"></i>
                                                                 <i class='fas fa-file-import mx-2' style='color: #009dff' data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
 
-                                                                <a class="nav-link text-primary content-collapse ms-3" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                                <a class="nav-link text-primary content-collapse ms-3" type=""> Content <i class="fa-solid fa-chevron-down"></i></a>
                                                             </div>
 
                                                         </div>
@@ -636,7 +657,8 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                 <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                                 <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Content <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -743,7 +765,8 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                 <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                                 <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Content <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -850,7 +873,9 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                                 <i class="fa-regular fa-pen-to-square text-primary editGradingModuleSection ms-2" type="button"></i>
                                                                 <i class="fa-solid fa-circle-plus" data-bs-toggle="modal" data-bs-target="#uploadModal"></i>
                                                             </div>
-                                                            <a class="nav-link text-primary content-collapse" type=""> Hide <i class="fa-solid fa-chevron-down"></i></a>
+                                                            <a class="nav-link text-primary content-collapse" type=""> Content <i
+                                                                    class="fa-solid fa-chevron-down"></i></a>
+
                                                         </div>
                                                         <p class="module-section-desc mt-3 mb-0"><?php echo $rowModuleTask['module_section_desc']; ?></p>
                                                         <table class="table table-hover p-0 section-table section-table-content custom-hide">
@@ -955,9 +980,10 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                             </div> -->
                                         </div>
                                     </div>
+                                    
                                     <div class="custom-border m-2">
                                         <h4>Task List</h4>
-                                        <div class="card m-2">
+                                        <div class="card m-2 overflow-scroll">
                                             <div class="card-body">
                                                 <table class="table table-hover ">
                                                     <thead>
@@ -1113,7 +1139,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                     
                                     <div class="student-table custom-border m-2" id="subject-students-progress">
                                         <h4>Progress</h4>
-                                        <div class="card">
+                                        <div class="card overflow-scroll">
                                             <div class="card-body">
                                                 <table class="table table-hover">
                                                     <thead>
@@ -1132,7 +1158,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                             $formatedDateEnrolled = date('F, j Y', $startedDateEnrolled);
                                                             ?>
                                                             <tr>
-                                                                <td><a href="student_subject.progress.php?studentId=<?php echo $rowResult['student_id'] ?>"><?php echo $rowResult['student_name'] ?></a></td>
+                                                                <td><a href="student_subject.progress.php?studentId=<?php echo $rowResult['student_id']?>&&tab=progress"><?php echo $rowResult['student_name'] ?></a></td>
                                                                 <!-- <td> -->
                                                                     <?php //echo $rowResult['Task_Completed'].' out of '.$totalTaskCount;?>
                                                                     <!-- <div class="d-flex justify-content-center">
@@ -1207,7 +1233,7 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
                                                             ?>
                                                             
                                                             <tr>
-                                                                <td><a href="student_subject.progress.php?studentId=<?=$studentId?>"><?php echo $rowResult['student_name'] ?></a></td>
+                                                                <td><a href="student_subject.progress.php?studentId=<?=$studentId?>&&tab=gradeBook"><?php echo $rowResult['student_name'] ?></a></td>
                                                                 
                                                                 <?php while ($rowTaskList2 = $resultTaskList2->fetch_assoc()) : 
                                                                     $taskId = $rowTaskList2['task_list_id'];
@@ -1236,17 +1262,69 @@ $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
 
 
                                 </div>
+                                
+                                <!-- Subject To Check-->
+                                <div class="tab-content " id="subjectStudentList">
+                                    <!-- Sort -->
+                                    <div class="container-fluid d-flex justify-content-between align-items-center py-2">
+                                        <div class="d-flex justify-content-center align-items-center">
+                                            <h3 class="mb-0 me-2 "><?php echo $currentSubjectData['subject_list_name']?></h3>
+                                            <p class="mb-0 me-4"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="student-table custom-border m-2">
+                                        <h4>To Grade </h4>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <table class="table table-hover ">
+                                                    <thead>
+                                                        <tr>
+                                                            <th scope="col" class="">Task name</th>
+                                                            <th class="text-center" style="min-width: 200px;">Not graded tasks</th>
+                                                        </tr>
+                                                    </thead>
+                                                    
+                                                    <tbody>
+                                                        <!-- display students -->
+                                                        <?php while ($rowResult = $resultTaskToGradeCount->fetch_assoc()) : ?>
+                                                            <?php 
+                                                                $resultTaskId =  $rowResult['task_list_id'];
+                                                                $resultTaskName = $rowResult['task_name'];
+                                                                $notGradedCount = $rowResult['not_graded_count'];
+                                                            ?>
+                                                            
+                                                            <tr>
+                                                                <td><a href="studentListOfSubmission.php?taskListId=<?=$resultTaskId?>&&tab=tocheck"><?=$resultTaskName?></a></td>
+                                                                <td><?=$notGradedCount?></td>
+                                                                
+                                                               
+                                                            </tr>
+        
+                                                        <?php endwhile; ?>
+        
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                
                             </div>
                         </div>
                     </div>
+                    
                 </div>
 
             </div>
         </div>
 
         <!-- Right Banner -->
-        <div class="custom-border col-md-2 mt-4" id="rightBanner">
-            <?php include('assets/banner.view.php') ?>
+        <div class="col-md-2 mt-4 custom-border" id="rightBanner">
+            <?php include('assets/banner.view.php')?>
         </div>
 
     </div>

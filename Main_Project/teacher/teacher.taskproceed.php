@@ -39,7 +39,7 @@ include('assets/header.view.php')
                                     id="taskProceedBtn">Proceed</button>
                             </form>
                         <?php } else if($_GET['msg'] == 'essay'){ ?>
-                            <h3>Do you want to save the (Essay)task?</h3>
+                            <h3>Do you want to save the task?</h3>
 
                             <form method='POST' action='../../includes/teacher.createtask.inc.php'>
                                 <button type="submit" name="cancelEssayTaskSave" class="btn btn-secondary ms-3"

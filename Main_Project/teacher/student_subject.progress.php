@@ -18,6 +18,10 @@
     //display Task List
     $resultTaskList =  getTasks($conn, $subjectId, $teacherId);
     
+    if(isset($_GET['path'])) $path = $_GET['path'];
+    
+    if(isset($_GET['tab'])) $tab = $_GET['tab'];
+    
     ?>
 
     <!--Body content -->
@@ -47,7 +51,11 @@
                     ?>
                     <div class="custom-border">
                         <div class="mx-3">
-                            <a href="teacher.subject.php">back</a>
+                            <?php
+                                if(isset($_GET['tab'])){
+                                    echo '<a href="teacher.subject.php?tab='.$tab.'">back</a>';
+                                }
+                            ?>
                             <div class="d-flex align-items-end mt-3">
                                 <h3 class="mb-0"><?php echo $currentSubjectData['subject_list_name']?></h3>
                                 <p class="text-muted mb-0 ms-2"><?php echo $currentSubjectData['grade_level_name'].' - '.$currentSubjectData['section_name']?></p>
@@ -80,7 +88,7 @@
                                         ?>
                                             <tr>
                                                 <td scope="col"  class="">
-                                                    <a href="studentTaskAttempts.php?studentId=<?=$studentId?>&&taskId=<?=$taskId?>"><?php echo $rowTaskList['task_name']; ?></a>
+                                                    <a href="studentTaskAttempts.php?studentId=<?=$studentId?>&&taskId=<?=$taskId?>&&tab=<?=$tab?>"><?php echo $rowTaskList['task_name']; ?></a>
                                                 </td>
                                                 <td>
                                                     <?php
